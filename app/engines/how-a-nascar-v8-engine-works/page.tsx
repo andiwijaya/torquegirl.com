@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages */
 import { ArrowLeft } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { nascarV8Article } from "../../../lib/torquegirl-content";
@@ -23,7 +24,7 @@ export default function NascarV8Article() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: nascarV8Article.title, description: nascarV8Article.description, image: [`https://torquegirl.com${nascarV8Article.heroImage}`], datePublished: nascarV8Article.date, dateModified: nascarV8Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><Link className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><nav className="nav-links article-nav" aria-label="Main navigation"><Link href="/">Home</Link><Link href="/engines/" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines/" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/engines/"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works/" /></header>
       <Figure src="/images/articles/torquegirl-nascar-v8-hero.png" alt={nascarV8Article.heroAlt} caption="Torque Girl takes a closer look at the V8 heart of a stock car." priority />
@@ -74,6 +75,6 @@ export default function NascarV8Article() {
         <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works/" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><Link className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines/">Engines</Link><Link href="/#about">About</Link><Link href="/#top">Privacy</Link><Link href="/#top">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines/">Engines</Link><Link href="/#about">About</Link><Link href="/#top">Privacy</Link><Link href="/#top">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

@@ -7,7 +7,7 @@ TorqueGirl is a bilingual media and education site about the engineering behind 
 - Next.js-compatible Vinext starter with React and TypeScript
 - Static-first Cloudflare Sites deployment
 - CSS-driven responsive layout with no database, CMS, or backend
-- English and Bahasa Indonesia content dictionaries in `app/page.tsx`
+- English-only editorial content in `app/page.tsx`
 
 ## Development
 
@@ -25,9 +25,9 @@ The production build outputs the deployable site under `dist/client`. Cloudflare
 
 The homepage is organized around reusable editorial surfaces: explore categories, engineering scope, a future featured machine, and the TorqueGirl guide. Future routes can expand into `/machines/`, `/motorsport/`, `/engines/`, `/technology/`, `/comparisons/`, and `/learn/`, with article content modeled as flexible sections rather than fixed fields.
 
-## Bilingual foundation
+## International foundation
 
-English is the default. The `EN / ID` switcher uses local translation dictionaries and client state, so additional pages can follow the same content pattern without relying on Google Translate.
+The public site is English-only and uses clean root-relative URLs, so future machine and engineering articles can expand without locale-specific routing.
 
 ## Deployment
 

@@ -22,4 +22,16 @@ export const nascarV8Article: ArticleSummary = {
   heroAlt: "TorqueGirl presenting the V8 engine bay of a stock car in a motorsport workshop.",
 };
 
-export const articles: ArticleSummary[] = [nascarV8Article];
+export const turboVsSuperchargerArticle: ArticleSummary = {
+  slug: "turbocharger-vs-supercharger",
+  title: "Turbocharger vs Supercharger: What’s the Difference?",
+  description: "Learn how turbochargers and superchargers work, where their driving energy comes from, and how boost, response, heat and efficiency differ.",
+  category: "Engines",
+  topics: ["Technology", "Performance"],
+  date: "2026-09-21",
+  readingTime: "10 min read",
+  heroImage: "/images/articles/torquegirl-turbo-vs-supercharger-hero.png",
+  heroAlt: "TorqueGirl comparing a turbocharger and supercharger on a performance workshop bench.",
+};
+
+export const articles: ArticleSummary[] = [turboVsSuperchargerArticle, nascarV8Article];

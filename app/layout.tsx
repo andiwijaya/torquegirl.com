@@ -4,6 +4,7 @@ import "./globals.css";
 import "./hero-responsive.css";
 import "./article.css";
 import "./featured-article.css";
+import "./article-turbo.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://torquegirl.com"),

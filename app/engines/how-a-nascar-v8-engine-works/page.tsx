@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
 /* eslint-disable @next/next/no-html-link-for-pages */
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { nascarV8Article } from "../../../lib/torquegirl-content";
 
@@ -71,6 +71,7 @@ export default function NascarV8Article() {
         <aside className="torquegirl-takeaway"><span>TORQUEGIRL TAKEAWAY</span><p>Good engineering isn't about using the most complicated solution. It's about making the right solution work exceptionally well.</p></aside>
         <h2>Final thoughts</h2>
         <p>The next time a stock car fires up, do not just hear noise. Think about airflow, combustion, friction, heat, torque and thousands of components working together at racing speed.</p>
+        <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger/"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://media.ndms.nascar.com/nascar/2021/NextGen/NextGen-SpecSheet.pdf" rel="noreferrer">NASCAR Next Gen specification sheet</a><a href="https://www.nascar.com/news-media/2025/11/14/nascar-2026-rule-book-technical-updates/" rel="noreferrer">NASCAR 2026 technical updates</a><a href="https://www.hendrickmotorsports.com/news/2023/2/17/nascar-unveils-garage-56-livery-full-details-and-specs-of-car" rel="noreferrer">Hendrick Motorsports engine specifications</a></div>
         <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works/" />
       </div></div>

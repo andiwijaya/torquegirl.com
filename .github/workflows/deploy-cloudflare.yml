@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      CLOUDFLARE_ACCOUNT_ID: de3db9734efdbc946c1265eda87842d7
+env:
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     steps:
       - name: Check out repository

@@ -1,0 +1,12 @@
+/* Keep the hero artwork readable across desktop and mobile. */
+.image-frame img {
+  object-position: center top;
+}
+
+@media (max-width: 640px) {
+  .hero-visual {
+    min-height: 500px;
+    height: min(128vw, 680px);
+    max-height: none;
+  }
+}

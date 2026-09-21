@@ -34,4 +34,16 @@ export const turboVsSuperchargerArticle: ArticleSummary = {
   heroAlt: "TorqueGirl comparing a turbocharger and supercharger on a performance workshop bench.",
 };
 
-export const articles: ArticleSummary[] = [turboVsSuperchargerArticle, nascarV8Article];
+export const toyota2JzArticle: ArticleSummary = {
+  slug: "toyota-2jz-gte-tuning-legend",
+  title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend",
+  description: "Discover the engineering, durability, tuning headroom and Supra connection that made Toyota's 2JZ-GTE a lasting performance legend.",
+  category: "Engine Legends",
+  topics: ["Toyota", "2JZ", "Supra"],
+  date: "2026-09-22",
+  readingTime: "12 min read",
+  heroImage: "/images/articles/torquegirl-2jz-gte-hero.png",
+  heroAlt: "TorqueGirl standing beside a Toyota 2JZ-GTE engine on a workshop stand.",
+};
+
+export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import "./hero-responsive.css";
+import "./article.css";
+import "./featured-article.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://torquegirl.com"),

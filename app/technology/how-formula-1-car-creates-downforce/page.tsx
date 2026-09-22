@@ -4,6 +4,7 @@ import Link from "next/link";
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
+import { HomeLink } from "../../../components/home-link";
 import { formulaDownforceArticle } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/technology/how-formula-1-car-creates-downforce";
@@ -24,7 +25,7 @@ export default function FormulaDownforceArticle() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: formulaDownforceArticle.title, description: formulaDownforceArticle.description, image: [`https://torquegirl.com${formulaDownforceArticle.heroImage}`], datePublished: formulaDownforceArticle.date, dateModified: formulaDownforceArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><Link className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><nav className="nav-links article-nav" aria-label="Main navigation"><Link href="/">Home</Link><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>MOTORSPORT</span><span>{formulaDownforceArticle.readingTime}</span></div><h1>{formulaDownforceArticle.title}</h1><p className="article-dek">An airplane uses airflow to help generate lift. A Formula-style race car turns that same invisible medium into a useful force in the opposite direction: toward the track.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={formulaDownforceArticle.date}>September 22, 2026</time></div><ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path="/technology/how-formula-1-car-creates-downforce" /></header>
       <Figure src="/images/articles/torquegirl-formula-downforce-hero.png" alt="Torque Girl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop." caption="Torque Girl takes a closer look at the aerodynamic surfaces that turn airflow into performance." priority wide />
@@ -90,6 +91,6 @@ export default function FormulaDownforceArticle() {
         <ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path="/technology/how-formula-1-car-creates-downforce" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><Link className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

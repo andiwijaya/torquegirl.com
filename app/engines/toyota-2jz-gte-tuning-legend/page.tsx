@@ -4,6 +4,7 @@ import Link from "next/link";
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
+import { HomeLink } from "../../../components/home-link";
 import { toyota2JzArticle } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/engines/toyota-2jz-gte-tuning-legend";
@@ -24,7 +25,7 @@ export default function Toyota2JzArticle() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: toyota2JzArticle.title, description: toyota2JzArticle.description, image: [`https://torquegirl.com${toyota2JzArticle.heroImage}`], datePublished: toyota2JzArticle.date, dateModified: toyota2JzArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><Link className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><nav className="nav-links article-nav" aria-label="Main navigation"><Link href="/">Home</Link><Link href="/engines" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINE LEGENDS</span><span>TOYOTA</span><span>{toyota2JzArticle.readingTime}</span></div><h1>{toyota2JzArticle.title}</h1><p className="article-dek">The 2JZ-GTE became famous through the Supra, but its real story is a combination of sound engineering, durability, tuning headroom and the culture built around it.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={toyota2JzArticle.date}>September 22, 2026</time></div><ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" /></header>
       <Figure src="/images/articles/torquegirl-2jz-gte-hero.png" alt={toyota2JzArticle.heroAlt} caption="TorqueGirl meets the long, straight-six architecture behind one of tuning's most enduring legends." priority />
@@ -76,6 +77,6 @@ export default function Toyota2JzArticle() {
         <ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><Link className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

@@ -70,5 +70,17 @@ export const obd2Article: ArticleSummary = {
   heroAlt: "TorqueGirl using an OBD2 scanner to diagnose a car.",
 };
 
+export const obd2ComparisonArticle: ArticleSummary = {
+  slug: "obd2-scanner-vs-code-reader",
+  title: "OBD2 Scanner vs Code Reader: What’s the Difference?",
+  description: "Compare a basic OBD2 code reader with an advanced scan tool, from generic trouble codes and live data to ABS, SRS, service functions, and bidirectional controls.",
+  category: "Technology",
+  topics: ["OBD2", "Diagnostics", "Scan Tools"],
+  date: "2026-09-22",
+  readingTime: "12 min read",
+  heroImage: "/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.png",
+  heroAlt: "TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool.",
+};
+
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
-export const technologyArticles: ArticleSummary[] = [obd2Article, formulaDownforceArticle];
+export const technologyArticles: ArticleSummary[] = [obd2ComparisonArticle, obd2Article, formulaDownforceArticle];

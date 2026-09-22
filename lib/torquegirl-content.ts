@@ -82,5 +82,17 @@ export const obd2ComparisonArticle: ArticleSummary = {
   heroAlt: "TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool.",
 };
 
+export const obd2DtcArticle: ArticleSummary = {
+  slug: "how-to-read-obd2-codes",
+  title: "How to Read OBD2 Codes: P, B, C and U Codes Explained",
+  description: "Learn how to read OBD2 diagnostic trouble codes, understand P, B, C and U code families, and use code information as the beginning of diagnosis—not a parts list.",
+  category: "Technology",
+  topics: ["OBD2", "DTC", "Diagnostics"],
+  date: "2026-09-22",
+  readingTime: "13 min read",
+  heroImage: "/images/articles/torquegirl-read-obd2-codes-hero.png",
+  heroAlt: "TorqueGirl reading OBD2 diagnostic trouble codes on an automotive scan tool.",
+};
+
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
-export const technologyArticles: ArticleSummary[] = [obd2ComparisonArticle, obd2Article, formulaDownforceArticle];
+export const technologyArticles: ArticleSummary[] = [obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];

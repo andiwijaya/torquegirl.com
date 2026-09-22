@@ -58,5 +58,17 @@ export const formulaDownforceArticle: ArticleSummary = {
   heroAlt: "TorqueGirl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop.",
 };
 
+export const obd2Article: ArticleSummary = {
+  slug: "what-is-an-obd2-scanner",
+  title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car",
+  description: "Learn what an OBD2 scanner does, where it plugs in, how diagnostic trouble codes work, and how to use scan data without guessing at parts.",
+  category: "Technology",
+  topics: ["OBD2", "Diagnostics", "Automotive Technology"],
+  date: "2026-09-22",
+  readingTime: "14 min read",
+  heroImage: "/images/articles/torquegirl-obd2-scanner-hero.png",
+  heroAlt: "TorqueGirl using an OBD2 scanner to diagnose a car.",
+};
+
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
-export const technologyArticles: ArticleSummary[] = [formulaDownforceArticle];
+export const technologyArticles: ArticleSummary[] = [obd2Article, formulaDownforceArticle];

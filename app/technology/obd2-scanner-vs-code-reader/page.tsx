@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
+import { HomeLink } from "../../../components/home-link";
 import { obd2ComparisonArticle } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/technology/obd2-scanner-vs-code-reader";
@@ -23,7 +24,7 @@ export default function Obd2ComparisonArticle() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2ComparisonArticle.title, description: obd2ComparisonArticle.description, image: [`https://torquegirl.com${obd2ComparisonArticle.heroImage}`], datePublished: obd2ComparisonArticle.date, dateModified: obd2ComparisonArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><a className="brand" href="https://torquegirl.com/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="https://torquegirl.com/">Home</a><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2ComparisonArticle.readingTime}</span></div><h1>{obd2ComparisonArticle.title}</h1><p className="article-dek">A tiny code reader and a large diagnostic tablet may use the same port. The difference is what they can ask the vehicle—and how much evidence they can show you next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2ComparisonArticle.date}>September 22, 2026</time></div><ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path="/technology/obd2-scanner-vs-code-reader" /></header>
       <Figure src="/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.png" alt="TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool" caption="The connector may be similar, but a basic reader and an advanced scan tool can expose very different levels of vehicle information." priority />
@@ -96,6 +97,6 @@ export default function Obd2ComparisonArticle() {
         <ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path="/technology/obd2-scanner-vs-code-reader" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="https://torquegirl.com/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

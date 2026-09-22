@@ -6,6 +6,7 @@ import "./article.css";
 import "./featured-article.css";
 import "./article-turbo.css";
 import "./article-legends.css";
+import "./article-technology.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://torquegirl.com"),

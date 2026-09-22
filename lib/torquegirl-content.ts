@@ -46,4 +46,17 @@ export const toyota2JzArticle: ArticleSummary = {
   heroAlt: "TorqueGirl standing beside a Toyota 2JZ-GTE engine on a workshop stand.",
 };
 
+export const formulaDownforceArticle: ArticleSummary = {
+  slug: "how-formula-1-car-creates-downforce",
+  title: "How a Formula 1 Car Creates Downforce",
+  description: "Learn how Formula 1 cars use wings, ground-effect floors, diffusers and aerodynamic balance to turn airflow into cornering performance.",
+  category: "Technology",
+  topics: ["Motorsport", "Aerodynamics", "Formula Racing"],
+  date: "2026-09-22",
+  readingTime: "13 min read",
+  heroImage: "/images/articles/torquegirl-formula-downforce-hero.png",
+  heroAlt: "TorqueGirl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop.",
+};
+
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
+export const technologyArticles: ArticleSummary[] = [formulaDownforceArticle];

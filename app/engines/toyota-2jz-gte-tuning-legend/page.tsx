@@ -6,14 +6,14 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { toyota2JzArticle } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/engines/toyota-2jz-gte-tuning-legend/";
+const articleUrl = "https://torquegirl.com/engines/toyota-2jz-gte-tuning-legend";
 
 export const metadata: Metadata = {
   title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl",
   description: toyota2JzArticle.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [{ url: toyota2JzArticle.heroImage, width: 1536, height: 1024, alt: toyota2JzArticle.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [toyota2JzArticle.heroImage] },
+  openGraph: { type: "article", url: articleUrl, title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [{ url: `https://torquegirl.com${toyota2JzArticle.heroImage}`, width: 1536, height: 1024, alt: toyota2JzArticle.heroAlt }] },
+  twitter: { card: "summary_large_image", title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [`https://torquegirl.com${toyota2JzArticle.heroImage}`] },
 };
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
@@ -24,9 +24,9 @@ export default function Toyota2JzArticle() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: toyota2JzArticle.title, description: toyota2JzArticle.description, image: [`https://torquegirl.com${toyota2JzArticle.heroImage}`], datePublished: toyota2JzArticle.date, dateModified: toyota2JzArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines/" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines/"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINE LEGENDS</span><span>TOYOTA</span><span>{toyota2JzArticle.readingTime}</span></div><h1>{toyota2JzArticle.title}</h1><p className="article-dek">The 2JZ-GTE became famous through the Supra, but its real story is a combination of sound engineering, durability, tuning headroom and the culture built around it.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={toyota2JzArticle.date}>September 22, 2026</time></div><ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend/" /></header>
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINE LEGENDS</span><span>TOYOTA</span><span>{toyota2JzArticle.readingTime}</span></div><h1>{toyota2JzArticle.title}</h1><p className="article-dek">The 2JZ-GTE became famous through the Supra, but its real story is a combination of sound engineering, durability, tuning headroom and the culture built around it.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={toyota2JzArticle.date}>September 22, 2026</time></div><ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" /></header>
       <Figure src="/images/articles/torquegirl-2jz-gte-hero.png" alt={toyota2JzArticle.heroAlt} caption="TorqueGirl meets the long, straight-six architecture behind one of tuning's most enduring legends." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>WHY IT LASTED</span></aside><div className="article-body">
         <p className="lead-paragraph">Some engines become famous because they are rare. Some become famous because they win races. The Toyota 2JZ-GTE took a different route: it became a legend because a well-engineered production engine gave an entire generation of enthusiasts something unusually valuable—room to learn, modify and keep asking for more.</p>
@@ -71,11 +71,11 @@ export default function Toyota2JzArticle() {
         <h2>Final thoughts</h2>
         <p>Thirty years later, the Toyota 2JZ-GTE is still interesting because it rewards curiosity. Study the factory engine, then study the modified one. Ask where the heat goes, how the fuel gets there, why the turbo system is controlled, and which parts of a famous build are actually doing the work.</p>
         <p>That is the better version of the legend: not an unlimited-engine myth, but a machine that gives careful engineers a strong place to begin.</p>
-        <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger/"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
+        <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://global.toyota/en/detail/7868203" rel="noreferrer">Toyota: launch of the all-new Supra</a><a href="https://pressroom.toyota.com/2024-gr-supra-celebrates-45-years-of-legendary-power/" rel="noreferrer">Toyota USA: A80 Supra and 2JZ specifications</a><a href="https://toyotagazooracing.com/gr/heritage/a80_supra/" rel="noreferrer">Toyota Gazoo Racing: A80 Supra heritage</a><a href="https://www.toyota.co.jp/jpn/company/history/75years/vehicle_lineage/car/id60006850/" rel="noreferrer">Toyota historical vehicle data: Supra JZA80</a></div>
-        <ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend/" />
+        <ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines/">Engines</Link><Link href="/#about">About</Link><Link href="/#top">Privacy</Link><Link href="/#top">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

@@ -6,14 +6,14 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { nascarV8Article } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/engines/how-a-nascar-v8-engine-works/";
+const articleUrl = "https://torquegirl.com/engines/how-a-nascar-v8-engine-works";
 
 export const metadata: Metadata = {
   title: "How a NASCAR V8 Engine Works",
   description: nascarV8Article.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [{ url: nascarV8Article.heroImage, width: 1536, height: 1024, alt: nascarV8Article.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [nascarV8Article.heroImage] },
+  openGraph: { type: "article", url: articleUrl, title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [{ url: `https://torquegirl.com${nascarV8Article.heroImage}`, width: 1536, height: 1024, alt: nascarV8Article.heroAlt }] },
+  twitter: { card: "summary_large_image", title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [`https://torquegirl.com${nascarV8Article.heroImage}`] },
 };
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
@@ -24,9 +24,9 @@ export default function NascarV8Article() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: nascarV8Article.title, description: nascarV8Article.description, image: [`https://torquegirl.com${nascarV8Article.heroImage}`], datePublished: nascarV8Article.date, dateModified: nascarV8Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines/" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines" aria-current="page">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines/"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works/" /></header>
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" /></header>
       <Figure src="/images/articles/torquegirl-nascar-v8-hero.png" alt={nascarV8Article.heroAlt} caption="Torque Girl takes a closer look at the V8 heart of a stock car." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>HOW POWER BECOMES MOTION</span></aside><div className="article-body">
         <p className="lead-paragraph">A NASCAR Cup Series engine is interesting precisely because it is not a science-fiction machine. It uses a familiar four-stroke V8 layout, then pushes that architecture through careful optimization, strict rules and the brutal duty cycle of racing.</p>
@@ -71,11 +71,11 @@ export default function NascarV8Article() {
         <aside className="torquegirl-takeaway"><span>TORQUEGIRL TAKEAWAY</span><p>Good engineering isn't about using the most complicated solution. It's about making the right solution work exceptionally well.</p></aside>
         <h2>Final thoughts</h2>
         <p>The next time a stock car fires up, do not just hear noise. Think about airflow, combustion, friction, heat, torque and thousands of components working together at racing speed.</p>
-        <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger/"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
+        <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://media.ndms.nascar.com/nascar/2021/NextGen/NextGen-SpecSheet.pdf" rel="noreferrer">NASCAR Next Gen specification sheet</a><a href="https://www.nascar.com/news-media/2025/11/14/nascar-2026-rule-book-technical-updates/" rel="noreferrer">NASCAR 2026 technical updates</a><a href="https://www.hendrickmotorsports.com/news/2023/2/17/nascar-unveils-garage-56-livery-full-details-and-specs-of-car" rel="noreferrer">Hendrick Motorsports engine specifications</a></div>
-        <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works/" />
+        <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines/">Engines</Link><Link href="/#about">About</Link><Link href="/#top">Privacy</Link><Link href="/#top">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><a className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

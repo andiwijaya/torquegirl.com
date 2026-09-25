@@ -94,5 +94,31 @@ export const obd2DtcArticle: ArticleSummary = {
   heroAlt: "TorqueGirl reading OBD2 diagnostic trouble codes on an automotive scan tool.",
 };
 
+export const obd2LiveDataArticle: ArticleSummary = {
+  slug: "how-to-analyze-obd2-live-data-and-logs",
+  title: "How to Analyze OBD2 Live Data and Logs",
+  description: "Learn how to record and read OBD2 live-data logs, compare RPM, throttle, fuel trims, coolant and oxygen-sensor data, and find useful patterns without jumping to conclusions.",
+  category: "Technology",
+  topics: ["OBD2", "Live Data", "Diagnostics"],
+  date: "2026-09-23",
+  readingTime: "12 min read",
+  heroImage: "/images/articles/meter2.webp",
+  heroAlt: "Torque Girl reviewing synchronized OBD2 live-data graphs on a laptop in a workshop.",
+};
+
+export const offTrackGolfDay: ArticleSummary = {
+  slug: "golf-day",
+  title: "Off Track: Torque Girl’s Golf Day",
+  description: "Torque Girl steps away from machines for a day on the golf course—a short story about curiosity, focus, learning and enjoying something new.",
+  category: "Off Track",
+  topics: ["Golf", "Off Track", "Curiosity"],
+  date: "2026-09-24",
+  readingTime: "3 min read",
+  heroImage: "/images/articles/golf1.webp",
+  heroAlt: "Torque Girl choosing a golf club beside her golf bag on a quiet course.",
+};
+
+export const offTrackStories: ArticleSummary[] = [offTrackGolfDay];
+
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
-export const technologyArticles: ArticleSummary[] = [obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];
+export const technologyArticles: ArticleSummary[] = [obd2LiveDataArticle, obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];

@@ -11,8 +11,9 @@ type ArticleShareProps = {
 
 export function ArticleShare({ title, description, path }: ArticleShareProps) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
 
-  const getUrl = () => typeof window === "undefined" ? `https://torquegirl.com${path}` : `${window.location.origin}${path}`;
+  const getUrl = () => `https://torquegirl.com${path}`;
   const socialUrl = (platform: "whatsapp" | "facebook" | "x" | "linkedin") => {
     const url = encodeURIComponent(getUrl());
     const text = encodeURIComponent(title);
@@ -36,12 +37,29 @@ export function ArticleShare({ title, description, path }: ArticleShareProps) {
   }
 
   async function copyLink() {
+    const url = getUrl();
     try {
-      await navigator.clipboard.writeText(getUrl());
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const field = document.createElement("textarea");
+        field.value = url;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.appendChild(field);
+        field.select();
+        const success = document.execCommand("copy");
+        field.remove();
+        if (!success) throw new Error("Clipboard copy was not available");
+      }
       setCopied(true);
+      setCopyFailed(false);
       window.setTimeout(() => setCopied(false), 2200);
     } catch {
       setCopied(false);
+      setCopyFailed(true);
+      window.setTimeout(() => setCopyFailed(false), 3500);
     }
   }
 
@@ -63,7 +81,7 @@ export function ArticleShare({ title, description, path }: ArticleShareProps) {
           <a className="share-button share-social-button" href={socialUrl("linkedin")} target="_blank" rel="noreferrer" aria-label={`Share ${title} on LinkedIn`}>LINKEDIN</a>
         </div>
       </div>
-      <span className="sr-only" aria-live="polite">{copied ? "Link copied" : ""}</span>
+      <span className="sr-only" aria-live="polite">{copied ? "Link copied" : copyFailed ? "Could not copy link. You can copy it from the address bar." : ""}</span>
     </div>
   );
 }

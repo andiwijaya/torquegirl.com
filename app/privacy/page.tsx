@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { HomeLink } from "../../components/home-link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | TorqueGirl",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return <main className="site-shell article-shell">
-    <header className="site-header article-header"><Link className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><nav className="nav-links article-nav" aria-label="Main navigation"><Link href="/">Home</Link><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link></nav></header>
+    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link><Link className="nav-off-track" href="/off-track">Off Track</Link></nav></header>
     <article className="legal-page"><header className="legal-intro"><p className="eyebrow"><span className="eyebrow-line" />TorqueGirl / policy</p><h1>Privacy</h1><p>TorqueGirl is an English-language editorial website about machines, performance and engineering. This page explains the information that may be processed when you visit the site.</p><p className="legal-updated">Last updated: September 22, 2026</p></header><div className="legal-body">
       <h2>Website usage</h2><p>You can read TorqueGirl content without creating an account or submitting personal information. We do not intentionally ask visitors to provide sensitive personal information through this website.</p>
       <h2>Analytics</h2><p>TorqueGirl may use analytics tools to understand general website usage, such as which pages are visited, approximate device or browser information, and broad performance signals. Analytics help us improve editorial structure, accessibility and site performance.</p>
@@ -21,6 +22,6 @@ export default function PrivacyPage() {
       <h2>Policy updates</h2><p>We may update this policy when the website, analytics, hosting or legal requirements change. The updated version will be published on this page with a new date.</p>
       <p className="legal-note">This policy is general website information and is not legal advice.</p>
     </div></article>
-    <footer className="site-footer"><div className="footer-top"><Link className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
   </main>;
 }

@@ -25,13 +25,14 @@ The production build outputs the deployable site under `dist/client`. Cloudflare
 
 The homepage is organized around reusable editorial surfaces: explore categories, engineering scope, a future featured machine, and the TorqueGirl guide. Future routes can expand into `/machines/`, `/motorsport/`, `/engines/`, `/technology/`, `/comparisons/`, and `/learn/`, with article content modeled as flexible sections rather than fixed fields.
 
-## OBD2 Data Engine and Log Analyzer V1
+## OBD2 Data Engine V2 and Log Analyzer
 
-The local-only analyzer is at `/tools/obd2-log-analyzer`. Its reusable TypeScript engine is in `lib/obd`; no server endpoint receives logs. See [the implementation report](docs/OBD2-V1-IMPLEMENTATION-REPORT.md) for input contracts, normalization rules, benchmark evidence, limitations and handoff details.
+The local-only analyzer is at `/tools/obd2-log-analyzer`. Its reusable TypeScript engine is in `lib/obd`; no server endpoint receives logs. V2 adds a required import preview, explicit time/PID/unit mappings and local-only mapping templates. Logs remain in memory. See the [V2 mapping report](docs/OBD2-V2-IMPORT-MAPPING-REPORT.md) for contracts, compatibility limits, measurements and handoff details, and the [V1 baseline report](docs/OBD2-V1-IMPLEMENTATION-REPORT.md) for the original analyzer architecture.
 
 ```bash
 npm run test:obd
 npm run benchmark:obd
+npm run benchmark:obd-v2
 npm run typecheck
 npm run lint
 npm run build

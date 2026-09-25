@@ -1,0 +1,4 @@
+Device Time;GPS Time;Engine RPM(rpm);Coolant temperature(C);STFT Bank 2(%);O2 B2 S2(V);Custom PID
+12:00:00.0;12:00:00.0;800;80;0,5;0,2;ready
+12:00:00.2;12:00:00.2;900;;1,5;;run
+12:00:01.0;12:00:01.0;1000;81;2,5;0,7;run

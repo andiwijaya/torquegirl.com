@@ -10,6 +10,7 @@ test('production worker import, normalization, synchronized cursor, playback, so
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://torquegirl.com/tools/obd2-log-analyzer');
   await page.screenshot({ path: 'outputs/obd-desktop-empty.png', fullPage: true });
   await page.getByLabel('Choose CSV log').setInputFiles({ name: 'private-engine.csv', mimeType: 'text/csv', buffer: Buffer.from('Time (s),RPM,Vehicle speed (mph),Coolant temperature (F),Custom\n0,800,10,212,hello\n1,1000,20,,world\n2,2000,30,214,test\n20,2500,40,,end') });
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'What happened here?' })).toBeVisible();
   await expect(page.locator('.obd-chart')).toHaveCount(3);
   await expect(page.locator('.obd-reading').nth(1)).toContainText('16.09');
@@ -40,6 +41,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 844, height: 390 }
   test(`responsive ${viewport.width}×${viewport.height}, tap, selection and no overflow`, async ({ page }) => {
     await page.setViewportSize(viewport); await page.goto('/tools/obd2-log-analyzer');
     await page.getByRole('button', { name: 'Explore demo', exact: true }).click();
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
     await expect(page.locator('.obd-chart')).toHaveCount(3);
     await expect(page.locator('.obd-chart path').first()).toHaveAttribute('d', /M/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -69,6 +71,7 @@ test('large local file remains interactive; replace and cancel release workers',
   await page.evaluate(() => { (window as unknown as { ticks: number }).ticks = 0; setInterval(() => { (window as unknown as { ticks: number }).ticks++; }, 20); });
   const started = Date.now();
   await page.getByLabel('Choose CSV log').setInputFiles({ name: 'large.csv', mimeType: 'text/csv', buffer: Buffer.from(demoCsv(200_000)) });
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.locator('.obd-import')).toContainText('200,000 records');
   await expect(page.locator('.obd-chart path').first()).toHaveAttribute('d', /M/);
   const elapsed = Date.now() - started;
@@ -76,10 +79,12 @@ test('large local file remains interactive; replace and cancel release workers',
   console.log(JSON.stringify({ browserLargeLogImportMs: elapsed, uiTimerTicks: ticks }));
   expect(ticks).toBeGreaterThan(2);
   await page.getByRole('button', { name: 'Explore demo', exact: true }).click();
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.locator('.obd-import')).toContainText('1,200 records');
   await page.getByLabel('Choose CSV log').setInputFiles({ name: 'bad.csv', mimeType: 'text/csv', buffer: Buffer.from('not a log') });
   await expect(page.getByRole('alert')).toContainText('header row');
   await page.getByRole('button', { name: 'Explore demo', exact: true }).click();
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.locator('.obd-chart')).toHaveCount(3);
   await page.getByLabel('Choose CSV log').setInputFiles({ name: 'cancel.csv', mimeType: 'text/csv', buffer: Buffer.from(demoCsv(200_000)) });
   await page.getByRole('button', { name: 'Cancel import', exact: true }).click();
@@ -101,6 +106,7 @@ test('touch-screen chart inspection updates the synchronized state', async ({ br
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:5184/tools/obd2-log-analyzer');
   await page.getByRole('button', { name: 'Explore demo', exact: true }).tap();
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.locator('.obd-chart')).toHaveCount(3);
   await page.getByRole('slider', { name: 'Inspect Engine RPM (rpm)', exact: true }).tap({ position: { x: 180, y: 70 } });
   await expect.poll(async () => Number(await page.getByLabel('Log position', { exact: true }).inputValue())).toBeGreaterThan(30);

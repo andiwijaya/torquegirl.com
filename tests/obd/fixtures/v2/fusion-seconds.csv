@@ -1,0 +1,4 @@
+Time (sec),Engine RPM (rpm),Vehicle Speed (km/h),Absolute Throttle Position (%),Short Term Fuel Trim Bank 1 (%),Long Term Fuel Trim Bank 2 (%),MAP (kPa)
+0,800,0,10,1,2,35
+0.1,900,3,20,2,2,45
+0.3,1200,6,30,3,2,55

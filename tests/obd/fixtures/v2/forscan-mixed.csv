@@ -1,0 +1,4 @@
+time(ms),RPM,VSS(km/h),ECT(C),IAT(C),SHRTFT2(%),O2S21(V),Fuel pressure(psi),Manifold pressure(psi)
+0,800,0,80,25,1,0.1,43.5,14.7
+200,1000,10,,26,2,0.8,44,15
+500,1200,20,81,27,3,0.3,44.5,16

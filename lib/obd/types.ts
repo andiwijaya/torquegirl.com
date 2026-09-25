@@ -1,3 +1,4 @@
+import type { MappingConfig, MappingProvenance } from './mapping-types';
 export interface Signal {
   id: string;
   originalName: string;
@@ -5,6 +6,7 @@ export interface Signal {
   identity: string | null;
   unit: string | null;
   ambiguity: string | null;
+  provenance?: MappingProvenance;
   sourceValues: string[];
   values: (number | null)[];
   samples: Sample[];
@@ -25,8 +27,9 @@ export interface Log {
   format: string; delimiter: string; signals: Signal[];
   originalTimes: string[]; times: (number | null)[];
   quality: Quality; events: Observation[];
+  mapping?: MappingConfig;
 }
 export type SignalInfo = Omit<Signal, 'sourceValues' | 'values' | 'samples'>;
-export interface LogInfo { format: string; delimiter: string; signals: SignalInfo[]; quality: Quality; events: Observation[] }
+export interface LogInfo { format: string; delimiter: string; signals: SignalInfo[]; quality: Quality; events: Observation[]; mapping?: MappingConfig }
 export interface Reading { id: string; value: number | null; source: string | null; time: number | null; offset: number | null; stale: boolean }
 export interface Trace { id: string; points: { time: number; value: number | null }[]; min: number | null; max: number | null; average: number | null; count: number }

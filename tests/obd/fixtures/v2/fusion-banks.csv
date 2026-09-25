@@ -1,0 +1,4 @@
+Time (seconds),Engine Speed (rpm),Vehicle Speed (mph),Coolant Temperature (F),STFT Bank 1 (%),STFT Bank 2 (%),O2 B1 S2 (V),O2 B2 S1 (V),Lambda (ratio),AFR (ratio)
+0,800,10,212,1,2,0.1,0.2,1,14.7
+1,900,20,,2,3,0.2,0.3,0.99,14.55
+2,1000,30,214,3,4,0.3,0.4,1.01,14.85

@@ -3,6 +3,9 @@ import { identify } from './signals';
 import { median, parseTime, timeKind } from './time';
 import type { Log, LogInfo, Quality, Signal } from './types';
 import { timeGapDetector } from './events';
+import { mappedColumn, validateConfig } from './mapping';
+import type { MappingConfig } from './mapping-types';
+import { detectExporter } from './adapters';
 
 export interface FormatAdapter { id: string; matches(headers: string[]): boolean }
 export const adapters: FormatAdapter[] = [
@@ -11,22 +14,23 @@ export const adapters: FormatAdapter[] = [
   { id: 'Generic / OBD Fusion-compatible table', matches: () => true },
 ];
 
-export function parseLog(text: string): Log {
+export function parseLog(text: string, mapping?: MappingConfig): Log {
   if (text.length > LIMITS.bytes) throw new Error('Log exceeds the 25 MiB text limit.');
   const delimiter = detectDelimiter(text), iterator = records(text, delimiter);
   const first = iterator.next().value;
   if (!first || first.error || first.fields.length < 2) throw new Error('A header row and at least two delimited columns are required.');
   const headers: string[] = first.fields.map((s: string) => s.trim());
+  const configuration = mapping ? validateConfig(mapping, headers) : null;
   const quality: Quality = { parsed: 0, rejected: 0, missingTimes: 0, duplicateTimes: 0, backwardsTimes: 0, duration: 0, recognized: 0, unknown: 0, missingValues: 0, invalidValues: 0, intervalMin: null, intervalMedian: null, intervalMax: null, irregular: false, warnings: [], warningCount: 0, gaps: 0 };
   const warn = (s: string) => { quality.warningCount++; if (quality.warnings.length < 50) quality.warnings.push(s); };
   const timeColumns = headers.map((h, i) => timeKind(h) ? i : -1).filter(i => i >= 0);
-  const ti = timeColumns[0] ?? -1;
+  const ti = configuration ? configuration.time.index ?? -1 : timeColumns[0] ?? -1;
   if (ti < 0) warn('No supported time column. Source data is preserved, but time charts are unavailable. Use Time (s) or Time (ms).');
   if (timeColumns.length > 1) warn(`Multiple time columns: using “${headers[ti]}”; other columns are retained.`);
-  const kind = ti < 0 ? null : timeKind(headers[ti]);
+  const kind = ti < 0 ? null : configuration ? configuration.time.format === 'auto' ? 'unspecified' : configuration.time.format : timeKind(headers[ti]);
   if (kind === 'unspecified' || kind === 'date') warn('Bare numeric timestamps have no inferred unit. ISO dates and HH:MM:SS are accepted; offset-free ISO dates use UTC.');
-  const columns = headers.map((name, i) => ({ i, info: identify(name) })).filter(c => c.i !== ti);
-  const signals: Signal[] = columns.map(({ i, info }) => ({ id: `column-${i}`, originalName: headers[i] || `Unnamed column ${i + 1}`, originalUnit: info.originalUnit, identity: info.identity, unit: info.unit, ambiguity: info.ambiguity, sourceValues: [], values: [], samples: [], missing: 0, invalid: 0, cadence: null }));
+  const columns = headers.map((name, i) => ({ i, info: configuration ? mappedColumn(name, configuration, i, headers) : { ...identify(name), provenance: undefined } })).filter(c => c.i !== ti && (!configuration || configuration.columns[c.i].state !== 'ignore'));
+  const signals: Signal[] = columns.map(({ i, info }) => ({ id: `column-${i}`, originalName: headers[i] || `Unnamed column ${i + 1}`, originalUnit: info.originalUnit, identity: info.identity, unit: info.unit, ambiguity: info.ambiguity, provenance: info.provenance, sourceValues: [], values: [], samples: [], missing: 0, invalid: 0, cadence: null }));
   for (const signal of signals) {
     if (signal.identity) quality.recognized++; else quality.unknown++;
     if (signal.ambiguity) warn(`${signal.originalName}: ${signal.ambiguity}`);
@@ -35,7 +39,7 @@ export function parseLog(text: string): Log {
   // Decimal commas are accepted only for semicolon/tab records; comma-delimited values remain ambiguous.
   const decimal = delimiter !== ',';
   if (decimal) warn('Semicolon/tab numeric fields accept decimal commas; ambiguous groups such as 1,234 and thousands separators are rejected.');
-  const log: Log = { format: adapters.find(a => a.matches(headers))!.id, delimiter, signals, originalTimes: [], times: [], quality, events: [] };
+  const log: Log = { format: configuration ? detectExporter(headers).label : adapters.find(a => a.matches(headers))!.id, delimiter, signals, originalTimes: [], times: [], quality, events: [], mapping: configuration ?? undefined };
   let previous: number | null = null, minimum = Infinity, maximum = -Infinity;
   const seen = new Set<number>();
   for (const record of iterator) {
@@ -89,5 +93,5 @@ export function parseLog(text: string): Log {
 }
 
 export function describe(log: Log): LogInfo {
-  return { format: log.format, delimiter: log.delimiter, quality: log.quality, events: log.events, signals: log.signals.map(s => ({ id: s.id, originalName: s.originalName, originalUnit: s.originalUnit, identity: s.identity, unit: s.unit, ambiguity: s.ambiguity, missing: s.missing, invalid: s.invalid, cadence: s.cadence })) };
+  return { format: log.format, delimiter: log.delimiter, quality: log.quality, events: log.events, mapping: log.mapping, signals: log.signals.map(s => ({ id: s.id, originalName: s.originalName, originalUnit: s.originalUnit, identity: s.identity, unit: s.unit, ambiguity: s.ambiguity, missing: s.missing, invalid: s.invalid, cadence: s.cadence, provenance: s.provenance })) };
 }

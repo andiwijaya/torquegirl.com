@@ -1,0 +1,4 @@
+Time (s)	RPM	Vehicle speed (km/h)	Boost pressure (bar)	Fuel pressure (kPa)	IAT (C)	Custom
+0	800	0	0.1	300	25	A
+0.1	1000	10	0.2	310		B
+8	1200	20	0.3	320	26	C

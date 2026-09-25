@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from '../../../components/document-link';
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { ArticleShare } from "../../../components/article-share";
 import { offTrackGolfDay } from "../../../lib/torquegirl-content";

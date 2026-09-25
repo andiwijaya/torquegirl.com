@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../../components/document-link';
 import type { Metadata } from 'next';
 export const metadata: Metadata = { title: 'Automotive Data Tools', description: 'Explore TorqueGirl tools for understanding recorded automotive sensor data.', alternates: { canonical: 'https://torquegirl.com/tools' } };
 export default function ToolsPage() {

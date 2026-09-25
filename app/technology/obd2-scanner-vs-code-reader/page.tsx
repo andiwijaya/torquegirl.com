@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
-import Link from "next/link";
+import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { HomeLink } from "../../../components/home-link";

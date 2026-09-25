@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from '../../components/document-link';
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { ArrowUpRight } from "lucide-react";
 import { offTrackStories } from "../../lib/torquegirl-content";

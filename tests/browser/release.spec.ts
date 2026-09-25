@@ -56,3 +56,28 @@ test('fresh release analyzer uses a real worker and sends no analysis requests',
   expect(errors).toEqual([]);
   console.log(JSON.stringify({ releaseOrigin: origin, workerAssets: workers, offOriginRequests: 0, nonReadRequests: 0, runtimeErrors: errors.length }));
 });
+
+
+test('editorial links navigate into a fresh analytics-free analyzer document', async ({ page }) => {
+  test.setTimeout(120_000);
+  const errors: string[] = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+  for (const path of ['/tools', '/technology', '/technology/how-to-analyze-obd2-live-data-and-logs', '/technology/what-is-an-obd2-scanner', '/technology/obd2-scanner-vs-code-reader', '/technology/how-to-read-obd2-codes', '/privacy']) {
+    await page.goto(path);
+    const before = await page.evaluate(() => performance.timeOrigin);
+    await page.locator('a[href="/tools/obd2-log-analyzer"]').first().click();
+    await expect(page).toHaveURL(`${origin}/tools/obd2-log-analyzer`);
+    await expect(page.getByLabel('Choose CSV log', { exact: true })).toBeVisible();
+    expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(before);
+    await expect(page.locator('script[src*="googletagmanager"],script[src*="cloudflareinsights"]')).toHaveCount(0);
+  }
+  const requests: string[] = [];
+  page.on('request', r => { if (new URL(r.url()).origin !== origin) requests.push(r.url()); });
+  await page.getByRole('button', { name: 'Explore demo', exact: true }).click();
+  await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
+  await expect(page.locator('.obd-chart path').first()).toHaveAttribute('d', /M/);
+  await page.waitForTimeout(1000);
+  expect(requests).toEqual([]);
+  expect(errors).toEqual([]);
+});

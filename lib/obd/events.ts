@@ -1,4 +1,10 @@
-import type { Observation } from './types';
+import type { Log, Observation } from './types';
+
+/** Signal-aware detectors complement timeline detectors; their output remains observational. */
+export interface LogObservationDetector<T> {
+  id: string; requiredInputs: string; rule: string; suppression: string; limitations: string;
+  detect(log: Log): T;
+}
 
 export interface TimelineContext { orderedTimes: number[]; origin: number; medianInterval: number | null }
 export interface ObservationDetector {

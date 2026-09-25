@@ -6,6 +6,8 @@ import ObdWorker from '../../lib/obd/worker?worker';
 import { demoCsv } from '../../lib/obd/demo';
 import type { LogInfo, Reading, SignalInfo, Trace } from '../../lib/obd/types';
 import ImportPreview from './import-preview';
+import DriveAnalysis from './drive-analysis';
+import type { Segment } from '../../lib/obd/drive';
 import type { ImportPreview as Preview } from '../../lib/obd/mapping';
 import type { MappingConfig } from '../../lib/obd/mapping-types';
 
@@ -52,26 +54,28 @@ function Chart({ signal, data, reading, color, range, cursor, onInspect }: { sig
 
 export default function Analyzer() {
   const client = useRef<LogWorkerClient | null>(null);
+  const [activeClient, setActiveClient] = useState<LogWorkerClient | null>(null);
   const [info, setInfo] = useState<LogInfo | null>(null), [name, setName] = useState('');
   const [busy, setBusy] = useState(false), [error, setError] = useState('');
   const [preview, setPreview] = useState<Preview | null>(null);
   const [selected, setSelected] = useState<string[]>([]), [filter, setFilter] = useState('');
   const [range, setRange] = useState<[number, number]>([0, 1]), [cursor, setCursor] = useState(0);
   const [traces, setTraces] = useState<Trace[]>([]), [readings, setReadings] = useState<Reading[]>([]);
+  const [phase, setPhase] = useState<Segment | null>(null);
   const [playing, setPlaying] = useState(false), [speed, setSpeed] = useState(1);
   const duration = info?.quality.duration ?? 0;
   useEffect(() => () => client.current?.dispose(), []);
   const load = async (file: Blob, label: string) => {
     client.current?.dispose();
-    setPlaying(false); setBusy(true); setError(''); setInfo(null); setPreview(null); setTraces([]); setReadings([]); setCursor(0); setName(label);
+    setPlaying(false); setBusy(true); setError(''); setInfo(null); setPreview(null); setTraces([]); setReadings([]); setPhase(null); setCursor(0); setName(label);
     let next: LogWorkerClient | null = null;
     try {
       next = new LogWorkerClient(new ObdWorker());
-      client.current = next;
+      client.current = next; setActiveClient(next);
       const response = await next.request({ kind: 'load', file });
       if (client.current !== next || !('kind' in response) || response.kind !== 'preview') return;
       setPreview(response.preview);
-    } catch (e) { if (client.current === next) { setError(e instanceof Error ? e.message : 'Import failed.'); setBusy(false); next?.dispose(); client.current = null; } }
+    } catch (e) { if (client.current === next) { setError(e instanceof Error ? e.message : 'Import failed.'); setBusy(false); next?.dispose(); client.current = null; setActiveClient(null); } }
     finally { if (client.current === next) setBusy(false); }
   };
   const reprocess = async (config?: MappingConfig): Promise<Preview | null> => {
@@ -106,7 +110,7 @@ export default function Analyzer() {
   useEffect(() => {
     if (!info || !client.current) return;
     let active = true;
-    client.current.request({ kind: 'inspect', time: cursor }).then(r => { if (active && 'kind' in r && r.kind === 'inspect') setReadings(r.readings); }).catch(e => { if (active) setError(e.message); });
+    client.current.request({ kind: 'inspect', time: cursor }).then(r => { if (active && 'kind' in r && r.kind === 'inspect') { setReadings(r.readings); setPhase(r.phase ?? null); } }).catch(e => { if (active) setError(e.message); });
     return () => { active = false; };
   }, [info, cursor]);
   const ended = cursor >= duration;
@@ -133,7 +137,7 @@ export default function Analyzer() {
       {!importInfo && <p className="obd-import-note">CSV / TSV · up to 25 MiB, 250,000 records, 2 million cells · comma, semicolon or tab</p>}
     </section>
     <p className="obd-privacy">◉ Your log stays in memory in this browser. Only mapping templates you explicitly save persist locally. Nothing is uploaded.</p>
-    {busy && <div className="obd-notice" role="status">Preparing your data in the background… <button onClick={() => { client.current?.dispose(); client.current = null; setBusy(false); setPreview(null); setInfo(null); setPlaying(false); setError(''); }}>Cancel import</button></div>}
+    {busy && <div className="obd-notice" role="status">Preparing your data in the background… <button onClick={() => { client.current?.dispose(); client.current = null; setActiveClient(null); setBusy(false); setPreview(null); setInfo(null); setPlaying(false); setError(''); }}>Cancel import</button></div>}
     {error && <p className="obd-error" role="alert">{error}</p>}
     {preview && <ImportPreview preview={preview} busy={busy} onReprocess={reprocess} onAccept={() => void accept()} onBack={info ? () => { setPreview(null); setError(''); } : undefined} />}
     {!info && !preview && !busy && <div className="obd-empty-grid"><section><span>02 / UNDERSTAND</span><h3>Trust the timeline.</h3><p>See missing samples, recording gaps and uncertain units before reading a chart.</p></section><section><span>03 / INSPECT</span><h3>What happened here?</h3><p>Tap a moment to see synchronized readings, their source times and how old they are.</p></section><section><span>04 / EXPLORE</span><h3>Follow the relationships.</h3><p>Replay real elapsed time. Compare RPM, throttle and the signals your file contains.</p></section></div>}
@@ -156,9 +160,10 @@ export default function Analyzer() {
           <div className="obd-playback"><button className="obd-primary" disabled={!duration} onClick={() => { if (isPlaying) setPlaying(false); else { if (cursor >= duration) setCursor(0); setPlaying(true); } }}>{isPlaying ? 'Pause' : 'Play'}</button><output aria-label="Cursor time">{clock(cursor)}</output><label className="obd-scrub">Log position<input aria-label="Log position" type="range" min="0" max={duration || 1} step="0.01" value={cursor} disabled={!duration} onChange={e => inspect(+e.target.value)} /></label><label>Speed<select aria-label="Playback speed" value={speed} onChange={e => setSpeed(+e.target.value)}>{[0.25, 1, 2, 5, 10].map(v => <option key={v} value={v}>{v}×</option>)}</select></label></div>
           <p className="obd-footnote">Playback respects elapsed time, including gaps. View statistics use full-resolution samples; the mean is sample-weighted, not time-weighted.</p>
         </div>
-        <aside className="obd-state"><div className="obd-state-title"><span className="obd-kicker">04 / VEHICLE STATE</span><h2>What happened here?</h2><output>{clock(cursor)}</output></div><p>Nearest recorded value. No interpolation. Signed Δ is sample time minus cursor time.</p><div className="obd-readings">{selected.map((id, i) => { const s = info.signals.find(s => s.id === id)!, r = readings.find(r => r.id === id); return <div className={`obd-reading ${r?.stale ? 'is-stale' : ''}`} key={id} style={{ borderLeftColor: colors[i] }}><span>{s.originalName}</span><strong>{number(r?.value)} <small>{s.unit ?? 'unit unknown'}</small></strong>{r?.time != null ? <><small>Sample {clock(r.time)} · Δ {r.offset! > 0 ? '+' : ''}{number(r.offset)} s {r.stale ? '· STALE' : ''}</small><small>Source: {r.source} {s.originalUnit ?? ''}</small>{s.provenance?.state === 'user' && <small>Interpreted as: {s.provenance.interpretedUnit ?? 'native / unknown'}</small>}</> : <small>No numeric sample with a valid timestamp</small>}{s.ambiguity && <small className="obd-ambiguity">{s.ambiguity}</small>}</div>; })}</div><details><summary>How readings are selected</summary><p>Closest numeric sample in either direction; ties choose the earlier time. Duplicate times use the first original row. A reading is stale beyond the larger of 2 seconds or 3× that signal’s median positive interval. A future sample has a positive Δ. Stale values remain visible.</p></details></aside>
+        <aside className="obd-state"><div className="obd-state-title"><span className="obd-kicker">04 / VEHICLE STATE</span><h2>What happened here?</h2><output>{clock(cursor)}</output></div><p>Nearest recorded value. No interpolation. Signed Δ is sample time minus cursor time.</p><div className="obd-phase-context" data-testid="current-phase"><strong>Phase: {phase?.phase ?? 'unclassified'}</strong>{phase && <><p>{clock(phase.start)}–{clock(phase.end)} · {number(phase.duration)} s</p><small>{phase.evidence}</small><p>Phase boundary at {clock(phase.start)}; a deterministic observation, not a fault.</p></>}</div><div className="obd-readings">{selected.map((id, i) => { const s = info.signals.find(s => s.id === id)!, r = readings.find(r => r.id === id); return <div className={`obd-reading ${r?.stale ? 'is-stale' : ''}`} key={id} style={{ borderLeftColor: colors[i] }}><span>{s.originalName}</span><strong>{number(r?.value)} <small>{s.unit ?? 'unit unknown'}</small></strong>{r?.time != null ? <><small>Sample {clock(r.time)} · Δ {r.offset! > 0 ? '+' : ''}{number(r.offset)} s {r.stale ? '· STALE' : ''}</small><small>Source: {r.source} {s.originalUnit ?? ''}</small>{s.provenance?.state === 'user' && <small>Interpreted as: {s.provenance.interpretedUnit ?? 'native / unknown'}</small>}</> : <small>No numeric sample with a valid timestamp</small>}{s.ambiguity && <small className="obd-ambiguity">{s.ambiguity}</small>}</div>; })}</div><details><summary>How readings are selected</summary><p>Closest numeric sample in either direction; ties choose the earlier time. Duplicate times use the first original row. A reading is stale beyond the larger of 2 seconds or 3× that signal’s median positive interval. A future sample has a positive Δ. Stale values remain visible.</p></details></aside>
       </div>
-      <section className="obd-events"><div><span className="obd-kicker">05 / OBSERVATIONS</span><h2>Markers, with evidence.</h2><p>Recording gaps only in V1: greater than max(5 seconds, 5× median positive interval). These are data observations, not vehicle faults.</p></div><div>{info.events.length ? info.events.map((event, i) => <button key={i} onClick={() => { inspect(event.time); setRange([Math.max(0, event.start - 5), Math.min(duration, event.time + 5)]); }}>{clock(event.time)} <span>{event.label}</span> ↗</button>) : <p>No gaps meeting this rule.</p>}</div></section>
+      <section className="obd-events"><div><span className="obd-kicker">05 / OBSERVATIONS</span><h2>Markers, with evidence.</h2><p>Recording-gap rule: greater than max(5 seconds, 5× median positive interval). These are data observations, not vehicle faults.</p></div><div>{info.events.length ? info.events.map((event, i) => <button key={i} onClick={() => { inspect(event.time); setRange([Math.max(0, event.start - 5), Math.min(duration, event.time + 5)]); }}>{clock(event.time)} <span>{event.label}</span> ↗</button>) : <p>No gaps meeting this rule.</p>}</div></section>
     </>}
+    {info && activeClient && <div hidden={!!preview}><DriveAnalysis client={activeClient} info={info} name={name} onInspect={inspect} onCancel={() => { client.current?.dispose(); client.current = null; setActiveClient(null); setInfo(null); setPreview(null); setBusy(false); setPlaying(false); setError(''); setPhase(null); }} /></div>}
   </div>;
 }

@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import { ImportSession } from '../lib/obd/import-session';
+import { phases, region, compare, relationship, comparisonTraces } from '../lib/obd/drive';
+import { driveCsv } from '../lib/obd/drive-demo';
+const aText = driveCsv({ mode: 'cruise', rows: 200_000 }), bText = driveCsv({ mode: 'cruise', rows: 200_000, trim: 4.3, start: 1_000_000 });
+const timings: Record<string, number> = {};
+function timed<T>(name: string, fn: () => T) { const t = performance.now(), value = fn(); timings[name] = +(performance.now() - t).toFixed(1); return value; }
+const heap = process.memoryUsage().heapUsed;
+const a = new ImportSession(), b = new ImportSession();
+timed('twoImportsMs', () => { const x = a.load(aText); a.commit(x.revision); const y = b.load(bText); b.commit(y.revision); });
+const [sa, sb] = timed('twoSegmentationsMs', () => [phases(a.log!), phases(b.log!)]);
+assert.equal(sa[0].phase, 'cruise'); assert.equal(sb[0].phase, 'cruise');
+timed('twoRegionStatisticsMs', () => [region(a.log!, sa[0]), region(b.log!, sb[0])]);
+const match = timed('contextMatchingAndChangesMs', () => compare(a.log!, b.log!, sa[0], sb[0]));
+assert.equal(match.state, 'GOOD MATCH'); assert.ok(Math.abs(match.changes.find(c => c.identity === 'ltft-bank-1')!.delta + 6.5) < 1e-9);
+const rel = timed('pairingCorrelationAndScatterMs', () => relationship(a.log!, sa[0], 'column-2', 'column-7'));
+assert.equal(rel.count, 200_000); assert.ok(rel.pearson! > 0.999999); assert.ok(rel.points.length <= 1000);
+const plots = timed('matchingAndTwoTracesMs', () => comparisonTraces(a.log!, b.log!, sa[0], sb[0], 'rpm'));
+assert.ok(plots.a.points.length <= 800); assert.equal(plots.a.count, 200_000);
+console.log(JSON.stringify({ rowsPerRun: 200_000, totalCells: 3_600_000, bytes: [Buffer.byteLength(aText), Buffer.byteLength(bText)], ...timings, heapDeltaMiB: +((process.memoryUsage().heapUsed - heap) / 1024 ** 2).toFixed(1), scatterPoints: rel.points.length, tracePoints: [plots.a.points.length, plots.b.points.length], paired: rel.count, pearson: rel.pearson, node: process.version, platform: process.platform }, null, 2));

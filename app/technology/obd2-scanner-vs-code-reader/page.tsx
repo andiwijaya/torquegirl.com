@@ -33,7 +33,7 @@ export default function Obd2ComparisonArticle() {
         <p>The useful answer is not “the bigger screen is better.” It is that the tools may be able to ask different questions of the vehicle. A basic code reader tells you what the car reported. A more capable scan tool gives you more information to investigate why it happened.</p>
         <p>If you need the fundamentals first, start with <Link className="inline-article-link" href="/technology/what-is-an-obd2-scanner">What Is an OBD2 Scanner? A Beginner's Guide to Diagnosing Your Car</Link>. This article moves to the next question: what kind of tool actually fits the diagnosis you want to perform?</p>
 
-        <h2>First, the terminology is messy</h2>
+        <p>Have a CSV or TSV recording? Open the <Link className="inline-article-link" href="/tools/obd2-log-analyzer">TorqueGirl OBD2 Log Analyzer</Link> to review its mapping, inspect the timeline and compare operating regions locally in your browser.</p><h2>First, the terminology is messy</h2>
         <p>In everyday conversation, “OBD2 scanner,” “OBD2 reader,” “code reader,” “diagnostic scanner,” and “scan tool” are often used interchangeably. Retail listings do the same. The label on the box is therefore less useful than the capability list behind it.</p>
         <p>For this comparison, TorqueGirl will use <strong>basic code reader</strong> for a simpler tool focused mainly on generic OBD2 engine and emissions information. We’ll use <strong>advanced scan tool</strong> for a more capable device that may access additional modules, enhanced data, service functions, or bidirectional controls—depending on the exact vehicle, manufacturer coverage, and software level.</p>
 

@@ -1,0 +1,18 @@
+import { performance } from 'node:perf_hooks';
+import { ImportSession } from '../lib/obd/import-session';
+import { demoCsv } from '../lib/obd/demo';
+import { nearest, trace } from '../lib/obd/analysis';
+import assert from 'node:assert/strict';
+const rows = 200_000, text = demoCsv(rows), session = new ImportSession();
+const before = process.memoryUsage().heapUsed, t0 = performance.now(), preview = session.load(text), t1 = performance.now();
+session.commit(preview.revision);
+const config = structuredClone(preview.config); config.time = { index: 0, format: 'ms', source: 'user' };
+config.columns[2] = { ...config.columns[2], state: 'user', unit: 'mph', via: 'manual' };
+const remapped = session.remap(config), t2 = performance.now(); session.commit(remapped.revision);
+const s = session.log!.signals.find(s => s.identity === 'speed')!;
+assert.equal(s.values[1], Number(s.sourceValues[1]) * 1.609344);
+assert.equal(session.log!.quality.duration, preview.info.quality.duration / 1000);
+const views = session.log!.signals.slice(0, 6).map(s => trace(s, 0, session.log!.quality.duration)), t3 = performance.now();
+for (let i = 0; i < 1000; i++) for (const s of session.log!.signals) nearest(s, i / 1000 * session.log!.quality.duration);
+const t4 = performance.now();
+console.log(JSON.stringify({ rows, cells: rows * 9, bytes: Buffer.byteLength(text), previewMs: +(t1 - t0).toFixed(1), remapMs: +(t2 - t1).toFixed(1), sixChartsMs: +(t3 - t2).toFixed(1), thousandSnapshotsMs: +(t4 - t3).toFixed(1), heapDeltaMiB: +((process.memoryUsage().heapUsed - before) / 1024 / 1024).toFixed(1), maxChartPoints: Math.max(...views.map(v => v.points.length)), sourceTruthVerified: true, node: process.version, platform: process.platform }, null, 2));

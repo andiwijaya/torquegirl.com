@@ -1,0 +1,5 @@
+Ticks,RPM,Unknown speed,Manifold pressure(psi),Reading,Reading,Custom text
+0,800,60,14.7,1,2,secret-row-A
+1000,1000,70,15,2,3,secret-row-B
+2000,1200,80,16,,4,secret-row-C
+malformed,record

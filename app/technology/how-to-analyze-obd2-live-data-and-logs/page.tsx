@@ -58,7 +58,7 @@ export default function Obd2LiveDataArticle() {
         </tbody></table></div>
         <p className="comparison-note">Names, units, scaling, bank numbers, and sensor behavior vary. Confirm what a channel means for your exact vehicle and scanner before comparing it with a specification.</p>
 
-        <h2>Step 2: Turn the log into something you can see</h2>
+        <p>Have a CSV or TSV recording? Open the <Link className="inline-article-link" href="/tools/obd2-log-analyzer">TorqueGirl OBD2 Log Analyzer</Link> to review its mapping, inspect the timeline and compare operating regions locally in your browser.</p><h2>Step 2: Turn the log into something you can see</h2>
         <Figure src="/images/articles/meter2.webp" alt="Torque Girl reviewing synchronized OBD2 live-data graphs for RPM, speed, throttle, coolant temperature, fuel trims, and oxygen-sensor data on a laptop." caption="Plotting multiple channels on the same timeline turns a wall of numbers into vehicle behavior you can actually investigate." />
         <p>A table is useful for exact values, but thousands of rows make trends hard to spot. A time-series graph places <strong>time on the X-axis</strong> and a sensor value on the <strong>Y-axis</strong>. Peaks, plateaus, sudden changes, and repeating patterns become easier to see.</p>
         <p>Put related channels on a shared time axis. If RPM, throttle, speed, and fuel-control data are synchronized, a cursor at one moment can show what each was reporting at that same point. Separate graphs with unrelated time scales can make events look connected when they were not.</p>

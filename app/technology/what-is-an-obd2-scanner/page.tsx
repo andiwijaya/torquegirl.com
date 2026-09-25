@@ -33,7 +33,7 @@ export default function Obd2ScannerArticle() {
         <p className="lead-paragraph">A check-engine light can turn a normal drive into a guessing game. Is it a loose fuel cap, an ignition problem, an emissions fault, or something more urgent? An OBD2 scanner gives you a way to ask the vehicle’s onboard computer what it has noticed before you start replacing parts.</p>
         <p>That distinction matters. A scanner is a diagnostic starting point, not a magical device that names the failed component. The useful skill is learning how to turn a code into a sensible next test.</p>
 
-        <h2>What is OBD2?</h2>
+        <p>Have a CSV or TSV recording? Open the <Link className="inline-article-link" href="/tools/obd2-log-analyzer">TorqueGirl OBD2 Log Analyzer</Link> to review its mapping, inspect the timeline and compare operating regions locally in your browser.</p><h2>What is OBD2?</h2>
         <p>OBD means On-Board Diagnostics. OBD2, also written OBD-II, is the standardized diagnostic system used by modern vehicles to monitor emissions-related systems and powertrain operation. It gives a compatible scan tool a common way to request information from the vehicle.</p>
         <p>That standardization is why one basic code reader can work across many makes and models for generic engine and emissions data. The coverage is not unlimited, though. Manufacturer-specific modules and functions may use different data, access rules, and tool capabilities.</p>
         <p>The system watches sensors and control systems while the car operates. When it detects an abnormal condition, it can store a Diagnostic Trouble Code (DTC), capture supporting information, and—in the right circumstances—command the malfunction indicator lamp.</p>

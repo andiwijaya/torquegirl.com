@@ -1,0 +1,4 @@
+Device Time,Engine RPM(rpm),Speed (OBD)(mph),Engine Coolant Temp(°F),Short Term Fuel Trim Bank 1(%),O2 B1 S1(V),Turbo Boost & Vacuum Gauge(psi)
+2026-09-25 12:00:00.000,800,0,176,1,0.1,-8
+2026-09-25 12:00:00.250,1200,10,,2,0.8,-6
+2026-09-25 12:00:01.000,1600,20,178,3,0.3,-4

@@ -1,0 +1,7 @@
+import type { LogInfo, Reading, Trace } from './types';
+import type { MappingConfig } from './mapping-types';
+import type { ImportPreview } from './mapping';
+import type { PhaseSummary, Segment, Region, Comparison, Relationship } from './drive';
+import type { Run } from './drive-session';
+export type Request = { id: number; run?: Run } & ({ kind: 'load'; file: Blob } | { kind: 'remap'; config: MappingConfig } | { kind: 'commit'; revision: number } | { kind: 'review' } | { kind: 'view'; signals: string[]; start: number; end: number } | { kind: 'inspect'; time: number } | { kind: 'phases'; offset?: number } | { kind: 'region'; segment: number } | { kind: 'compare'; a: number; b: number } | { kind: 'comparison-traces'; a: number; b: number; identity: string } | { kind: 'relationship'; segment: number; x: string; y: string; tolerance: number } | { kind: 'clear-b' });
+export type Response = { id: number; error: string } | { id: number; kind: 'preview'; preview: ImportPreview } | { id: number; kind: 'commit'; info: LogInfo } | { id: number; kind: 'view'; traces: Trace[] } | { id: number; kind: 'inspect'; readings: Reading[]; phase?: Segment | null } | { id: number; kind: 'phases'; summary: PhaseSummary } | { id: number; kind: 'region'; region: Region } | { id: number; kind: 'compare'; comparison: Comparison } | { id: number; kind: 'comparison-traces'; traces: { a: Trace; b: Trace } } | { id: number; kind: 'relationship'; relationship: Relationship } | { id: number; kind: 'clear-b' };

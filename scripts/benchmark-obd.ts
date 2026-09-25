@@ -1,0 +1,11 @@
+import { performance } from 'node:perf_hooks';
+import { parseLog } from '../lib/obd/engine';
+import { nearest, trace } from '../lib/obd/analysis';
+import { demoCsv } from '../lib/obd/demo';
+const rows = 200_000, csv = demoCsv(rows);
+const before = process.memoryUsage().heapUsed, t0 = performance.now(), log = parseLog(csv), t1 = performance.now();
+const views = log.signals.slice(0, 6).map(s => trace(s, 0, log.quality.duration));
+const t2 = performance.now();
+for (let i = 0; i < 1000; i++) for (const signal of log.signals) nearest(signal, i / 1000 * log.quality.duration);
+const t3 = performance.now();
+console.log(JSON.stringify({ rows, cells: rows * 9, bytes: Buffer.byteLength(csv), parseMs: +(t1 - t0).toFixed(1), sixChartsMs: +(t2 - t1).toFixed(1), thousandSnapshotsMs: +(t3 - t2).toFixed(1), heapDeltaMiB: +((process.memoryUsage().heapUsed - before) / 1024 / 1024).toFixed(1), maxChartPoints: Math.max(...views.map(v => v.points.length)), node: process.version, platform: process.platform }, null, 2));

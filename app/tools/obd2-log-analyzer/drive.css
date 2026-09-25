@@ -1,0 +1,30 @@
+.drive-analysis { margin: 36px 0; padding: 24px; background: #131c25; border: 1px solid #34414e; border-radius: 16px; color: #dbe5ee; }
+.drive-analysis h2 { margin: 10px 0; font-size: clamp(24px, 4vw, 36px); }
+.drive-analysis p, .drive-analysis li { line-height: 1.65; overflow-wrap: anywhere; }
+.drive-analysis summary { padding: 14px 0; cursor: pointer; font-weight: 700; min-height: 44px; }
+.drive-controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin: 16px 0; }
+.drive-controls > * { flex: 1 1 240px; min-width: 0; }
+.drive-controls label { display: flex; flex-direction: column; gap: 8px; }
+.drive-analysis select, .drive-analysis input[type=number] { width: 100%; min-height: 44px; padding: 10px; background: #0c141c; color: #edf3f9; border: 1px solid #536271; border-radius: 6px; min-width: 0; }
+.drive-analysis button { min-height: 44px; white-space: normal; }
+.drive-analysis input[type=file] { width: 100%; max-width: 100%; }
+.drive-run { align-self: stretch; border-top: 3px solid #5baaff; padding-top: 12px; }
+.drive-run.run-B { border-color: #f3bc5b; }
+.drive-region h4, .drive-run-name { overflow-wrap: anywhere; }
+.drive-advanced { border-top: 1px solid #34414e; margin-top: 18px; }
+.drive-result { margin-top: 24px; }
+.drive-match { display: inline-block; padding: 10px 14px; border: 1px solid #7d9bab; border-radius: 6px; }
+.drive-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 16px 0; max-height: 540px; overflow-y: auto; }
+.drive-stat-grid article { display: flex; flex-direction: column; gap: 8px; background: #0c141c; padding: 16px; border: 1px solid #303e4b; border-radius: 8px; overflow-wrap: anywhere; }
+.drive-stat-grid small, .drive-axis { color: #b4c3cf; }
+.drive-plot { margin: 12px 0; min-width: 0; background: #0c141c; padding: 12px; border-radius: 8px; }
+.drive-plot svg { display: block; width: 100%; height: auto; max-height: 400px; }
+.drive-plot figcaption { font-weight: 700; overflow-wrap: anywhere; }
+.drive-axis { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 12px; }
+.drive-b-preview .mapping-accept { position: static; }
+.obd-phase-context { border-left: 3px solid #52d6b1; padding: 10px; margin-bottom: 14px; }
+@media (max-width: 600px) { .drive-analysis { padding: 14px; } .drive-controls > * { flex-basis: 100%; } .drive-stat-grid { grid-template-columns: 1fr; } }
+
+.drive-analysis h3 { font-size: 18px; font-weight: 700; margin: 20px 0 12px; }
+.drive-analysis h4 { font-weight: 700; margin: 14px 0; }
+@media (max-height: 500px) and (orientation: landscape) { .drive-plot svg { max-height: 220px; } }

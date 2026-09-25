@@ -1,0 +1,4 @@
+Time (s),Engine RPM (rpm),Vehicle speed (km/h),Throttle position (%),Coolant temperature (C)
+0,800,0,10,85
+1,1600,20,35,86
+2,2400,40,60,87

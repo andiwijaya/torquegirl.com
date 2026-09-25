@@ -58,7 +58,7 @@ export default function Obd2DtcArticle() {
         <div className="technical-note"><span>P0171</span><strong>System Too Lean, Bank 1</strong><p>Consider unmetered air, intake or vacuum leaks, fuel delivery, sensor information, and exhaust or air-measurement issues depending on the system.</p></div>
         <div className="technical-note"><span>P0420</span><strong>Catalyst System Efficiency Below Threshold, Bank 1</strong><p>Consider sensor data, exhaust leaks, engine operating condition, misfire history, fuel-control problems, and catalyst condition before concluding that the converter is the failed part.</p></div>
 
-        <h2>Stored, pending and permanent codes</h2>
+        <p>Have a recorded sensor log? Use the <Link className="inline-article-link" href="/tools/obd2-log-analyzer">TorqueGirl OBD2 Log Analyzer</Link> to inspect sensor relationships and recording quality alongside your diagnostic context.</p><h2>Stored, pending and permanent codes</h2>
         <p>A scanner may show different states. A <strong>stored or confirmed</strong> code means the vehicle recorded a fault that met its criteria. A <strong>pending</strong> code is an early or intermittent observation that may become confirmed if the condition repeats. A <strong>permanent</strong> emissions-related code has a different clearing behavior: it cannot simply be manually erased with a scanner and is tied to the vehicle's monitoring and verification process.</p>
 
         <h2>What is freeze-frame data?</h2>

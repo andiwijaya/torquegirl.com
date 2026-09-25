@@ -1,0 +1,10 @@
+Time (ms),RPM,STFT Bank 1 (%),Custom PID (widgets),Custom PID (widgets)
+0,800,1,5,A
+100,900,,6,B
+100,950,,7,C
+50,880,2,8,D
+,1000,3,9,E
+200,1100,,10,F
+12200,1200,4,11,G
+bad,row
+12300,1250,N/A,12,H

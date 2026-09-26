@@ -7,6 +7,7 @@ import { demoCsv } from '../../lib/obd/demo';
 import type { LogInfo, Reading, SignalInfo, Trace } from '../../lib/obd/types';
 import ImportPreview from './import-preview';
 import DriveAnalysis from './drive-analysis';
+import { ShareToolButton } from './share-tool-button';
 import type { Segment } from '../../lib/obd/drive';
 import type { ImportPreview as Preview } from '../../lib/obd/mapping';
 import type { MappingConfig } from '../../lib/obd/mapping-types';
@@ -133,7 +134,7 @@ export default function Analyzer() {
   return <div className="obd-app">
     <section className={`obd-import ${importInfo ? 'obd-import-compact' : ''}`} aria-label="Import a log">
       <div><span className="obd-kicker">01 / IMPORT</span><h2>{importInfo ? name : 'Every drive tells a story.'}</h2><p>{importInfo ? `${importInfo.format} · ${number(importInfo.quality.parsed)} records · ${clock(importInfo.quality.duration)}` : 'Bring your recorded data. Explore what the sensors actually saw.'}</p></div>
-      <div className="obd-import-actions"><label className="obd-button obd-primary">{busy ? 'Replace file' : importInfo ? 'Open another log' : 'Choose a CSV log'}<input aria-label="Choose CSV log" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" onChange={e => { const f = e.target.files?.[0]; if (f) void load(f, f.name); e.target.value = ''; }} /></label><button onClick={() => void load(new Blob([demoCsv()], { type: 'text/csv' }), 'Synthetic demo · illustrative data')}>Explore demo</button></div>
+      <div className="obd-import-actions"><label className="obd-button obd-primary">{busy ? 'Replace file' : importInfo ? 'Open another log' : 'Choose a CSV log'}<input aria-label="Choose CSV log" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" onChange={e => { const f = e.target.files?.[0]; if (f) void load(f, f.name); e.target.value = ''; }} /></label><button onClick={() => void load(new Blob([demoCsv()], { type: 'text/csv' }), 'Synthetic demo · illustrative data')}>Explore demo</button><ShareToolButton /></div>
       {!importInfo && <p className="obd-import-note">CSV / TSV · up to 25 MiB, 250,000 records, 2 million cells · comma, semicolon or tab</p>}
     </section>
     <p className="obd-privacy">◉ Your log stays in memory in this browser. Only mapping templates you explicitly save persist locally. Nothing is uploaded.</p>

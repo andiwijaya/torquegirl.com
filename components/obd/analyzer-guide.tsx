@@ -14,7 +14,7 @@ export default function AnalyzerGuide({ stage, demo }: { stage: 'choose' | 'mapp
         <li><strong>Select a region or driving phase.</strong> Zoom for a closer view; choose Phase region A below for region statistics and Inspect this phase in Run A.</li>
         <li><strong>Optional: compare Run B.</strong> Review its mapping and quality, select regions, then check the operating-condition match before What changed.</li>
         <li><strong>Optional: explore relationships.</strong> Choose signals and a pairing tolerance for the selected phase. Correlation alone cannot establish a cause.</li>
-        <li><strong>Record an observation and next test.</strong> In your own notes, include the region, signals, units, conditions, timing limits and an alternative explanation.</li>
+        <li><strong>Record an observation and next test.</strong> Use the local notebook below: capture evidence, review it, then save intentionally. Include the region, signals, units, conditions, timing limits and an alternative explanation.</li>
       </ol>
       <p>Find patterns first. Diagnose second. Leaving or reloading clears the in-memory logs; returning starts a new analysis.</p>
     </details>

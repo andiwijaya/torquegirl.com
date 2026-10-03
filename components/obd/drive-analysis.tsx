@@ -8,6 +8,8 @@ import type { ImportPreview as Preview } from '../../lib/obd/mapping';
 import type { MappingConfig } from '../../lib/obd/mapping-types';
 import ImportPreview from './import-preview';
 
+export interface NotebookAnalysisContext { info: LogInfo; regionA?: Region; regionB?: Region; comparison?: Comparison; bInfo?: LogInfo }
+
 const n = (v: number | null | undefined) => v == null ? '—' : v.toLocaleString('en', { maximumFractionDigits: 3 });
 const label = (s: Segment) => `${s.phase} · ${n(s.start)}–${n(s.end)} s (${n(s.duration)} s)`;
 const pct = (v: number) => `${Math.round(v * 100)}%`;
@@ -23,7 +25,7 @@ function Scatter({ data, xLabel, yLabel }: { data: Relationship; xLabel: string;
 function RegionStats({ data, run }: { data: Region; run: Run }) {
   return <div className="drive-region" data-testid={`region-${run}`}><h4>Run {run}: {label(data.segment)}</h4><p>{data.segment.evidence}</p><p className="obd-footnote">{data.segment.caveat}</p><details><summary>Full-resolution phase statistics</summary><p>Closed interval endpoints. Mean and median are sample-weighted. Coverage is the fraction of region duration spanned by consecutive numeric samples ≤2 s apart; it does not imply continuous measurement.</p><div className="drive-stat-grid">{data.stats.map(s => <article key={s.id}><strong>{s.identity ?? s.id} · {s.unit ?? 'unknown unit'}</strong><span>Median {n(s.median)} · mean {n(s.mean)}</span><span>Min {n(s.min)} · max {n(s.max)}</span><small>{n(s.count)} samples · coverage {pct(s.coverage)} · median cadence {n(s.cadence)} s</small></article>)}</div></details></div>;
 }
-export default function DriveAnalysis({ client, info, name, onInspect, onCancel, demo = false }: { demo?: boolean; client: LogWorkerClient; info: LogInfo; name: string; onInspect: (time: number) => void; onCancel: () => void }) {
+export default function DriveAnalysis({ client, info, name, onInspect, onCancel, onNotebookContext, demo = false }: { demo?: boolean; client: LogWorkerClient; info: LogInfo; name: string; onInspect: (time: number) => void; onCancel: () => void; onNotebookContext: (context: NotebookAnalysisContext) => void }) {
   const [summaries, setSummaries] = useState<Partial<Record<Run, PhaseSummary>>>({});
   const [ids, setIds] = useState<Record<Run, number>>({ A: -1, B: -1 });
   const [regions, setRegions] = useState<Partial<Record<Run, Region>>>({});
@@ -32,6 +34,7 @@ export default function DriveAnalysis({ client, info, name, onInspect, onCancel,
   const [comparison, setComparison] = useState<Comparison | null>(null), [identity, setIdentity] = useState(''), [plots, setPlots] = useState<{ a: Trace; b: Trace } | null>(null);
   const [context, setContext] = useState('Run 1 vs Run 2'), [relRun, setRelRun] = useState<Run>('A'), [x, setX] = useState(''), [y, setY] = useState(''), [tolerance, setTolerance] = useState(0.5), [rel, setRel] = useState<Relationship | null>(null);
   const mounted = useRef(true), generation = useRef(0);
+  const regionOwners = useRef<Partial<Record<Run, LogInfo>>>({});
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   const clearResults = () => { generation.current++; setComparison(null); setPlots(null); setRel(null); };
   const phasePage = async (run: Run, offset = 0) => {
@@ -47,7 +50,7 @@ export default function DriveAnalysis({ client, info, name, onInspect, onCancel,
   }, [client, info]);
   useEffect(() => {
     let active = true;
-    for (const run of ['A', 'B'] as const) if (ids[run] >= 0) client.request({ kind: 'region', run, segment: ids[run] }).then(r => { if (active && 'kind' in r && r.kind === 'region') setRegions(old => ({ ...old, [run]: r.region })); }).catch(e => { if (active) setError(e.message); });
+    for (const run of ['A', 'B'] as const) if (ids[run] >= 0) client.request({ kind: 'region', run, segment: ids[run] }).then(r => { if (active && 'kind' in r && r.kind === 'region') { regionOwners.current[run] = run === 'A' ? info : bInfo ?? undefined; setRegions(old => ({ ...old, [run]: r.region })); } }).catch(e => { if (active) setError(e.message); });
     return () => { active = false; };
   }, [client, ids, info, bInfo]);
   const act = async (task: () => Promise<void>) => {
@@ -63,6 +66,13 @@ export default function DriveAnalysis({ client, info, name, onInspect, onCancel,
     let value: Preview | null = null;
     await act(async () => { const r = await client.request(config ? { kind: 'remap', run: 'B', config } : { kind: 'review', run: 'B' }); if (mounted.current && 'kind' in r && r.kind === 'preview') { value = r.preview; setPreview(value); } }); return value;
   };
+  useEffect(() => {
+    // Exclude pending/remapped regions; an old response must not become evidence
+    // for a newly selected phase. Parent also checks the accepted Run A info.
+    const regionA = regionOwners.current.A === info && regions.A?.segment.id === ids.A ? regions.A : undefined;
+    const regionB = !preview && bInfo && regionOwners.current.B === bInfo && regions.B?.segment.id === ids.B ? regions.B : undefined;
+    onNotebookContext({ info, regionA: busy ? undefined : regionA, regionB: busy ? undefined : regionB, comparison: !busy && !preview && regionA && regionB ? comparison ?? undefined : undefined, bInfo: !preview ? bInfo ?? undefined : undefined });
+  }, [info, bInfo, regions, ids, preview, busy, comparison, onNotebookContext]);
   const signals = (relRun === 'A' ? info : bInfo)?.signals.filter(s => s.identity && !s.ambiguity && s.unit) ?? [];
   const xId = signals.some(s => s.id === x) ? x : signals[0]?.id ?? '', yId = signals.some(s => s.id === y && s.id !== xId) ? y : signals.find(s => s.id !== xId)?.id ?? '';
   const selectedPair = comparison?.pairs.find(p => p.identity === identity);
@@ -84,7 +94,7 @@ export default function DriveAnalysis({ client, info, name, onInspect, onCancel,
       <h3 id="observation-heading">Turn the pattern into a next test.</h3>
       {regions.A && <p>Selected Run A region: <strong>{label(regions.A.segment)}</strong>. Use its full-resolution statistics above alongside your selected signals and source times.</p>}
       {demo && <p className="obd-demo-hint">Demo practice: inspect the gap marker, then an idle region. Write only what the displayed readings support. A useful observation can be a recording gap or sparse channel coverage; it does not need to be a vehicle fault.</p>}
-      <p>In your own notes, record what changed or stayed steady, the time region, signals and units, operating conditions, and data-quality limits. Add another possible explanation and a safe next verification or retest. Keep your original file: these logs are cleared on exit or reload.</p>
+      <p><a href="#observation-notebook">Open the local notebook below</a> to record what changed or stayed steady, the time region, signals and units, operating conditions, and data-quality limits. Add another possible explanation and a safe next verification or retest. Keep your original file: these logs are cleared on exit or reload.</p>
     </section>
   </section>;
 }

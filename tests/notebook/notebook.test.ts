@@ -331,6 +331,7 @@ test('denied/unavailable storage and missing locks fail closed without losing da
   assert.throws(() => store.planClear(saved), failure('unavailable'));
   storage.denyRead = false;
   const readOnly = createNotebookStore(storage);
+  assert.equal(readOnly.writable, false);
   assert.equal(readOnly.export(readOnly.read()), before);
   await assert.rejects(readOnly.update(readOnly.read(), 'note-1', {}), failure('unavailable'));
   assert.throws(() => createNotebookStore(undefined).read(), failure('unavailable'));
@@ -407,7 +408,7 @@ test('browser adapter uses the exact shared Web Lock/key and leaves mapping stor
   try {
     Object.defineProperty(globalThis, 'window', { configurable: true, value: { localStorage: storage } });
     Object.defineProperty(globalThis, 'navigator', { configurable: true, value: { locks: { request: async (name: string, options: unknown, task: () => unknown) => { requests.push({ name, options }); return task(); } } } });
-    const store = browserNotebookStore(); assert.equal(requests.length, 0); assert.equal(storage.writes, 0);
+    const store = browserNotebookStore(); assert.equal(store.writable, true); assert.equal(requests.length, 0); assert.equal(storage.writes, 0);
     await store.create(store.read(), { notes: 'explicit' });
     assert.deepEqual(requests, [{ name: NOTEBOOK_KEY, options: { mode: 'exclusive' } }]);
     assert.equal(storage.getItem('torquegirl.obd.mapping-templates.v1'), 'unchanged');

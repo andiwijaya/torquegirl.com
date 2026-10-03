@@ -63,6 +63,8 @@ export function createNotebookStore(storage: NotebookStorage | undefined, option
     return result;
   };
   return {
+    /** Capability only; actual reads/writes can still fail (denial/quota/locks). */
+    writable: !!storage && !!options.exclusive,
     read,
     export(snapshot: NotebookSnapshot): string { return exportNotebookJson(current(snapshot).document); },
     async create(snapshot: NotebookSnapshot, draft: NotebookDraft): Promise<NotebookSnapshot> {

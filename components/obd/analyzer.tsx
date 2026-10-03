@@ -6,7 +6,9 @@ import ObdWorker from '../../lib/obd/worker?worker';
 import { demoCsv } from '../../lib/obd/demo';
 import type { LogInfo, Reading, SignalInfo, Trace } from '../../lib/obd/types';
 import ImportPreview from './import-preview';
-import DriveAnalysis from './drive-analysis';
+import DriveAnalysis, { type NotebookAnalysisContext } from './drive-analysis';
+import ObservationNotebook from './observation-notebook';
+import type { AnalysisEvidenceInput } from '../../lib/notebook/evidence';
 import AnalyzerGuide from './analyzer-guide';
 import { ShareToolButton } from './share-tool-button';
 import type { Segment } from '../../lib/obd/drive';
@@ -56,6 +58,7 @@ function Chart({ signal, data, reading, color, range, cursor, onInspect }: { sig
 
 export default function Analyzer() {
   const client = useRef<LogWorkerClient | null>(null);
+  const [notebookContext, setNotebookContext] = useState<NotebookAnalysisContext>();
   const [activeClient, setActiveClient] = useState<LogWorkerClient | null>(null);
   const [info, setInfo] = useState<LogInfo | null>(null), [name, setName] = useState('');
   const [demo, setDemo] = useState(false);
@@ -138,6 +141,19 @@ export default function Analyzer() {
     const start = Math.max(0, Math.min(duration - width, center - width / 2)); setRange([start, Math.min(duration, start + width)]);
   };
   const pan = (direction: number) => { const width = range[1] - range[0], start = Math.max(0, Math.min(duration - width, range[0] + direction * width * 0.4)); setRange([start, start + width]); };
+  // Only compact signal metadata and current worker summaries cross this seam.
+  const currentContext = notebookContext?.info === info ? notebookContext : undefined;
+  const notebookAnalysis: AnalysisEvidenceInput | undefined = info && !preview && !busy ? {
+    signals: selected.flatMap(id => {
+      const a = info.signals.find(s => s.id === id);
+      if (!a) return [];
+      const compact = (s: SignalInfo, run: 'A' | 'B') => ({ id: s.id, label: s.originalName, run, ...(s.identity ? { identity: s.identity } : {}), ...(s.unit ? { unit: s.unit } : {}) });
+      const b = a.identity && currentContext?.regionB ? currentContext.bInfo?.signals.find(s => s.identity === a.identity && s.unit === a.unit && !s.ambiguity) : undefined;
+      return b ? [compact(a, 'A'), compact(b, 'B')] : [compact(a, 'A')];
+    }),
+    timeRegionA: { start: range[0], end: range[1] },
+    regionA: currentContext?.regionA, regionB: currentContext?.regionB, comparison: currentContext?.comparison,
+  } : undefined;
   const q = info?.quality;
   const importInfo = preview?.info ?? info;
   return <div className="obd-app">
@@ -146,7 +162,7 @@ export default function Analyzer() {
       <div className="obd-import-actions"><label className="obd-button obd-primary">{busy ? 'Replace file' : importInfo ? 'Open another log' : 'Choose a CSV log'}<input aria-label="Choose CSV log" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" onChange={e => { const f = e.target.files?.[0]; if (f) void load(f, f.name); e.target.value = ''; }} /></label><button onClick={() => void load(new Blob([demoCsv()], { type: 'text/csv' }), 'Synthetic demo · illustrative data', true)}>Explore demo</button><ShareToolButton /></div>
       {!importInfo && <p className="obd-import-note">CSV / TSV · up to 25 MiB, 250,000 records, 2 million cells · comma, semicolon or tab</p>}
     </section>
-    <p className="obd-privacy">◉ Your log stays in memory in this browser. Only mapping templates you explicitly save persist locally. Nothing is uploaded. Leaving or reloading clears the logs; returning starts a new analysis.</p>
+    <p className="obd-privacy">◉ Your log stays in memory in this browser. Only mapping templates and notebook notes you explicitly save persist locally. Raw logs and the analysis session are never saved or restored. Nothing is uploaded. Leaving or reloading clears the logs; returning starts a new analysis.</p>
     <AnalyzerGuide stage={preview ? 'mapping' : info ? 'analyze' : 'choose'} demo={demo && !!importInfo} />
     {busy && <div className="obd-notice" role="status">Preparing your data in the background… <button onClick={() => { client.current?.dispose(); client.current = null; setActiveClient(null); setBusy(false); setPreview(null); setInfo(null); setPlaying(false); setError(''); }}>Cancel import</button></div>}
     {error && <p className="obd-error" role="alert">{error}</p>}
@@ -175,6 +191,7 @@ export default function Analyzer() {
       </div>
       <section className="obd-events"><div><span className="obd-kicker">05 / OBSERVATIONS</span><h2>Markers, with evidence.</h2><p>Recording-gap rule: greater than max(5 seconds, 5× median positive interval). These are data observations, not vehicle faults.</p></div><div>{info.events.length ? info.events.map((event, i) => <button key={i} onClick={() => { inspect(event.time); setRange([Math.max(0, event.start - 5), Math.min(duration, event.time + 5)]); }}>{clock(event.time)} <span>{event.label}</span> ↗</button>) : <p>No gaps meeting this rule.</p>}</div></section>
     </>}
-    {info && activeClient && <div hidden={!!preview}><DriveAnalysis demo={demo} client={activeClient} info={info} name={name} onInspect={inspect} onCancel={() => { client.current?.dispose(); client.current = null; setActiveClient(null); setInfo(null); setPreview(null); setBusy(false); setPlaying(false); setError(''); setPhase(null); }} /></div>}
+    {info && activeClient && <div hidden={!!preview}><DriveAnalysis onNotebookContext={setNotebookContext} demo={demo} client={activeClient} info={info} name={name} onInspect={inspect} onCancel={() => { client.current?.dispose(); client.current = null; setActiveClient(null); setInfo(null); setPreview(null); setBusy(false); setPlaying(false); setError(''); setPhase(null); }} /></div>}
+    <ObservationNotebook analysis={notebookAnalysis} />
   </div>;
 }

@@ -6,6 +6,7 @@ import Analyzer from '../../../components/obd/analyzer';
 import './style.css';
 import './mapping.css';
 import './drive.css';
+import './notebook.css';
 
 const url = 'https://torquegirl.com/tools/obd2-log-analyzer';
 export const metadata: Metadata = {

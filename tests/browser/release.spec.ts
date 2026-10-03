@@ -3,6 +3,18 @@ import { driveCsv } from '../../lib/obd/drive-demo';
 const origin = new URL(process.env.OBD_TEST_URL ?? 'http://127.0.0.1:5184').origin;
 const routes = ['/', '/engines', '/engines/how-a-nascar-v8-engine-works', '/engines/toyota-2jz-gte-tuning-legend', '/engines/turbocharger-vs-supercharger', '/technology', '/technology/how-formula-1-car-creates-downforce', '/technology/what-is-an-obd2-scanner', '/technology/obd2-scanner-vs-code-reader', '/technology/how-to-read-obd2-codes', '/technology/how-to-analyze-obd2-live-data-and-logs', '/off-track', '/off-track/golf-day', '/tools', '/tools/obd2-log-analyzer', '/privacy', '/terms'];
 
+test('private tool responses prevent edge analytics injection', async ({ request }) => {
+  for (const path of ['/tools/obd2-log-analyzer', '/tools/torque-power-explorer']) {
+    for (const suffix of ['', '/', '?entry=privacy-check']) {
+      const response = await request.get(path + suffix);
+      expect(response.status()).toBe(200);
+      expect(response.headers()['cache-control']).toMatch(/(?:^|,)\s*no-transform(?:,|$)/);
+      expect(await response.text()).not.toMatch(/static\.cloudflareinsights\.com|googletagmanager\.com/);
+    }
+  }
+  expect((await request.get('/')).headers()['cache-control'] ?? '').not.toContain('no-transform');
+});
+
 test('release routes, canonical URLs, editorial links and preserved image assets', async ({ page, request }) => {
   test.setTimeout(180_000);
   const statuses: Record<string, number> = {};

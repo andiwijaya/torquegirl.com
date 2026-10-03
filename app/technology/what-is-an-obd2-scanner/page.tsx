@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl",
   description: obd2Article.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl", description: obd2Article.description, images: [{ url: `https://torquegirl.com${obd2Article.heroImage}`, width: 1536, height: 1024, alt: obd2Article.heroAlt }] },
+  openGraph: { type: "article", publishedTime: obd2Article.date, modifiedTime: obd2Article.updatedDate, url: articleUrl, title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl", description: obd2Article.description, images: [{ url: `https://torquegirl.com${obd2Article.heroImage}`, width: 1536, height: 1024, alt: obd2Article.heroAlt }] },
   twitter: { card: "summary_large_image", title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl", description: obd2Article.description, images: [`https://torquegirl.com${obd2Article.heroImage}`] },
 };
 
@@ -22,13 +22,13 @@ function Figure({ src, alt, caption, priority = false }: { src: string; alt: str
 }
 
 export default function Obd2ScannerArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2Article.title, description: obd2Article.description, image: [`https://torquegirl.com${obd2Article.heroImage}`], datePublished: obd2Article.date, dateModified: obd2Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
+  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2Article.title, description: obd2Article.description, image: [`https://torquegirl.com${obd2Article.heroImage}`], datePublished: obd2Article.date, dateModified: obd2Article.updatedDate ?? obd2Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
 
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <SiteHeader active="Technology" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2Article.readingTime}</span></div><h1>{obd2Article.title}</h1><p className="article-dek">The check-engine light is a question from your car, not a verdict. An OBD2 scanner helps you read the first clue and decide what to test next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2Article.date}>September 22, 2026</time></div><ArticleShare title={obd2Article.title} description={obd2Article.description} path="/technology/what-is-an-obd2-scanner" /></header>
+      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2Article.readingTime}</span></div><h1>{obd2Article.title}</h1><p className="article-dek">The check-engine light is a question from your car, not a verdict. An OBD2 scanner helps you read the first clue and decide what to test next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2Article.date}>September 22, 2026</time><span>Updated <time dateTime={obd2Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2Article.title} description={obd2Article.description} path="/technology/what-is-an-obd2-scanner" /></header>
       <Figure src="/images/articles/torquegirl-obd2-scanner-hero.png" alt="TorqueGirl using an OBD2 scanner to diagnose a car" caption="An OBD2 scan is a starting point for diagnosis: read what the vehicle detected, then investigate why." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>SCAN / UNDERSTAND / TEST</span></aside><div className="article-body">
         <p className="lead-paragraph">A check-engine light can turn a normal drive into a guessing game. Is it a loose fuel cap, an ignition problem, an emissions fault, or something more urgent? An OBD2 scanner gives you a way to ask the vehicle’s onboard computer what it has noticed before you start replacing parts.</p>
@@ -68,6 +68,8 @@ export default function Obd2ScannerArticle() {
         <h2>What is live data?</h2>
         <p>Live data is the stream of measurements and status values the vehicle reports while the system is awake. Depending on the car and scanner, you may see engine RPM, coolant temperature, throttle position, vehicle speed, airflow or manifold pressure, oxygen or air-fuel sensor information, and short- or long-term fuel trims.</p>
         <p>Live data adds context to a code. A temperature reading that never rises, a fuel trim that stays unusually high, or a sensor value that does not respond as expected can help you choose the next test. One number rarely proves a fault by itself, so compare readings with the vehicle’s operating conditions and service information.</p>
+
+        <p>To see how those readings become a timeline, continue with <Link className="inline-article-link" href="/technology/how-to-analyze-obd2-live-data-and-logs">How to Analyze OBD2 Live Data and Logs</Link>. It explains channel context and how to compare recorded patterns before choosing a test.</p>
 
         <h2>Can an OBD2 scanner turn off the check-engine light?</h2>
         <p>Many scanners can clear stored codes and switch off the malfunction indicator lamp. That action erases or resets useful diagnostic information, however, and it does not repair the cause. If the fault remains, the code and light can return.</p>

@@ -6,6 +6,7 @@ export type ArticleSummary = {
   category: string;
   topics: string[];
   date: string;
+  updatedDate?: string;
   readingTime: string;
   heroImage: string;
   heroAlt: string;
@@ -71,6 +72,7 @@ export const obd2Article: ArticleSummary = {
   category: "Technology",
   topics: ["OBD2", "Diagnostics", "Automotive Technology"],
   date: "2026-09-22",
+  updatedDate: "2026-10-03",
   readingTime: "14 min read",
   heroImage: "/images/articles/torquegirl-obd2-scanner-hero.png",
   heroAlt: "TorqueGirl using an OBD2 scanner to diagnose a car.",
@@ -84,6 +86,7 @@ export const obd2ComparisonArticle: ArticleSummary = {
   category: "Technology",
   topics: ["OBD2", "Diagnostics", "Scan Tools"],
   date: "2026-09-22",
+  updatedDate: "2026-10-03",
   readingTime: "12 min read",
   heroImage: "/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.png",
   heroAlt: "TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool.",
@@ -97,6 +100,7 @@ export const obd2DtcArticle: ArticleSummary = {
   category: "Technology",
   topics: ["OBD2", "DTC", "Diagnostics"],
   date: "2026-09-22",
+  updatedDate: "2026-10-03",
   readingTime: "13 min read",
   heroImage: "/images/articles/torquegirl-read-obd2-codes-hero.png",
   heroAlt: "TorqueGirl reading OBD2 diagnostic trouble codes on an automotive scan tool.",
@@ -110,9 +114,23 @@ export const obd2LiveDataArticle: ArticleSummary = {
   category: "Technology",
   topics: ["OBD2", "Live Data", "Diagnostics"],
   date: "2026-09-23",
+  updatedDate: "2026-10-03",
   readingTime: "12 min read",
   heroImage: "/images/articles/meter2.webp",
   heroAlt: "Torque Girl reviewing synchronized OBD2 live-data graphs on a laptop in a workshop.",
+};
+
+export const obd2RecordingArticle: ArticleSummary = {
+  slug: "how-to-record-and-export-obd2-logs",
+  path: "/technology/how-to-record-and-export-obd2-logs",
+  title: "How to Record and Export OBD2 Logs",
+  description: "Prepare a useful OBD2 recording: choose channels, capture safe operating context, preserve timestamps and units, and export a log for local analysis.",
+  category: "Technology",
+  topics: ["OBD2", "Data Logging", "Live Data"],
+  date: "2026-10-03",
+  readingTime: "8 min read",
+  heroImage: "/images/articles/meter1.webp",
+  heroAlt: "Torque Girl preparing an OBD2 recording beside a vehicle in a workshop.",
 };
 
 export const offTrackGolfDay: ArticleSummary = {
@@ -131,7 +149,7 @@ export const offTrackGolfDay: ArticleSummary = {
 export const offTrackStories: ArticleSummary[] = [offTrackGolfDay];
 
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
-export const technologyArticles: ArticleSummary[] = [obd2LiveDataArticle, obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];
+export const technologyArticles: ArticleSummary[] = [obd2RecordingArticle, obd2LiveDataArticle, obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];
 
 // Category arrays remain the registry; labels such as Engine Legends are not URL roots.
 export const allArticles: ArticleSummary[] = [...articles, ...technologyArticles, ...offTrackStories];

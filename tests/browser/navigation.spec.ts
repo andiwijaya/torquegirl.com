@@ -26,7 +26,7 @@ async function noClipping(page: Page) {
   expect(clipped).toEqual([]);
 }
 
-test('all 17 routes share six destinations and complete legal/contact footers', async ({ page }) => {
+test('all registry routes share six destinations and complete legal/contact footers', async ({ page }) => {
   test.setTimeout(120_000);
   const observed = watch(page);
   await page.setViewportSize({ width: 1440, height: 1000 });

@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { allArticles, articles, getLatestArticles, offTrackGolfDay, obd2LiveDataArticle, toyota2JzArticle, type ArticleSummary } from '../../lib/torquegirl-content';
+import { allArticles, articles, getLatestArticles, offTrackGolfDay, obd2LiveDataArticle, obd2RecordingArticle, toyota2JzArticle, type ArticleSummary } from '../../lib/torquegirl-content';
 
 test('latest selects newest publications across every category, without changing registry order', () => {
   const before = allArticles.map(a => a.path);
-  assert.deepEqual(getLatestArticles().map(a => a.path), [offTrackGolfDay.path, obd2LiveDataArticle.path, toyota2JzArticle.path]);
+  assert.deepEqual(getLatestArticles().map(a => a.path), [obd2RecordingArticle.path, offTrackGolfDay.path, obd2LiveDataArticle.path]);
   assert.deepEqual(allArticles.map(a => a.path), before);
   assert.equal(getLatestArticles(articles, 1)[0], toyota2JzArticle);
 });
@@ -26,6 +26,10 @@ test('registry has unique canonical paths, valid publication dates and correct e
     assert.match(article.path, /^\/(engines|technology|off-track)\/[a-z0-9-]+$/);
     assert.ok(article.path.endsWith('/' + article.slug));
     assert.equal(new Date(article.date).toISOString().slice(0, 10), article.date);
+    if (article.updatedDate) {
+      assert.equal(new Date(article.updatedDate).toISOString().slice(0, 10), article.updatedDate);
+      assert.ok(article.updatedDate >= article.date);
+    }
   }
   assert.equal(toyota2JzArticle.path, '/engines/toyota-2jz-gte-tuning-legend');
 });

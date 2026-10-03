@@ -79,8 +79,8 @@ test('learning content, internal links, metadata and publication freshness agree
   const checked = new Set<string>();
   const sitemap = await (await request.get('/sitemap.xml')).text();
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  expect(new Set(locations).size).toBe(18);
-  expect(locations.length).toBe(18);
+  expect(new Set(locations).size).toBe(19);
+  expect(locations.length).toBe(19);
   for (const article of learning) {
     expect((await page.goto(article.path))!.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);

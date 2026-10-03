@@ -5,6 +5,7 @@
 .tools-spotlight .text-link{color:#ff8187;min-height:44px}
 .tools-context{border-left:1px solid #596168;padding-left:2rem}
 .tools-context>span{color:#88ddbb;font-size:.75rem;font-weight:800;letter-spacing:.12em}
+.tools-context h3{font-size:clamp(1.6rem,2.5vw,2.3rem);line-height:1.15;letter-spacing:-.04em;margin:20px 0}
 .latest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
 .latest-card{min-width:0;border-bottom:1px solid var(--line);padding-bottom:24px}
 .latest-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#e8ebea}

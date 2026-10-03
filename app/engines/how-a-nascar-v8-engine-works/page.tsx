@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
-import { nascarV8Article } from "../../../lib/torquegirl-content";
+import { nascarV8Article, torquePowerExplorerTool } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/engines/how-a-nascar-v8-engine-works";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "How a NASCAR V8 Engine Works",
   description: nascarV8Article.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [{ url: `https://torquegirl.com${nascarV8Article.heroImage}`, width: 1536, height: 1024, alt: nascarV8Article.heroAlt }] },
+  openGraph: { type: "article", publishedTime: nascarV8Article.date, modifiedTime: nascarV8Article.updatedDate, url: articleUrl, title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [{ url: `https://torquegirl.com${nascarV8Article.heroImage}`, width: 1536, height: 1024, alt: nascarV8Article.heroAlt }] },
   twitter: { card: "summary_large_image", title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [`https://torquegirl.com${nascarV8Article.heroImage}`] },
 };
 
@@ -22,12 +22,12 @@ function Figure({ src, alt, caption, priority = false }: { src: string; alt: str
 }
 
 export default function NascarV8Article() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: nascarV8Article.title, description: nascarV8Article.description, image: [`https://torquegirl.com${nascarV8Article.heroImage}`], datePublished: nascarV8Article.date, dateModified: nascarV8Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
+  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: nascarV8Article.title, description: nascarV8Article.description, image: [`https://torquegirl.com${nascarV8Article.heroImage}`], datePublished: nascarV8Article.date, dateModified: nascarV8Article.updatedDate ?? nascarV8Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <SiteHeader active="Engines" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" /></header>
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time><span>Updated <time dateTime={nascarV8Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" /></header>
       <Figure src="/images/articles/torquegirl-nascar-v8-hero.png" alt={nascarV8Article.heroAlt} caption="Torque Girl takes a closer look at the V8 heart of a stock car." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>HOW POWER BECOMES MOTION</span></aside><div className="article-body">
         <p className="lead-paragraph">A NASCAR Cup Series engine is interesting precisely because it is not a science-fiction machine. It uses a familiar four-stroke V8 layout, then pushes that architecture through careful optimization, strict rules and the brutal duty cycle of racing.</p>
@@ -52,7 +52,8 @@ export default function NascarV8Article() {
         <p>Overhead-valve, or pushrod, architecture remains relevant because packaging and rules matter. It can keep the valvetrain arrangement compact and benefits from decades of development. That does not mean every pushrod engine is automatically lighter, simpler or better than a modern overhead-cam design. It means the architecture can be exceptionally effective when optimized for its constraints.</p>
         <p>That is a recurring engineering lesson: the best solution is not universal. It is the solution that performs reliably inside the space, rules, materials, operating range and budget that actually exist.</p>
         <h2>Torque versus horsepower</h2>
-        <p>Torque is rotational force—the twisting effort at the crankshaft. Power describes how quickly work can be performed. In practical terms, torque gives the engine its shove, while rotational speed determines how quickly that shove can be delivered. We will take apart the difference in a future TorqueGirl feature, <span className="future-topic">Horsepower vs Torque — What's the Difference?</span></p>
+        <p>Torque is rotational force—the twisting effort at the crankshaft. Power describes how quickly work can be performed. In practical terms, torque gives the engine its shove, while rotational speed determines how quickly that shove can be delivered.</p>
+        <p>Try the <Link className="inline-article-link" href={torquePowerExplorerTool.path}>Torque-Power Explorer</Link> to calculate a point or inspect how RPM connects torque and power. Its synthetic sample illustrates the relationship; it is not a measured NASCAR engine curve.</p>
         <h2>Making power without a turbo</h2>
         <p>A naturally aspirated racing engine has no turbocharger compressing the intake charge for it. It must earn its airflow through intake design, valve timing, cylinder-head flow, combustion efficiency and carefully tuned exhaust behavior. High volumetric efficiency means the cylinders fill effectively relative to their size.</p>
         <p>Compression, calibration, friction reduction and engine speed all matter too. None is magic by itself. Power comes from the interaction between airflow, fuel, combustion and mechanical efficiency.</p>

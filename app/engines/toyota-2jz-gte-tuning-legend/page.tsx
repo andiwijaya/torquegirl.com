@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
-import { toyota2JzArticle } from "../../../lib/torquegirl-content";
+import { toyota2JzArticle, torquePowerExplorerTool } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/engines/toyota-2jz-gte-tuning-legend";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl",
   description: toyota2JzArticle.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [{ url: `https://torquegirl.com${toyota2JzArticle.heroImage}`, width: 1536, height: 1024, alt: toyota2JzArticle.heroAlt }] },
+  openGraph: { type: "article", publishedTime: toyota2JzArticle.date, modifiedTime: toyota2JzArticle.updatedDate, url: articleUrl, title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [{ url: `https://torquegirl.com${toyota2JzArticle.heroImage}`, width: 1536, height: 1024, alt: toyota2JzArticle.heroAlt }] },
   twitter: { card: "summary_large_image", title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend | TorqueGirl", description: toyota2JzArticle.description, images: [`https://torquegirl.com${toyota2JzArticle.heroImage}`] },
 };
 
@@ -22,12 +22,12 @@ function Figure({ src, alt, caption, priority = false }: { src: string; alt: str
 }
 
 export default function Toyota2JzArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: toyota2JzArticle.title, description: toyota2JzArticle.description, image: [`https://torquegirl.com${toyota2JzArticle.heroImage}`], datePublished: toyota2JzArticle.date, dateModified: toyota2JzArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
+  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: toyota2JzArticle.title, description: toyota2JzArticle.description, image: [`https://torquegirl.com${toyota2JzArticle.heroImage}`], datePublished: toyota2JzArticle.date, dateModified: toyota2JzArticle.updatedDate ?? toyota2JzArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <SiteHeader active="Engines" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINE LEGENDS</span><span>TOYOTA</span><span>{toyota2JzArticle.readingTime}</span></div><h1>{toyota2JzArticle.title}</h1><p className="article-dek">The 2JZ-GTE became famous through the Supra, but its real story is a combination of sound engineering, durability, tuning headroom and the culture built around it.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={toyota2JzArticle.date}>September 22, 2026</time></div><ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" /></header>
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINE LEGENDS</span><span>TOYOTA</span><span>{toyota2JzArticle.readingTime}</span></div><h1>{toyota2JzArticle.title}</h1><p className="article-dek">The 2JZ-GTE became famous through the Supra, but its real story is a combination of sound engineering, durability, tuning headroom and the culture built around it.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={toyota2JzArticle.date}>September 22, 2026</time><span>Updated <time dateTime={toyota2JzArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={toyota2JzArticle.title} description={toyota2JzArticle.description} path="/engines/toyota-2jz-gte-tuning-legend" /></header>
       <Figure src="/images/articles/torquegirl-2jz-gte-hero.png" alt={toyota2JzArticle.heroAlt} caption="TorqueGirl meets the long, straight-six architecture behind one of tuning's most enduring legends." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>WHY IT LASTED</span></aside><div className="article-body">
         <p className="lead-paragraph">Some engines become famous because they are rare. Some become famous because they win races. The Toyota 2JZ-GTE took a different route: it became a legend because a well-engineered production engine gave an entire generation of enthusiasts something unusually valuable—room to learn, modify and keep asking for more.</p>
@@ -54,6 +54,7 @@ export default function Toyota2JzArticle() {
         <p>This is where responsible explanations matter. Factory output is a specification. A lightly modified street engine is a different case. An upgraded turbo, fuel system and calibration are another. A heavily built engine with forged internals, serious cooling and motorsport maintenance is something else again.</p>
         <p>There is no honest single number that describes what every 2JZ-GTE can reliably make. Achievable power depends on engine condition, fuel quality, boost, turbo selection, fuel delivery, ignition control, cooling, oiling, internal components, intended use and maintenance. A dyno number without that context tells only a small part of the story.</p>
         <p>When a famous build makes four-digit power, it is usually a complete system: upgraded fuel supply, engine management, turbo hardware, exhaust, intercooling, drivetrain and often a built engine. That is evidence of the platform's tuning potential, not proof that every stock long block should be operated at that level.</p>
+        <p>A headline power figure also leaves out where that output occurs. Use the <Link className="inline-article-link" href={torquePowerExplorerTool.path}>Torque-Power Explorer</Link> to connect torque, power and RPM in supplied samples. The educational sample represents no 2JZ build and predicts no safe or achievable output.</p>
         <h2>The Supra connection</h2>
         <Figure src="/images/articles/torquegirl-supra-a80.png" alt="TorqueGirl inspecting the open engine bay of a silver Toyota Supra Mk4 in a workshop." caption="The A80 Supra made the 2JZ-GTE visible to a much wider audience; this enthusiast performance build may include aftermarket engine-bay components." />
         <p>The A80 Supra gave the 2JZ-GTE its most recognizable home. Toyota paired the engine with a sophisticated chassis, a six-speed manual option for turbo models and the kind of performance that made the car feel expensive without wearing an exotic badge. The engine and car became a package in the imagination of enthusiasts.</p>

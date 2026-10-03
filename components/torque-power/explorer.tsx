@@ -65,11 +65,19 @@ export default function Explorer() {
   }
   function switchTorque(next: TorqueUnit) {
     try { setTorque(String(convertTorque(parseNumericInput(torque, 'torque'), torqueUnit, next))); setTorqueUnit(next); setPointError(null); }
-    catch (error) { setPointError(failure(error)); }
+    catch (error) {
+      const issue = failure(error);
+      setPointError(mode === 'torque' ? issue : new TorquePowerError(issue.code, 'torqueUnit', `${issue.message} Switch to Torque + RPM to correct the retained torque input before converting its unit.`));
+      document.getElementById(mode === 'torque' ? 'tp-torque' : 'tp-torque-unit')?.focus();
+    }
   }
   function switchPower(next: PowerUnit) {
     try { setPower(String(convertPower(parseNumericInput(power, 'power'), powerUnit, next))); setPowerUnit(next); setPointError(null); }
-    catch (error) { setPointError(failure(error)); }
+    catch (error) {
+      const issue = failure(error);
+      setPointError(mode === 'power' ? issue : new TorquePowerError(issue.code, 'powerUnit', `${issue.message} Switch to Power + RPM to correct the retained power input before converting its unit.`));
+      document.getElementById(mode === 'power' ? 'tp-power' : 'tp-power-unit')?.focus();
+    }
   }
   function submitCurve(event: FormEvent) {
     event.preventDefault();
@@ -99,8 +107,8 @@ export default function Explorer() {
         <div className="tp-fields">
           <label htmlFor="tp-rpm">RPM<input id="tp-rpm" type="text" inputMode="decimal" value={rpm} onChange={e => { setRpm(e.target.value); pointEdit(); }} aria-invalid={pointError?.field === 'rpm'} aria-describedby={`tp-point-help${pointError?.field === 'rpm' ? ' tp-point-error' : ''}`} /></label>
           {mode === 'torque' ? <label htmlFor="tp-torque">Torque ({torqueUnit})<input id="tp-torque" type="text" inputMode="decimal" value={torque} onChange={e => { setTorque(e.target.value); pointEdit(); }} aria-invalid={pointError?.field === 'torque'} aria-describedby={`tp-point-help${pointError?.field === 'torque' ? ' tp-point-error' : ''}`} /></label> : <label htmlFor="tp-power">Power ({powerLabel(powerUnit)})<input id="tp-power" type="text" inputMode="decimal" value={power} onChange={e => { setPower(e.target.value); pointEdit(); }} aria-invalid={pointError?.field === 'power'} aria-describedby={`tp-point-help${pointError?.field === 'power' ? ' tp-point-error' : ''}`} /></label>}
-          <label htmlFor="tp-torque-unit">Point torque unit<select aria-label="Point torque unit" id="tp-torque-unit" value={torqueUnit} onChange={e => switchTorque(e.target.value as TorqueUnit)} aria-describedby="tp-point-help tp-point-error"><option>Nm</option><option>lb-ft</option></select></label>
-          <label htmlFor="tp-power-unit">Point power unit<select aria-label="Point power unit" id="tp-power-unit" value={powerUnit} onChange={e => switchPower(e.target.value as PowerUnit)} aria-describedby="tp-point-help tp-point-error"><option>kW</option><option value="hp">hp (mechanical)</option></select></label>
+          <label htmlFor="tp-torque-unit">Point torque unit<select aria-label="Point torque unit" id="tp-torque-unit" value={torqueUnit} onChange={e => switchTorque(e.target.value as TorqueUnit)} aria-invalid={pointError?.field === 'torqueUnit'} aria-describedby="tp-point-help tp-point-error"><option>Nm</option><option>lb-ft</option></select></label>
+          <label htmlFor="tp-power-unit">Point power unit<select aria-label="Point power unit" id="tp-power-unit" value={powerUnit} onChange={e => switchPower(e.target.value as PowerUnit)} aria-invalid={pointError?.field === 'powerUnit'} aria-describedby="tp-point-help tp-point-error"><option>kW</option><option value="hp">hp (mechanical)</option></select></label>
         </div>
         <p id="tp-point-help" className="tp-help">Use nonnegative dot decimals or e notation, without grouping or unit suffixes. RPM: 0–100,000; torque: up to 1,000,000 Nm; power: up to 20,000,000 kW. These are tool capacity limits. Unit changes convert the entered quantity; invalid values keep their current unit.</p>
         <p id="tp-point-error" className="tp-error" role="alert">{pointError?.message}</p><button type="submit">Calculate point</button>

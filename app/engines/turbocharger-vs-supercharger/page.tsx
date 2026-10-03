@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
-import { turboVsSuperchargerArticle } from "../../../lib/torquegirl-content";
+import { turboVsSuperchargerArticle, torquePowerExplorerTool } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/engines/turbocharger-vs-supercharger";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl",
   description: turboVsSuperchargerArticle.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl", description: turboVsSuperchargerArticle.description, images: [{ url: `https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`, width: 1536, height: 1024, alt: turboVsSuperchargerArticle.heroAlt }] },
+  openGraph: { type: "article", publishedTime: turboVsSuperchargerArticle.date, modifiedTime: turboVsSuperchargerArticle.updatedDate, url: articleUrl, title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl", description: turboVsSuperchargerArticle.description, images: [{ url: `https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`, width: 1536, height: 1024, alt: turboVsSuperchargerArticle.heroAlt }] },
   twitter: { card: "summary_large_image", title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl", description: turboVsSuperchargerArticle.description, images: [`https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`] },
 };
 
@@ -22,12 +22,12 @@ function Figure({ src, alt, caption, priority = false }: { src: string; alt: str
 }
 
 export default function TurboVsSuperchargerArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: turboVsSuperchargerArticle.title, description: turboVsSuperchargerArticle.description, image: [`https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`], datePublished: turboVsSuperchargerArticle.date, dateModified: turboVsSuperchargerArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
-  return <main className="site-shell article-shell">
+  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: turboVsSuperchargerArticle.title, description: turboVsSuperchargerArticle.description, image: [`https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`], datePublished: turboVsSuperchargerArticle.date, dateModified: turboVsSuperchargerArticle.updatedDate ?? turboVsSuperchargerArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
+  return <main className="site-shell article-shell turbo-article">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <SiteHeader active="Engines" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>TECHNOLOGY</span><span>{turboVsSuperchargerArticle.readingTime}</span></div><h1>{turboVsSuperchargerArticle.title}</h1><p className="article-dek">Both systems force more air into an engine. The fascinating difference is where the energy to do that work comes from.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={turboVsSuperchargerArticle.date}>September 21, 2026</time></div><ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path="/engines/turbocharger-vs-supercharger" /></header>
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>TECHNOLOGY</span><span>{turboVsSuperchargerArticle.readingTime}</span></div><h1>{turboVsSuperchargerArticle.title}</h1><p className="article-dek">Both systems force more air into an engine. The fascinating difference is where the energy to do that work comes from.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={turboVsSuperchargerArticle.date}>September 21, 2026</time><span>Updated <time dateTime={turboVsSuperchargerArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path="/engines/turbocharger-vs-supercharger" /></header>
       <Figure src="/images/articles/torquegirl-turbo-vs-supercharger-hero.png" alt={turboVsSuperchargerArticle.heroAlt} caption="Torque Girl faces one of performance engineering's classic questions: turbocharger or supercharger?" priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>THE ENERGY QUESTION</span></aside><div className="article-body">
         <p className="lead-paragraph">An internal-combustion engine needs air. Add more usable oxygen, add the right amount of fuel, and an engine can potentially make more power—provided its cooling, calibration and mechanical strength can handle the assignment.</p>
@@ -63,6 +63,7 @@ export default function TurboVsSuperchargerArticle() {
         <p>Good cooling does not only protect components. It helps the engine receive a more consistent, denser charge and gives calibration more room to work. The radiator, charge-air cooler, ducting, oil system and engine bay all become part of the power equation.</p>
         <h2>Response and power delivery</h2>
         <p>Turbocharged systems can offer strong efficiency potential, flexible packaging and large power capability, with response shaped by the complete design. Mechanically driven superchargers can offer a direct mechanical relationship to engine speed, a distinctive power curve and simpler exhaust routing. Neither list is a guarantee; the hardware has to be matched to the engine and its job.</p>
+        <p>To separate torque from power at a given engine speed, try the <Link className="inline-article-link" href={torquePowerExplorerTool.path}>Torque-Power Explorer</Link>. Supplied samples help explain a powerband; they do not predict boost response or the performance of a turbocharged or supercharged engine.</p>
         <h2>Turbocharger vs supercharger: side by side</h2>
         <div className="comparison-table-wrap"><table className="comparison-table"><caption className="sr-only">Comparison of turbochargers and superchargers</caption><thead><tr><th scope="col">Question</th><th scope="col">Turbocharger</th><th scope="col">Supercharger</th></tr></thead><tbody><tr><th scope="row">Driving energy</th><td>Exhaust-gas energy through a turbine</td><td>Mechanical power from the engine</td></tr><tr><th scope="row">Compressor drive</th><td>Common shaft shared with turbine</td><td>Belt, gears or another mechanical drive</td></tr><tr><th scope="row">Response</th><td>Depends on airflow, sizing and control strategy</td><td>Directly related to the mechanical drive and type</td></tr><tr><th scope="row">Engine load</th><td>Exhaust backpressure and pumping effects</td><td>Parasitic mechanical load</td></tr><tr><th scope="row">Exhaust involvement</th><td>Central to turbine operation and boost control</td><td>Not required to drive the compressor</td></tr><tr><th scope="row">Heat management</th><td>Compressed-air and turbine-side heat are important</td><td>Compressed-air and drive-system heat are important</td></tr><tr><th scope="row">Packaging</th><td>Needs hot-side and charge-air routing</td><td>Needs compressor space and drive alignment</td></tr><tr><th scope="row">Control complexity</th><td>Wastegate, bypass, variable geometry or electronic controls may apply</td><td>Drive ratio, bypass and throttle strategy vary by design</td></tr><tr><th scope="row">Common applications</th><td>Downsized road engines, diesel, racing and performance builds</td><td>Performance road cars, racing and applications valuing direct drive</td></tr></tbody></table></div>
         <h2>Which one makes more power?</h2>

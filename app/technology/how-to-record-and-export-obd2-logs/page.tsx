@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: article.title,
   description: article.description,
   alternates: { canonical: articleUrl },
-  openGraph: { type: 'article', url: articleUrl, title: `${article.title} | TorqueGirl`, description: article.description, publishedTime: article.date, images: [{ url: `https://torquegirl.com${article.heroImage}`, width: 1672, height: 944, alt: article.heroAlt }] },
+  openGraph: { type: 'article', url: articleUrl, title: `${article.title} | TorqueGirl`, description: article.description, publishedTime: article.date, modifiedTime: article.updatedDate ?? article.date, images: [{ url: `https://torquegirl.com${article.heroImage}`, width: 1672, height: 944, alt: article.heroAlt }] },
   twitter: { card: 'summary_large_image', title: `${article.title} | TorqueGirl`, description: article.description, images: [`https://torquegirl.com${article.heroImage}`] },
 };
 
@@ -93,7 +93,7 @@ export default function RecordingGuide() {
         <p>TorqueGirl analyzes your imported log locally in your browser without uploading it. Keep your own file backup: leaving or reloading the analyzer clears the in-memory log. Article sharing shares this guide&apos;s URL, and Share Tool shares the analyzer URL; neither attaches your log. Your scanner app&apos;s own cloud/export behavior is separate, so review its settings too.</p>
 
         <h2 id="analyze">I have a log. What next?</h2>
-        <p>Choose the exported file, review the mapping, then analyze. Check data quality and timing before inspecting related channels in a useful region. Write down the observation, another possible explanation and a safe next verification or retest in your own notes. A pattern is evidence to investigate, not an automatic diagnosis.</p>
+        <p>Choose the exported file, review the mapping, then analyze. Check data quality and timing before inspecting related channels in a useful region. Use the <DocumentLink className="inline-article-link" href="/tools/obd2-log-analyzer#observation-notebook">local observation notebook</DocumentLink> to record the observation, another possible explanation and a safe next verification or retest. Review any captured compact evidence before saving. Keep the original log separately: saved notes and JSON backups do not restore raw logs or the analysis session. A pattern is evidence to investigate, not an automatic diagnosis.</p>
         <div className="related-article"><span>I HAVE A LOG</span><DocumentLink href="/tools/obd2-log-analyzer"><strong>Analyze my log locally</strong><ArrowUpRight size={17} aria-hidden="true" /></DocumentLink></div>
         <aside className="torquegirl-takeaway"><span>TORQUEGIRL&apos;S QUICK TAKE</span><p>Keep the context as carefully as the numbers. Find patterns first. Diagnose second.</p></aside>
         <div className="related-article"><span>KEEP LEARNING</span><DocumentLink href="/technology/how-to-analyze-obd2-live-data-and-logs"><strong>How to Analyze OBD2 Live Data and Logs</strong><ArrowUpRight size={17} aria-hidden="true" /></DocumentLink></div>

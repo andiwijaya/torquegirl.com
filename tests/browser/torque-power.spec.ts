@@ -70,6 +70,26 @@ test('point unit switches convert quantities and reject invalid conversion witho
   await page.getByLabel('Point power unit', { exact: true }).selectOption('kW'); expect(Number(await page.getByLabel(/^Power \(/).inputValue())).toBeCloseTo(74.56998715822702, 10);
 });
 
+test('invalid retained quantity has an actionable visible unit error in the other direction', async ({ page }) => {
+  await page.goto(route);
+  await page.getByLabel(/^Torque \(/).fill('bad');
+  await page.getByLabel('Power + RPM → Torque', { exact: true }).check();
+  const torqueUnit = page.getByLabel('Point torque unit', { exact: true });
+  await torqueUnit.selectOption('lb-ft');
+  await expect(torqueUnit).toHaveValue('Nm');
+  await expect(torqueUnit).toHaveAttribute('aria-invalid', 'true');
+  await expect(torqueUnit).toBeFocused();
+  await expect(page.locator('#tp-point-error')).toContainText('Switch to Torque + RPM');
+  await page.getByLabel(/^Power \(/).fill('bad');
+  await page.getByLabel('Torque + RPM → Power', { exact: true }).check();
+  const powerUnit = page.getByLabel('Point power unit', { exact: true });
+  await powerUnit.selectOption('hp');
+  await expect(powerUnit).toHaveValue('kW');
+  await expect(powerUnit).toHaveAttribute('aria-invalid', 'true');
+  await expect(powerUnit).toBeFocused();
+  await expect(page.locator('#tp-point-error')).toContainText('Switch to Power + RPM');
+});
+
 test('curve sample, supplied peaks, numeric fallback and source label', async ({ page }) => {
   await page.goto(route); await page.getByRole('button', { name: 'Load synthetic sample' }).click();
   await expect(page.getByTestId('peak-torque')).toContainText('230 Nm'); await expect(page.getByTestId('peak-torque')).toContainText('3,500 RPM');
@@ -78,7 +98,7 @@ test('curve sample, supplied peaks, numeric fallback and source label', async ({
   await expect(page.locator('.tp-plot svg')).toHaveCount(2); await expect(page.locator('.tp-plot circle')).toHaveCount(16);
   await page.getByText('All numeric samples (8)', { exact: true }).click(); await expect(page.locator('.tp-numeric li')).toHaveCount(8);
   await expect(page.locator('.tp-numeric li').nth(3)).toContainText('Sampled torque peak'); await expect(page.locator('.tp-numeric li').nth(6)).toContainText('Sampled power peak');
-  await expect(page.locator('.tp-context')).toContainText('5252'); await expect(page.locator('.tp-context')).toContainText('metric PS');
+  await expect(page.getByRole('region', { name: 'Torque and power learning context' })).toContainText('5252'); await expect(page.getByRole('region', { name: 'Torque and power learning context' })).toContainText('metric PS');
 });
 
 test('curve paste formats, edits, unit conversion and sampled ties', async ({ page }) => {

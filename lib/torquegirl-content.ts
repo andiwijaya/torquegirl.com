@@ -20,6 +20,7 @@ export const nascarV8Article: ArticleSummary = {
   category: "Engines",
   topics: ["Motorsport", "V8", "Powertrain"],
   date: "2026-09-21",
+  updatedDate: "2026-10-03",
   readingTime: "9 min read",
   heroImage: "/images/articles/torquegirl-nascar-v8-hero.png",
   heroAlt: "TorqueGirl presenting the V8 engine bay of a stock car in a motorsport workshop.",
@@ -33,6 +34,7 @@ export const turboVsSuperchargerArticle: ArticleSummary = {
   category: "Engines",
   topics: ["Technology", "Performance"],
   date: "2026-09-21",
+  updatedDate: "2026-10-03",
   readingTime: "10 min read",
   heroImage: "/images/articles/torquegirl-turbo-vs-supercharger-hero.png",
   heroAlt: "TorqueGirl comparing a turbocharger and supercharger on a performance workshop bench.",
@@ -46,6 +48,7 @@ export const toyota2JzArticle: ArticleSummary = {
   category: "Engine Legends",
   topics: ["Toyota", "2JZ", "Supra"],
   date: "2026-09-22",
+  updatedDate: "2026-10-03",
   readingTime: "12 min read",
   heroImage: "/images/articles/torquegirl-2jz-gte-hero.png",
   heroAlt: "TorqueGirl standing beside a Toyota 2JZ-GTE engine on a workshop stand.",
@@ -158,3 +161,16 @@ export const allArticles: ArticleSummary[] = [...articles, ...technologyArticles
 export function getLatestArticles(source: readonly ArticleSummary[] = allArticles, limit = 3): ArticleSummary[] {
   return [...source].sort((a, b) => b.date.localeCompare(a.date)).slice(0, Math.max(0, Math.floor(limit)));
 }
+
+// Product discovery shares the editorial registry; tools are not published stories.
+export const obd2AnalyzerTool = {
+  title: 'OBD2 Log Analyzer', path: '/tools/obd2-log-analyzer', label: 'Analyze / Observe / Retest',
+  description: 'Inspect recorded signals, timing and quality. Compare runs and save observations, compact evidence and next tests in a browser-local notebook.',
+  image: obd2LiveDataArticle.heroImage, imageAlt: obd2LiveDataArticle.heroAlt,
+};
+export const torquePowerExplorerTool = {
+  title: 'Torque-Power Explorer', path: '/tools/torque-power-explorer', label: 'Explore / Torque / Power / RPM',
+  description: 'Calculate torque or power at an RPM. Plot supplied samples, inspect the numbers and see why sampled torque and power peaks can differ.',
+  image: nascarV8Article.heroImage, imageAlt: nascarV8Article.heroAlt,
+};
+export const tools = [obd2AnalyzerTool, torquePowerExplorerTool] as const;

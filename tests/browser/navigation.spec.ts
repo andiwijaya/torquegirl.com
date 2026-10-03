@@ -1,10 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
-import { allArticles, getLatestArticles } from '../../lib/torquegirl-content';
+import { allArticles, getLatestArticles, tools } from '../../lib/torquegirl-content';
 import { siteDestinations } from '../../lib/site-navigation';
 import { driveCsv } from '../../lib/obd/drive-demo';
 
 const origin = new URL(process.env.OBD_TEST_URL ?? 'http://127.0.0.1:5184').origin;
-const routes = ['/', '/engines', '/technology', '/tools', '/off-track', '/privacy', '/terms', '/tools/obd2-log-analyzer', ...allArticles.map(a => a.path)];
+const routes = ['/', '/engines', '/technology', '/tools', '/off-track', '/privacy', '/terms', ...tools.map(t => t.path), ...allArticles.map(a => a.path)];
 const viewports = [{ width: 320, height: 740 }, { width: 375, height: 812 }, { width: 390, height: 844 }, { width: 430, height: 932 }, { width: 844, height: 390 }, { width: 1440, height: 1000 }];
 
 function watch(page: Page) {

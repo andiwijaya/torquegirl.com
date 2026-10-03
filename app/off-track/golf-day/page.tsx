@@ -1,6 +1,7 @@
+import SiteHeader from '../../../components/site-header';
+import SiteFooter from '../../../components/site-footer';
 import type { Metadata } from "next";
 import Link from '../../../components/document-link';
-/* eslint-disable @next/next/no-html-link-for-pages */
 import { ArticleShare } from "../../../components/article-share";
 import { offTrackGolfDay } from "../../../lib/torquegirl-content";
 
@@ -36,7 +37,7 @@ const articleJsonLd = {
 export default function GolfDayPage() {
   return <main className="site-shell article-shell offtrack-story">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
-    <header className="site-header article-header"><a className="brand" href="/" aria-label="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></a><nav className="nav-links article-nav" aria-label="Main navigation"><a href="/">Home</a><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link><Link className="nav-off-track" href="/off-track" aria-current="page">Off Track</Link></nav></header>
+    <SiteHeader active="Off Track" />
     <article>
       <div className="technical-article offtrack-article">
         <div className="article-intro offtrack-intro">
@@ -57,6 +58,6 @@ export default function GolfDayPage() {
         </div>
       </div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><Link className="brand brand-footer" href="/"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></Link><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/off-track">Off Track</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <SiteFooter />
   </main>;
 }

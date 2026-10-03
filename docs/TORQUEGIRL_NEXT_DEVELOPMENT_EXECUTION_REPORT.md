@@ -2,7 +2,7 @@
 
 ## Status and authority
 
-Task 0 only: repository baseline, approved-PRD preservation, implementation decomposition, and sequential validation plan. Product workstreams A–F are **pending**. This is not the final delivery report and does not authorize skipping any release gate. The parent orchestrator will review each bounded coding task and invoke the next task without asking the Product Owner to relay prompts.
+Task 0 established the repository baseline, approved-PRD preservation, implementation decomposition, and sequential validation plan. Task 1 implements and locally verifies **Workstream A / A1-A5**; parent milestone review follows the checkpoint. Workstreams B-F and the second-tool integration remain pending. This is not the final delivery report and does not authorize skipping any release gate. The parent orchestrator will review each bounded coding task and invoke the next task without asking the Product Owner to relay prompts.
 
 The complete inherited user PRD is preserved in [TORQUEGIRL_NEXT_DEVELOPMENT_PRD.md](TORQUEGIRL_NEXT_DEVELOPMENT_PRD.md), including the orchestration instructions, all A–F requirements, exclusions, gates, production fix loop, final-report format, and success definition. It remains authoritative; proposals below are implementation decisions, not changes to approved scope.
 
@@ -60,9 +60,9 @@ Confirmed metadata drift: privacy page says September 26, 2026, but sitemap `las
 
 Planned new public route: `/tools/torque-power-explorer`. A separate recording/export guide is recommended at `/technology/how-to-record-and-export-obd2-logs`; Task 2 may instead extend the live-data article if review shows it stays readable and covers every B2 item. The notebook should remain inside the privacy-protected analyzer initially, avoiding a new public route and a second analytics boundary. No empty Machines/Motorsport/Learn/About pages.
 
-## 3. Navigation, homepage, and content findings
+## 3. Task 0 navigation, homepage, and content findings
 
-There is no shared site header/footer component today. Brand/header/footer markup is duplicated across pages, with at least these variants:
+At the Task 0 baseline there was no shared site header/footer component. Brand/header/footer markup was duplicated across pages, with at least these variants (replaced in Task 1; see section 10):
 
 | Variant | Current behavior / affected routes |
 | --- | --- |
@@ -109,16 +109,16 @@ The early three OBD articles already have contextual direct analyzer CTAs; basel
 
 ## 5. Requirement coverage matrix
 
-All implementation entries below are planned, not delivered by Task 0. Optional scope remains explicitly optional. Evidence must be added after each task's reviewed diff and passing checks.
+Task 0 planned these implementation entries. Task 1 evidence is recorded below for A1-A5; later scope remains pending. Optional scope remains explicitly optional. Evidence must be added after each task's reviewed diff and passing checks.
 
 | PRD requirement | Task / likely files | Required acceptance evidence | State |
 | --- | --- | --- | --- |
 | Source-of-truth check; Git safety | 0; this report | Initial status, SHA, fresh remote, routes/sitemap, instructions, existing architecture/deploy/test audit | Baseline verified |
-| A1 headers and real destinations | 1; shared header, all route header call sites | Actual desktop clicking; six real destinations; no empty pages; visual identity preserved | Pending |
-| A2 editorial mobile discovery | 1, 9; header/CSS/browser navigation suite | Engines/Technology/Tools/Off Track/About/Home reachable; keyboard, Escape/focus, touch sizes and no clipping/overflow | Pending |
-| A3 Learn / Analyze / Explore homepage | 1, 8; `app/page.tsx` | Direct analyzer discovery and editorial/tool surfaces; later explorer link; reviewed desktop/mobile screenshots | Pending |
-| A4 registry-backed Latest | 1; `lib/torquegirl-content.ts`, homepage | Newest-first registry-derived selection, stable ties, correct paths for Engine Legends; no extra manual registry | Pending |
-| A5 consistent footers | 1; shared footer/call sites | Tools on editorial paths; Privacy, Terms, Contact retained; index/analyzer coverage | Pending |
+| A1 headers and real destinations | 1; shared header, all route header call sites | Actual desktop clicking; six real destinations; no empty pages; visual identity preserved | Task 1 locally verified: 17 shared shells, desktop/narrow repeated clicks |
+| A2 editorial mobile discovery | 1, 9; header/CSS/browser navigation suite | Engines/Technology/Tools/Off Track/About/Home reachable; keyboard, Escape/focus, touch sizes and no clipping/overflow | Task 1 locally verified at all six sizes; release hardening remains Task 9 |
+| A3 Learn / Analyze / Explore homepage | 1, 8; `app/page.tsx` | Direct analyzer discovery and editorial/tool surfaces; later explorer link; reviewed desktop/mobile screenshots | Task 1 locally verified; second tool remains Task 8 after implementation |
+| A4 registry-backed Latest | 1; `lib/torquegirl-content.ts`, homepage | Newest-first registry-derived selection, stable ties, correct paths for Engine Legends; no extra manual registry | Task 1 locally verified: 3 registry units + browser cards/date/path clicks |
+| A5 consistent footers | 1; shared footer/call sites | Tools on editorial paths; Privacy, Terms, Contact retained; index/analyzer coverage | Task 1 locally verified on all 17 routes, including tool index/analyzer |
 | B1 directional learning links | 2; three early OBD articles/live-data/analyzer | Click scanner → capability → codes → live-data → preparation → analyzer and reciprocal learning links | Pending |
 | B2 practical record/export guidance | 2; recording guide or live-data extension, registry | Every listed context/channel/timestamp/unit/cadence/export/original/privacy item; driving safety; no unvalidated exporter claims | Pending |
 | B3 “I have a log” local CTA | 2; guide/live-data | Visible honest local analyzer CTA, actual full-document click | Pending |
@@ -140,7 +140,7 @@ All implementation entries below are planned, not delivered by Task 0. Optional 
 | E7 reciprocal engine learning | 8; three engine articles/explorer | Contextual NASCAR/2JZ/turbo links and tool return links, clicked and checked | Pending |
 | E8 both tools on index | 8; `app/tools/page.tsx` | Analyzer + explorer discoverable; working destination links; shared navigation/footer | Pending |
 | E9 second tool homepage discovery | 8; homepage tool spotlight | Explorer discoverable without overwhelming editorial page | Pending |
-| Content source-of-truth | 1, 2, 8 | Registry-derived homepage/category references and small canonical-path/update-date helpers; no CMS | Pending |
+| Content source-of-truth | 1, 2, 8 | Registry-derived homepage/category references and small canonical-path/update-date helpers; no CMS | Task 1 homepage/category registry paths and freshness verified; later metadata/content integration pending |
 | SEO and sitemap | 2, 7, 8, 10 | New titles/descriptions/canonicals/OG/semantic headings; unique route coverage; all 17 existing routes retained; accurate lastmod | Pending |
 | Accessibility | 1, 3, 5, 7, 9 | Keyboard access, visible focus, labels, error/status messaging, touch sizes, heading order, chart text summaries | Pending |
 | Six required viewports + tablet | 9, 10, 12 | 320×740, 375×812, 390×844, 430×932, 844×390, 1440×1000; add tablet ~768px; screenshots/overflow/touch checks | Pending |
@@ -258,13 +258,65 @@ After normal integration/push, monitor the exact workflow run for the intended S
 
 | Task | State | Checkpoint / evidence |
 | --- | --- | --- |
-| 0 | Baseline and documents ready for parent review | Two requested docs; fresh synchronized baseline; 61 unit / 27 local browser / 3 public release pass; docs-only checkpoint SHA in task handoff |
-| 1–12 | Pending | Parent must invoke bounded sequential tasks and append exact reviewed outcomes here |
+| 0 | Complete | Documentation checkpoint `273a676e663f03c6ac091185aad9e743bd96f120`; 61 unit / 27 local browser / 3 public baseline release pass |
+| 1 | Implemented and locally verified; parent review follows checkpoint | A1-A5, 61 OBD + 3 registry units, full 38 browser regression and final focused release checks; exact evidence in section 10, checkpoint SHA in handoff |
+| 2-12 | Pending | Parent must invoke bounded sequential tasks and append exact reviewed outcomes here |
 
 Task 0 has no unresolved product-test failure. The initial sandbox failures were infrastructure restrictions and were resolved by approved host-permission reruns; do not weaken security settings or patch product/test code around them. Git metadata writes and host browser/tsx runs may again need the same permission boundary in later tasks. Fresh remote reads/fetch were successful with authorized tools. No external dependency currently blocks Task 1.
 
 Real-world limitation: no physical real-drive corpus validation has been performed and no approved logs were supplied for this task. Retain import support and synthetic labels; later report must distinguish format-shaped fixtures from real exported logs and actual device testing. Chromium desktop with emulated narrow/touch viewports is the tested browser baseline; no physical phone/tablet or Safari/Firefox testing was performed. Full required new-feature viewport coverage, notebook behavior, explorer calculations/UI, and final production deployment remain pending.
 
-Bounded next task: **Task 1 — navigation/footer consolidation + homepage repositioning and registry-derived Latest only**. Work in `C:\TorqueGirl` on `codex/next-development-program`. Read this report and full PRD, recheck status and remote, preserve `DocumentLink` analytics isolation and existing editorial assets. Implement real destinations/shared small shell, accessible editorial mobile menu, compact Learn/Analyze/Explore + direct analyzer spotlight, and current registry-derived Latest; keep the second-tool destination for Task 8 after it exists. Inspect the diff, run the Task 1 checks above, correct defects, update coverage evidence, and make a normal checkpoint. Do not implement the notebook/explorer, push, or deploy during Task 1.
+Bounded next task: **Task 2 - OBD learning flow and practical recording/export guidance / B1-B3**. Work in `C:\TorqueGirl` on `codex/next-development-program`. Read this report and full PRD, recheck status and remote, and preserve the Task 1 shell, `DocumentLink` analytics isolation and existing editorial assets. Prefer a focused `/technology/how-to-record-and-export-obd2-logs` guide if it keeps the live-data article readable. Connect scanner/capability/codes to live data, preparation and local analysis using contextual links. Cover every B2 item and driving-safety checklist; update the registry using explicit `path`, sitemap and real update dates. Run actual journey clicks, focused SEO/mobile/privacy browser checks and lint/typecheck/build, inspect the diff, update evidence and commit normally. Do not implement onboarding/notebook/explorer, push or deploy during Task 2.
 
 At program completion only, publish the single final delivery report using the PRD's 15-section format with release SHA/workflow/URLs/results, honest real-world/device limitations, final branch/status/ahead-behind, and one next product decision. Do not automatically start that next product.
+
+## 10. Task 1 / Workstream A milestone (2026-10-03 UTC)
+
+### Baseline and Task 0 review
+
+Verified `C:\TorqueGirl`, clean `codex/next-development-program`, HEAD `273a676e663f03c6ac091185aad9e743bd96f120`, initially `1 0` ahead/behind `origin/main`. Fresh host-permission `git ls-remote origin refs/heads/main` returned `c2789e8357f23b84bd83aed81fb4ffee293c43d9`; no newer remote/user changes were found. The Task 0 diff contains only the full 1,425-line PRD and 270-line baseline report. Both were read completely and compared to the requirement matrix: A1-A5, B1-B3, C1-C3, D1-D6, E1-E9, optional E6, cross-cutting constraints, F gates/deployment/public fix loop and final report are accounted for. Baseline evidence is correctly distinguished from final-release evidence. No missing requirement or hidden implementation was found. No root/ancestor/repository `AGENTS.md`, `.agents/skills` or checkout-local instructions exist; the ownership-denied OBD worktree and security settings were untouched.
+
+### Delivered behavior and decisions
+
+- **A1/A2:** one shared `SiteHeader`, `SiteBrand` and six-destination registry on all 17 routes: Home `/`, Engines `/engines`, Technology `/technology`, Tools `/tools`, Off Track `/off-track`, About `/#about`. About remains a real homepage section; no empty category pages were added. The analyzer keeps its dark styling and LOCAL / PRIVATE badge. At <=960px the menu expands in normal document flow, keeping it clear of shell clipping and usable in 844x390 landscape. Native disclosure semantics use an accessible changing label, `aria-expanded` and `aria-controls`; Enter/Tab, Escape with focus return, focus/outside-pointer dismissal, link dismissal, same-document About focus and resize dismissal work. Header/footer/brand targets have minimum 44px dimensions; mobile menu links are at least 48px tall. Old editorial rules that hid most links were removed.
+- **A3:** server-rendered editorial homepage now says “Explore machines. Make sense of data.” Learn / Analyze / Explore cards lead to actual destinations, with a direct hero analyzer CTA and an OBD tool spotlight before Latest. Copy accurately describes local import, synthetic demo, quality/phases/A+B and evidence before diagnosis. Existing hero/article/Off Track assets and editorial character remain. All 13 previous homepage IDs remain unique and reachable. No notebook or torque-power feature is advertised. Homepage canonical, title/description, OG and Twitter copy match the positioning; existing social hero image and large-image card are explicitly retained.
+- **A4:** `ArticleSummary.path` defines canonical registry destinations independently of editorial labels; Engine Legends correctly routes under `/engines`. `allArticles` composes existing category arrays; `getLatestArticles` sorts publication dates descending, retains registry order on ties and never mutates the source. Current Latest is Golf Day (2026-09-24), live-data/logs (2026-09-23), 2JZ (2026-09-22). Category cards use the same helper/paths. All homepage article features now reference registry summaries rather than duplicate titles/descriptions/assets/paths. Curated feature selection remains editorial; Latest derives automatically.
+- **A5:** one shared footer on every route, including the previously footerless Tools index and minimal analyzer. All six destinations plus Privacy, Terms and `mailto:hello@torquegirl.com` Contact are present; footer branding remains readable on dark backgrounds.
+- **Privacy navigation decision:** current `DocumentLink` and `SiteAnalytics` source were inspected, not assumed. Native full-document navigation is retained for every new shared link. Same-origin `/` replaces the old hard-coded production-home redirect in shell call sites: production still reaches the same homepage, while local/preproduction navigation stays on the tested origin. `HomeLink` is retained as an unused compatibility helper. Analyzer exit continues to destroy raw in-memory analysis; returning starts empty. Nothing claims future notebook persistence can restore raw logs. Future milestones must keep this fresh-document boundary, sensitive-route analytics exclusion and explicit compact-only evidence persistence.
+
+### Changed files
+
+New: `components/site-header.tsx`, `components/site-footer.tsx`, `components/site-brand.tsx`, `lib/site-navigation.ts`, `app/site-shell.css`, `app/home-discovery.css`, `tests/content/registry.test.ts`, `tests/browser/navigation.spec.ts`.
+
+Modified: `lib/torquegirl-content.ts`, `package.json` (adds `test:content`, no dependency/lockfile change), `app/layout.tsx`, `app/globals.css`, `app/article.css`, this execution report, and all 17 page files: `app/page.tsx`; `app/engines/page.tsx`; `app/engines/how-a-nascar-v8-engine-works/page.tsx`; `app/engines/toyota-2jz-gte-tuning-legend/page.tsx`; `app/engines/turbocharger-vs-supercharger/page.tsx`; `app/technology/page.tsx`; `app/technology/how-formula-1-car-creates-downforce/page.tsx`; `app/technology/what-is-an-obd2-scanner/page.tsx`; `app/technology/obd2-scanner-vs-code-reader/page.tsx`; `app/technology/how-to-read-obd2-codes/page.tsx`; `app/technology/how-to-analyze-obd2-live-data-and-logs/page.tsx`; `app/off-track/page.tsx`; `app/off-track/golf-day/page.tsx`; `app/tools/page.tsx`; `app/tools/obd2-log-analyzer/page.tsx`; `app/privacy/page.tsx`; `app/terms/page.tsx`.
+
+Final diff review also compared the 16 non-home page bodies/metadata to HEAD after allowing only shell/import/category-path/order changes: unchanged article/legal/tool content and metadata were confirmed. CSS comparison confirmed only obsolete navigation rules were removed from the two existing stylesheets. New shell/discovery CSS, components, registry, homepage and tests were reviewed directly. No analyzer algorithms, persistence, analytics, worker, assets, dependencies, deployment workflow or PRD edits occurred. `git diff --check` passes. Evidence: `outputs/next-development-task1/diff-review.json`.
+
+### Test evidence
+
+Logs and screenshots are ignored local artifacts under `outputs/next-development-task1/`. The production server uses `node node_modules/vinext/dist/cli.js start --port 5184`; tests use `http://127.0.0.1:5184` and the real bundled worker `_next/static/worker-_nsHyO87.js`. Task-owned servers are stopped after validation. No public deployment or new-release production check was performed; Task 0's three public tests remain baseline evidence only.
+
+| Command / check | Actual result | Evidence |
+| --- | --- | --- |
+| `npm run test:obd` with host permissions | **61 passed, 0 failed/skipped/cancelled**, 743.954ms | `obd-unit-host.log`; same 61 baseline tests, unchanged OBD implementation |
+| `npm run test:content` with host permissions | **3 passed, 0 failed/skipped/cancelled**, 235.3922ms | `content-unit-host.log`; cross-category freshness/new publication/date ties/immutability/limits/unique paths/Engine Legends/date validity |
+| `npm run typecheck` | PASS, exit 0 | `typecheck.log` |
+| `npm run lint` | PASS, exit 0; **0 errors, 18 warnings**, vs baseline 0/31 | `lint.log`; remaining image-optimization warnings, no blocking/new rule error; obsolete unused disables removed |
+| `npm run build` | PASS, exit 0; all five stages / 17 routes | `build.log`; existing nonblocking Vinext timing/classification notices remain |
+| `npm run test:browser -- --output=outputs/next-development-task1/final-browser-results` with host permissions | **38 passed, 0 failed**, reporter duration **1.3m** | `final-browser.log`; all 27 existing tests unchanged + 11 new navigation tests, on the build with final target dimensions |
+| Final focused `npm run test:browser -- tests/browser/navigation.spec.ts tests/browser/release.spec.ts --output=outputs/next-development-task1/final-navigation-release-results` with host permissions | **14 passed, 0 failed**, **39.7s** | `final-navigation-release.log`; rerun on the final build after small-text contrast and explicit social-image retention, without repeating unaffected large-log tests |
+| Routes / sitemap / canonicals / preserved assets | **17/17 routes HTTP 200**, all canonicals correct; sitemap HTTP 200, **17 entries / 17 unique**; six WebP assets and `/tools/` HTTP 200 | Existing release regression and XML inventory; no new route or sitemap change |
+| Privacy after actual homepage/editorial/tool clicks | Fresh `performance.timeOrigin`, zero analyzer analytics scripts/`dataLayer`, empty returning session; **0 off-origin / 0 content-bearing or non-read requests / 0 runtime errors** during sentinel import | New navigation privacy case plus unchanged real-worker/release/share-tool privacy tests |
+| Navigation / resources | Six real destinations clicked at desktop and 320px repeatedly; latest cards and Engine Legends clicked; all 17 header/footer inventories; **0 monitored console/runtime errors or failed same-origin resources** | New suite checks after actual navigation, not only HTTP reads |
+| Keyboard / touch / layout | Enter/Tab/focus outline/Escape return/close/reopen/About focus/focus-out/resize dismissal; 375px real touchscreen emulation and actual tap to Tools; header/footer/brand minimum 44px | New navigation tests; computed small-text contrast >=4.5:1 for homepage navigation/labels/Latest/Follow |
+| Visual / responsive | Reviewed homepage closed and menus open at **320x740, 375x812, 390x844, 430x932, 844x390, 1440x1000**; editorial/analyzer menus and desktop shells; home/footer/spotlight/Latest | `WIDTHxHEIGHT-home/article/analyzer-closed/open.png`, home section/footer screenshots; 57 automated viewport artifacts. Full-section screenshots at 320 and 1440, plus 768x1024/tablet and 961px menu-breakpoint spot checks. Root and selected component/text containers measured, so hidden root overflow is not treated as sufficient proof |
+
+Performance in the full 38-test run on the target-dimension build: 200k-row import **1843ms / 66 timer ticks**, second 200k import + comparison **2786ms / 106 ticks**, remap **880ms / 43 ticks**. Baseline was 2007ms/74, 2753ms/106 and 884ms/44. Single-machine observations show no material regression; they are not physical-device performance guarantees.
+
+### Defects corrected and limitations
+
+Corrected hidden editorial Tools/destinations, duplicate topical menu destinations, absent/inconsistent footer paths, stale manually selected Latest, duplicated homepage metadata, dark footer brand contrast, inadequate short-link/brand target dimensions and low-contrast small homepage labels. Visual review replaced an initial hero heading that split “Understand” at 320px without shrinking body/heading text. Focused tests caught the analyzer's generic button rule overriding desktop toggle hiding; the shared header selector now has appropriate specificity. Explicit OG/Twitter fields retain social imagery after replacing homepage metadata (a direct rendered-meta check confirmed nested metadata otherwise dropped the inherited image).
+
+Infrastructure is distinguished from product defects: sandbox tsx failed before assertions with `uv_os_get_passwd returned ENOMEM`; sandbox Chromium failed all 10 initial navigation launches with `spawn EPERM`. Authorized host reruns passed; security settings were unchanged. One initial registry fixture incorrectly expected different publication dates to tie; it was corrected to supply genuinely equal dates. Five initial viewport failures used a locator tied to the changing “Open menu” label after it became “Close menu”; the test now locates the same button independently and still verifies its accessible state. The sixth failure was the actual analyzer desktop CSS issue above. Vinext emits “Premature close” diagnostics for image streams canceled by deliberate document navigation/teardown; the browser resource monitors and asset HTTP checks pass.
+
+No external blocker remains. Coverage is Windows Chromium with emulated viewports/touch, not physical phones/tablets, Safari or Firefox; no physical vehicle/log corpus exists. Notebook, torque-power, complete B-F journeys, all-feature release hardening and production remain pending. Existing privacy sitemap date mismatch and article `dateModified` alignment remain assigned to later content integration; nav-only shell changes do not invent new article publication dates. Homepage originally has no maintained sitemap `lastmod`; no misleading article freshness date was added. The current milestone does not authorize pushing/deploying before the complete A-F gates pass.

@@ -1,5 +1,6 @@
 export type ArticleSummary = {
   slug: string;
+  path: string;
   title: string;
   description: string;
   category: string;
@@ -12,6 +13,7 @@ export type ArticleSummary = {
 
 export const nascarV8Article: ArticleSummary = {
   slug: "how-a-nascar-v8-engine-works",
+  path: "/engines/how-a-nascar-v8-engine-works",
   title: "How a NASCAR V8 Engine Works",
   description: "Explore how a NASCAR-style V8 racing engine works, from airflow and combustion to torque, cooling, lubrication and race-ready durability.",
   category: "Engines",
@@ -24,6 +26,7 @@ export const nascarV8Article: ArticleSummary = {
 
 export const turboVsSuperchargerArticle: ArticleSummary = {
   slug: "turbocharger-vs-supercharger",
+  path: "/engines/turbocharger-vs-supercharger",
   title: "Turbocharger vs Supercharger: What’s the Difference?",
   description: "Learn how turbochargers and superchargers work, where their driving energy comes from, and how boost, response, heat and efficiency differ.",
   category: "Engines",
@@ -36,6 +39,7 @@ export const turboVsSuperchargerArticle: ArticleSummary = {
 
 export const toyota2JzArticle: ArticleSummary = {
   slug: "toyota-2jz-gte-tuning-legend",
+  path: "/engines/toyota-2jz-gte-tuning-legend",
   title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend",
   description: "Discover the engineering, durability, tuning headroom and Supra connection that made Toyota's 2JZ-GTE a lasting performance legend.",
   category: "Engine Legends",
@@ -48,6 +52,7 @@ export const toyota2JzArticle: ArticleSummary = {
 
 export const formulaDownforceArticle: ArticleSummary = {
   slug: "how-formula-1-car-creates-downforce",
+  path: "/technology/how-formula-1-car-creates-downforce",
   title: "How a Formula 1 Car Creates Downforce",
   description: "Learn how Formula 1 cars use wings, ground-effect floors, diffusers and aerodynamic balance to turn airflow into cornering performance.",
   category: "Technology",
@@ -60,6 +65,7 @@ export const formulaDownforceArticle: ArticleSummary = {
 
 export const obd2Article: ArticleSummary = {
   slug: "what-is-an-obd2-scanner",
+  path: "/technology/what-is-an-obd2-scanner",
   title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car",
   description: "Learn what an OBD2 scanner does, where it plugs in, how diagnostic trouble codes work, and how to use scan data without guessing at parts.",
   category: "Technology",
@@ -72,6 +78,7 @@ export const obd2Article: ArticleSummary = {
 
 export const obd2ComparisonArticle: ArticleSummary = {
   slug: "obd2-scanner-vs-code-reader",
+  path: "/technology/obd2-scanner-vs-code-reader",
   title: "OBD2 Scanner vs Code Reader: What’s the Difference?",
   description: "Compare a basic OBD2 code reader with an advanced scan tool, from generic trouble codes and live data to ABS, SRS, service functions, and bidirectional controls.",
   category: "Technology",
@@ -84,6 +91,7 @@ export const obd2ComparisonArticle: ArticleSummary = {
 
 export const obd2DtcArticle: ArticleSummary = {
   slug: "how-to-read-obd2-codes",
+  path: "/technology/how-to-read-obd2-codes",
   title: "How to Read OBD2 Codes: P, B, C and U Codes Explained",
   description: "Learn how to read OBD2 diagnostic trouble codes, understand P, B, C and U code families, and use code information as the beginning of diagnosis—not a parts list.",
   category: "Technology",
@@ -96,6 +104,7 @@ export const obd2DtcArticle: ArticleSummary = {
 
 export const obd2LiveDataArticle: ArticleSummary = {
   slug: "how-to-analyze-obd2-live-data-and-logs",
+  path: "/technology/how-to-analyze-obd2-live-data-and-logs",
   title: "How to Analyze OBD2 Live Data and Logs",
   description: "Learn how to record and read OBD2 live-data logs, compare RPM, throttle, fuel trims, coolant and oxygen-sensor data, and find useful patterns without jumping to conclusions.",
   category: "Technology",
@@ -108,6 +117,7 @@ export const obd2LiveDataArticle: ArticleSummary = {
 
 export const offTrackGolfDay: ArticleSummary = {
   slug: "golf-day",
+  path: "/off-track/golf-day",
   title: "Off Track: Torque Girl’s Golf Day",
   description: "Torque Girl steps away from machines for a day on the golf course—a short story about curiosity, focus, learning and enjoying something new.",
   category: "Off Track",
@@ -122,3 +132,11 @@ export const offTrackStories: ArticleSummary[] = [offTrackGolfDay];
 
 export const articles: ArticleSummary[] = [toyota2JzArticle, turboVsSuperchargerArticle, nascarV8Article];
 export const technologyArticles: ArticleSummary[] = [obd2LiveDataArticle, obd2DtcArticle, obd2ComparisonArticle, obd2Article, formulaDownforceArticle];
+
+// Category arrays remain the registry; labels such as Engine Legends are not URL roots.
+export const allArticles: ArticleSummary[] = [...articles, ...technologyArticles, ...offTrackStories];
+
+/** ISO publication dates sort newest first; equal dates retain registry order. Never mutate the source. */
+export function getLatestArticles(source: readonly ArticleSummary[] = allArticles, limit = 3): ArticleSummary[] {
+  return [...source].sort((a, b) => b.date.localeCompare(a.date)).slice(0, Math.max(0, Math.floor(limit)));
+}

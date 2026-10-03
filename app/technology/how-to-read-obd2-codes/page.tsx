@@ -1,9 +1,10 @@
+import SiteHeader from '../../../components/site-header';
+import SiteFooter from '../../../components/site-footer';
 import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
-import { HomeLink } from "../../../components/home-link";
 import { obd2DtcArticle } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/technology/how-to-read-obd2-codes";
@@ -24,7 +25,7 @@ export default function Obd2DtcArticle() {
   const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2DtcArticle.title, description: obd2DtcArticle.description, image: [`https://torquegirl.com${obd2DtcArticle.heroImage}`], datePublished: obd2DtcArticle.date, dateModified: obd2DtcArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link><Link className="nav-off-track" href="/off-track">Off Track</Link></nav></header>
+    <SiteHeader active="Technology" />
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2DtcArticle.readingTime}</span></div><h1>{obd2DtcArticle.title}</h1><p className="article-dek">A trouble code is not a parts list. Learn how to read its structure, understand what the vehicle detected, and turn that first clue into a sensible diagnostic plan.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2DtcArticle.date}>September 22, 2026</time></div><ArticleShare title={obd2DtcArticle.title} description={obd2DtcArticle.description} path="/technology/how-to-read-obd2-codes" /></header>
       <Figure src="/images/articles/torquegirl-read-obd2-codes-hero.png" alt="TorqueGirl reading OBD2 diagnostic trouble codes on an automotive scan tool" caption="A scan tool gives you a code such as P0301. The useful work begins when you interpret that code in vehicle context." priority />
@@ -94,6 +95,6 @@ export default function Obd2DtcArticle() {
         <ArticleShare title={obd2DtcArticle.title} description={obd2DtcArticle.description} path="/technology/how-to-read-obd2-codes" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <SiteFooter />
   </main>;
 }

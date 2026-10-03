@@ -8,6 +8,8 @@ import "./article-turbo.css";
 import "./article-legends.css";
 import "./article-technology.css";
 import "./legal.css";
+import "./site-shell.css";
+import "./home-discovery.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://torquegirl.com"),

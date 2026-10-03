@@ -18,7 +18,8 @@
     "typecheck": "tsc --noEmit",
     "test:browser": "playwright test",
     "benchmark:obd-v2": "node --import tsx scripts/benchmark-obd-v2.ts",
-    "benchmark:obd-v3": "node --import tsx scripts/benchmark-obd-v3.ts"
+    "benchmark:obd-v3": "node --import tsx scripts/benchmark-obd-v3.ts",
+    "test:content": "node --import tsx --test tests/content/*.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

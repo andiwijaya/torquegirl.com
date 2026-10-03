@@ -1,8 +1,9 @@
+import SiteHeader from '../../../components/site-header';
+import SiteFooter from '../../../components/site-footer';
 import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
-import { HomeLink } from "../../../components/home-link";
 import { obd2LiveDataArticle } from "../../../lib/torquegirl-content";
 
 const articleUrl = "https://torquegirl.com/technology/how-to-analyze-obd2-live-data-and-logs";
@@ -24,7 +25,7 @@ export default function Obd2LiveDataArticle() {
 
   return <main className="site-shell article-shell">
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/technology" aria-current="page">Technology</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link><Link className="nav-off-track" href="/off-track">Off Track</Link></nav></header>
+    <SiteHeader active="Technology" />
     <article className="technical-article">
       <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2LiveDataArticle.readingTime}</span></div><h1>{obd2LiveDataArticle.title}</h1><p className="article-dek">A scanner can turn a drive into thousands of sensor readings. Learn to turn that wall of numbers into a useful story about what the vehicle was doing—and where a closer look may help.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2LiveDataArticle.date}>September 23, 2026</time></div><ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path="/technology/how-to-analyze-obd2-live-data-and-logs" /></header>
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>CONNECT / RECORD / CORRELATE</span></aside><div className="article-body">
@@ -92,6 +93,6 @@ export default function Obd2LiveDataArticle() {
         <ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path="/technology/how-to-analyze-obd2-live-data-and-logs" />
       </div></div>
     </article>
-    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/#about">About</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <SiteFooter />
   </main>;
 }

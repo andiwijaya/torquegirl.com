@@ -1,6 +1,7 @@
+import SiteHeader from '../../components/site-header';
+import SiteFooter from '../../components/site-footer';
 import type { Metadata } from "next";
 import Link from '../../components/document-link';
-import { HomeLink } from "../../components/home-link";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | TorqueGirl",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return <main className="site-shell article-shell">
-    <header className="site-header article-header"><HomeLink className="brand" ariaLabel="TorqueGirl home"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><nav className="nav-links article-nav" aria-label="Main navigation"><HomeLink>Home</HomeLink><Link href="/engines">Engines</Link><Link href="/#explore">Machines</Link><Link href="/#how-it-works">Learn</Link><Link href="/#about">About</Link><Link className="nav-off-track" href="/off-track">Off Track</Link></nav></header>
+    <SiteHeader />
     <article className="legal-page"><header className="legal-intro"><p className="eyebrow"><span className="eyebrow-line" />TorqueGirl / policy</p><h1>Privacy</h1><p>TorqueGirl is an English-language editorial website about machines, performance and engineering. This page explains the information that may be processed when you visit the site.</p><p className="legal-updated">Last updated: September 26, 2026</p></header><div className="legal-body">
       <h2>Website usage</h2><p>You can read TorqueGirl content without creating an account or submitting personal information. We do not intentionally ask visitors to provide sensitive personal information through this website.</p>
       <h2>Local OBD2 log analysis</h2><p>The <Link href="/tools/obd2-log-analyzer">OBD2 Log Analyzer</Link> processes imported logs and comparisons in your browser memory. It does not upload log contents, vehicle readings or comparison results. Mapping templates are saved locally only when you explicitly choose to save them, and contain mapping configuration rather than recorded log samples. You can delete templates in the tool or clear browser storage.</p>
@@ -23,6 +24,6 @@ export default function PrivacyPage() {
       <h2>Policy updates</h2><p>We may update this policy when the website, analytics, hosting or legal requirements change. The updated version will be published on this page with a new date.</p>
       <p className="legal-note">This policy is general website information and is not legal advice.</p>
     </div></article>
-    <footer className="site-footer"><div className="footer-top"><HomeLink className="brand brand-footer"><span className="brand-mark">T</span><span>Torque<span>Girl</span><b>.com</b></span></HomeLink><p>Machines. Performance. Real engineering.</p></div><div className="footer-bottom"><nav aria-label="Footer navigation"><Link href="/engines">Engines</Link><Link href="/technology">Technology</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><a href="mailto:hello@torquegirl.com">Contact</a></nav><div className="footer-meta"><span>© 2026 TorqueGirl</span><span>English only</span></div></div></footer>
+    <SiteFooter />
   </main>;
 }

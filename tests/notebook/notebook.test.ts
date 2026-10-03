@@ -115,7 +115,7 @@ test('UTF-8 byte size and per-field limits reject instead of truncating', () => 
   assert.throws(() => validateNotebook(document(...lots)), failure('limit'));
   assert.throws(() => parseNotebookJson(' '.repeat(NOTEBOOK_LIMITS.bytes + 1)), failure('limit'));
   assert.throws(() => parseNotebookJson('🚗'.repeat(NOTEBOOK_LIMITS.bytes / 4 + 1)), failure('limit'));
-  assert.throws(() => validateNotebook(document(...Array.from({ length: 101 }, (_, i) => record(`n-${i}`)))), failure('invalid'));
+  assert.throws(() => validateNotebook(document(...Array.from({ length: 101 }, (_, i) => record(`n-${i}`)))), error => failure('invalid')(error) && (error as Error).message.includes('100 records'));
 });
 
 test('depth preflight handles escaped quotes and braces inside text', () => {

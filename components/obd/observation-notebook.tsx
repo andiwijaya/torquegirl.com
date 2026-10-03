@@ -44,6 +44,7 @@ function download(json: string, filename: string) {
 export default function ObservationNotebook({ analysis }: { analysis?: AnalysisEvidenceInput }) {
   const store = useRef<ReturnType<typeof browserNotebookStore> | null>(null);
   const [snapshot, setSnapshot] = useState<NotebookSnapshot | null>(null);
+  const [initialized, setInitialized] = useState(false);
   const [writable, setWritable] = useState(false), [storageState, setStorageState] = useState('Checking browser storage…');
   const [form, setForm] = useState<Form>({}), [editId, setEditId] = useState<string | null>(null);
   const [start, setStart] = useState(''), [end, setEnd] = useState(''), [phase, setPhase] = useState('');
@@ -55,6 +56,7 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
   const [mode, setMode] = useState<'merge' | 'replace'>('merge');
   const [busy, setBusy] = useState(false);
   const gate = useRef(false), dialog = useRef<HTMLDialogElement>(null), formHeading = useRef<HTMLHeadingElement>(null);
+  const dialogTrigger = useRef<HTMLButtonElement | null>(null);
   const signature = JSON.stringify({ form, start, end, phase, signals, evidence });
   const emptySignature = JSON.stringify({ form: {}, start: '', end: '', phase: '', signals: [] });
   const dirty = signature !== (baseline || emptySignature);
@@ -69,6 +71,7 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
     setWritable(adapter.writable);
     try { setSnapshot(adapter.read()); setStorageState(adapter.writable ? 'Browser-local saving is available. Save explicitly; keep your own backups.' : 'Read-only: safe cross-tab saving requires Web Locks. Saved notes can be read and exported. Drafts are memory-only; download a draft backup.'); }
     catch (e) { setStorageState('Storage unavailable or saved format unreadable. Saved bytes are preserved. Drafts are memory-only; download a draft backup.'); fail(e); }
+    finally { setInitialized(true); }
     });
     const changed = (event: StorageEvent) => { if (event.key === NOTEBOOK_KEY || event.key === null) { setStale(true); setStatus('Saved notebook changed in another tab. Reload saved notes before applying changes; your draft is preserved.'); } };
     window.addEventListener('storage', changed);
@@ -111,7 +114,15 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
       if (dirty) { setEditId(null); setStatus('Saved notes reloaded. Your draft was kept and will save as a new note to protect newer edits.'); }
       else { loadDraft(); setStatus('Saved notes reloaded.'); }
       setStorageState(store.current!.writable ? 'Browser-local saving is available. Save explicitly; keep your own backups.' : 'Read-only: Web Locks unavailable. Read/export saved notes or download your memory-only draft.');
-    } catch (e) { fail(e); }
+    } catch (e) {
+      // A later denied/corrupt read invalidates the old writable snapshot too.
+      // Keep the form in memory, but require a successful explicit reload before
+      // offering storage mutations again.
+      setSnapshot(null);
+      setImportPlan(null);
+      setStorageState('Storage unavailable or saved format unreadable. Saved bytes are preserved. Drafts are memory-only; download a draft backup.');
+      fail(e);
+    }
   };
   const prepare = (kind: 'delete' | 'clear', id?: string) => {
     try { const plan = kind === 'delete' ? store.current!.planDelete(snapshot!, id!) : store.current!.planClear(snapshot!); setError(''); setPending({ kind: 'plan', plan }); } catch (e) { fail(e); }
@@ -120,9 +131,14 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
     const next = await store.current!.commitPlan(plan, { confirmed: true }); setSnapshot(next); setStale(false); setImportPlan(null);
     if (editId && !next.document.records.some(r => r.id === editId) || plan.kind === 'replace') { setEditId(null); setBaseline(emptySignature); setStatus('Notebook updated. Your current form was kept; save it as a new note if needed.'); }
     else setStatus(`Notebook updated: ${plan.added} added, ${plan.removed} removed. ${plan.conflictIds.length} conflicting imported records skipped; local versions kept.`);
-    dialog.current?.close(); setPending(null);
+    closeDialog();
   });
-  const cancel = () => { if (gate.current) return; dialog.current?.close(); setPending(null); };
+  const closeDialog = (restoreFocus = true) => {
+    const trigger = dialogTrigger.current;
+    dialog.current?.close(); setPending(null);
+    if (restoreFocus) requestAnimationFrame(() => (trigger?.isConnected ? trigger : formHeading.current)?.focus());
+  };
+  const cancel = () => { if (gate.current) return; closeDialog(); };
   const capture = () => {
     try {
       if (!analysis) return;
@@ -133,7 +149,10 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
   const confirmLabel = pending?.kind === 'discard' ? 'Discard unsaved edits' : pending?.plan.kind === 'delete' ? 'Delete saved note' : pending?.plan.kind === 'clear' ? 'Clear saved notebook' : 'Replace saved notebook';
   const canSave = !!snapshot && writable && !busy;
 
-  return <section id="observation-notebook" className="observation-notebook" aria-labelledby="notebook-heading">
+  return <section id="observation-notebook" className="observation-notebook" aria-labelledby="notebook-heading" onClickCapture={event => {
+    const trigger = event.target instanceof Element ? event.target.closest('button') : null;
+    if (!dialog.current?.open && trigger instanceof HTMLButtonElement) dialogTrigger.current = trigger;
+  }}>
     <span className="obd-kicker">07 / OBSERVATION + RETEST NOTEBOOK</span><h2 id="notebook-heading">Keep the observation. Plan the retest.</h2>
     <p>Find patterns first. Diagnose second. Record what the data supports, another possible explanation and a safe next test. Every field is optional; no vehicle details are required.</p>
     <p className="notebook-privacy">Browser-local notes only, on this origin in this browser. Nothing is sent over the network. Raw logs, source rows, traces and the analysis session are never saved or restored. Browser data clearing or private browsing may lose notes. JSON backups are user-controlled local files and may contain private identifiers or observations; store and share them carefully. Share Tool shares only the public tool URL.</p>
@@ -145,7 +164,7 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
       <div className="notebook-editor">
         <h3 tabIndex={-1} ref={formHeading}>{editId ? 'Edit saved observation' : 'New observation'}</h3>
         <p>{dirty ? 'Unsaved edits — kept in memory until you save or download a draft backup.' : 'No unsaved changes.'}</p>
-        <fieldset disabled={busy}><legend>Capture current analysis (optional)</legend>
+        <fieldset disabled={busy || !initialized}><legend>Capture current analysis (optional)</legend>
           <p>Choose signals in Build your view above. Phase capture includes those Run A signals and matching Run B signals (up to 16 combined), current phase statistics and the current comparison if available. Timeline capture includes the visible Run A time bounds and signals, without phase statistics. Review run labels; filenames are not copied automatically.</p>
           <label>Run A evidence label<input maxLength={160} value={runA} onChange={e => setRunA(e.target.value)} /></label><label>Run B evidence label<input maxLength={160} value={runB} onChange={e => setRunB(e.target.value)} /></label>
           <label>Evidence scope<select aria-label="Evidence scope" value={scope} onChange={e => setScope(e.target.value)}><option value="phase">Selected phases / comparison</option><option value="timeline">Visible Run A timeline</option></select></label>
@@ -153,7 +172,7 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
           {!analysis && <p>Analyze a log to capture evidence, or write a manual note below.</p>}
         </fieldset>
         <form onSubmit={e => { e.preventDefault(); void save(); }}>
-          <fieldset disabled={busy}><legend>Observation details — all optional</legend>
+          <fieldset disabled={busy || !initialized}><legend>Observation details - all optional</legend>
           {fields.map(([key, label, max]) => <div className="notebook-field" key={key}><label htmlFor={`notebook-${key}`}>{label}</label>{key === 'testDate' || max === 160 ? <input id={`notebook-${key}`} type={key === 'testDate' ? 'date' : 'text'} maxLength={max} value={form[key] ?? ''} onChange={e => setForm(old => ({ ...old, [key]: e.target.value }))} /> : <textarea id={`notebook-${key}`} rows={key === 'observation' || key === 'notes' ? 4 : 2} maxLength={max} value={form[key] ?? ''} onChange={e => setForm(old => ({ ...old, [key]: e.target.value }))} />}</div>)}
           <fieldset><legend>Selected region (optional, elapsed seconds)</legend><label>Region start (s)<input type="number" min="0" max="1000000000" step="any" value={start} onChange={e => setStart(e.target.value)} /></label><label>Region end (s)<input type="number" min="0" max="1000000000" step="any" value={end} onChange={e => setEnd(e.target.value)} /></label><label>Selected phase<select aria-label="Selected phase" value={phase} onChange={e => setPhase(e.target.value)}><option value="">No phase</option>{['stopped', 'idle', 'acceleration', 'cruise', 'deceleration', 'unclassified'].map(p => <option key={p}>{p}</option>)}</select></label></fieldset>
           <fieldset><legend>Selected signals (optional, maximum 16)</legend>{signals.map((s, i) => <div className="notebook-signal" key={i}><label>Signal {i + 1} label<input maxLength={160} value={s.label} onChange={e => setSignals(old => old.map((v, index) => index === i ? { ...v, label: e.target.value } : v))} /></label><label>Signal {i + 1} unit<input maxLength={40} value={s.unit ?? ''} onChange={e => setSignals(old => old.map((v, index) => index === i ? { ...v, unit: e.target.value } : v))} /></label><p>Run {s.run ?? 'A'} · {s.identity ?? 'manual signal'}</p><button type="button" onClick={() => setSignals(old => old.filter((_, index) => index !== i))}>Remove signal {i + 1}</button></div>)}<button type="button" disabled={signals.length >= NOTEBOOK_LIMITS.signals} onClick={() => setSignals(old => [...old, { id: `manual-${crypto.randomUUID()}`, label: '' }])}>Add manual signal</button></fieldset>
@@ -172,9 +191,16 @@ export default function ObservationNotebook({ analysis }: { analysis?: AnalysisE
         {importPlan && <div className="notebook-import-preview" data-testid="notebook-import-preview"><h4>Import preview: {importPlan.kind}</h4><p>{importPlan.added} added · {importPlan.removed} removed · {importPlan.unchanged} identical · {importPlan.conflictIds.length} conflicting IDs skipped (local versions kept).</p>{!!importPlan.conflictIds.length && <p>Skipped IDs: {importPlan.conflictIds.join(', ')}</p>}<p>Resulting notebook: {importPlan.preview.records.length} records.</p><details><summary>Review resulting notes</summary>{importPlan.preview.records.map(r => <p key={r.id}>{title(r)} · {r.observation || 'no observation text'}</p>)}</details><div className="notebook-actions"><button disabled={!canSave} onClick={() => importPlan.requiresConfirmation ? setPending({ kind: 'plan', plan: importPlan }) : void applyPlan(importPlan)}>Apply {importPlan.kind} import</button><button disabled={busy} onClick={() => { setImportPlan(null); setStatus('Import cancelled. Saved notes and your draft were preserved.'); }}>Cancel import preview</button></div></div>}
       </div>
     </div>
-    <dialog ref={dialog} className="notebook-dialog" aria-labelledby="notebook-confirm-heading" aria-describedby="notebook-confirm-description" onCancel={e => { e.preventDefault(); cancel(); }}>
+    <dialog ref={dialog} className="notebook-dialog" aria-labelledby="notebook-confirm-heading" aria-describedby="notebook-confirm-description" onCancel={e => { e.preventDefault(); cancel(); }} onKeyDown={event => {
+      if (event.key !== 'Tab') return;
+      const controls = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')];
+      const first = controls[0], last = controls.at(-1);
+      if (event.shiftKey && document.activeElement === first || !event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); (event.shiftKey ? last : first)?.focus();
+      }
+    }}>
       <h3 id="notebook-confirm-heading">{confirmLabel}?</h3><p id="notebook-confirm-description">{pending?.kind === 'discard' ? 'Your unsaved form edits will be discarded. Download a draft backup first if you want to keep them.' : `${pending?.kind === 'plan' ? pending.plan.removed : 0} saved notes will be removed. This cannot be undone without your own backup. Your current form stays in memory.`}</p>
-      {error && <p role="alert">{error}</p>}<div className="notebook-actions"><button autoFocus disabled={busy} onClick={cancel}>Cancel</button><button disabled={busy} className="notebook-destructive" onClick={() => { if (!pending || gate.current) return; if (pending.kind === 'discard') { const next = pending.next; cancel(); next(); } else void applyPlan(pending.plan); }}>{busy ? 'Applying…' : confirmLabel}</button></div>
+      {error && <p role="alert">{error}</p>}<div className="notebook-actions"><button autoFocus disabled={busy} onClick={cancel}>Cancel</button><button disabled={busy} className="notebook-destructive" onClick={() => { if (!pending || gate.current) return; if (pending.kind === 'discard') { const next = pending.next; closeDialog(false); next(); } else void applyPlan(pending.plan); }}>{busy ? 'Applying…' : confirmLabel}</button></div>
     </dialog>
   </section>;
 }

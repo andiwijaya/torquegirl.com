@@ -58,6 +58,7 @@ function Chart({ signal, data, reading, color, range, cursor, onInspect }: { sig
 
 export default function Analyzer() {
   const client = useRef<LogWorkerClient | null>(null);
+  const [ready, setReady] = useState(false);
   const [notebookContext, setNotebookContext] = useState<NotebookAnalysisContext>();
   const [activeClient, setActiveClient] = useState<LogWorkerClient | null>(null);
   const [info, setInfo] = useState<LogInfo | null>(null), [name, setName] = useState('');
@@ -71,12 +72,14 @@ export default function Analyzer() {
   const [playing, setPlaying] = useState(false), [speed, setSpeed] = useState(1);
   const duration = info?.quality.duration ?? 0;
   useEffect(() => {
+    let active = true;
+    queueMicrotask(() => { if (active) setReady(true); });
     // A document held in the back/forward cache must not retain a usable log.
     const leave = () => { client.current?.dispose(); client.current = null; };
     const returnToDocument = (event: PageTransitionEvent) => { if (event.persisted) window.location.reload(); };
     window.addEventListener('pagehide', leave);
     window.addEventListener('pageshow', returnToDocument);
-    return () => { leave(); window.removeEventListener('pagehide', leave); window.removeEventListener('pageshow', returnToDocument); };
+    return () => { active = false; leave(); window.removeEventListener('pagehide', leave); window.removeEventListener('pageshow', returnToDocument); };
   }, []);
   const load = async (file: Blob, label: string, synthetic = false) => {
     client.current?.dispose();
@@ -159,7 +162,7 @@ export default function Analyzer() {
   return <div className="obd-app">
     <section className={`obd-import ${importInfo ? 'obd-import-compact' : ''}`} aria-label="Import a log">
       <div><span className="obd-kicker">01 / IMPORT</span><h2>{importInfo ? name : 'Every drive tells a story.'}</h2><p>{importInfo ? `${importInfo.format} · ${number(importInfo.quality.parsed)} records · ${clock(importInfo.quality.duration)}` : 'Bring your recorded data. Explore what the sensors actually saw.'}</p></div>
-      <div className="obd-import-actions"><label className="obd-button obd-primary">{busy ? 'Replace file' : importInfo ? 'Open another log' : 'Choose a CSV log'}<input aria-label="Choose CSV log" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" onChange={e => { const f = e.target.files?.[0]; if (f) void load(f, f.name); e.target.value = ''; }} /></label><button onClick={() => void load(new Blob([demoCsv()], { type: 'text/csv' }), 'Synthetic demo · illustrative data', true)}>Explore demo</button><ShareToolButton /></div>
+      <div className="obd-import-actions"><label className="obd-button obd-primary">{busy ? 'Replace file' : importInfo ? 'Open another log' : 'Choose a CSV log'}<input aria-label="Choose CSV log" disabled={!ready} type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values" onChange={e => { const f = e.target.files?.[0]; if (f) void load(f, f.name); e.target.value = ''; }} /></label><button disabled={!ready} onClick={() => void load(new Blob([demoCsv()], { type: 'text/csv' }), 'Synthetic demo · illustrative data', true)}>Explore demo</button><ShareToolButton /></div>
       {!importInfo && <p className="obd-import-note">CSV / TSV · up to 25 MiB, 250,000 records, 2 million cells · comma, semicolon or tab</p>}
     </section>
     <p className="obd-privacy">◉ Your log stays in memory in this browser. Only mapping templates and notebook notes you explicitly save persist locally. Raw logs and the analysis session are never saved or restored. Nothing is uploaded. Leaving or reloading clears the logs; returning starts a new analysis.</p>

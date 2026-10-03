@@ -96,7 +96,10 @@ function checkTree(input: unknown, depth = 0, seen = new Set<object>()) {
 function parseSchema<T>(schema: z.ZodType<T>, input: unknown): T {
   checkTree(input);
   const result = schema.safeParse(input);
-  if (!result.success) throw new NotebookError('invalid', 'Notebook fields are invalid or unsupported; nothing was changed.');
+  if (!result.success) {
+    if (result.error.issues.some(issue => issue.code === 'too_big' && issue.path.length === 1 && issue.path[0] === 'records')) throw new NotebookError('invalid', 'Notebook supports at most 100 records. Export a backup before removing saved notes to make room; nothing was changed.');
+    throw new NotebookError('invalid', 'Notebook fields are invalid or unsupported; nothing was changed.');
+  }
   return result.data;
 }
 export const validateDraft = (input: unknown): NotebookDraft => parseSchema(notebookDraftSchema, input);

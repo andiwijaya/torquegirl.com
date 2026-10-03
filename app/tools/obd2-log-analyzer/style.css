@@ -2,3 +2,9 @@
 .obd-share-tool{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.obd-share-button{border-color:#8b454b!important;color:#ffd9dc!important}.obd-share-button:hover{background:#39282d!important}.obd-share-status{min-height:14px;color:#aeb9c3;font-size:10px;line-height:1.4}.obd-share-status:empty{display:none}
 
 .obd-guide{border:1px solid #425464;border-left:3px solid #52d6b1;border-radius:4px;padding:16px 20px;margin:20px 0;background:#1b252f;line-height:1.7;overflow-wrap:anywhere}.obd-guide p{margin:0 0 10px;color:#c1ccd5}.obd-guide-next strong{color:#f2f4f5}.obd-guide summary,.obd-term-help summary{min-height:44px;display:list-item;align-content:center;cursor:pointer;color:#d7e2eb;font-weight:700}.obd-guide ol{list-style:decimal;padding-left:24px;margin:12px 0}.obd-guide li{padding:5px 0;color:#c1ccd5}.obd-guide li strong{color:#f2f4f5}.obd-demo-hint{color:#bce7d9!important}.obd-term-help{font-size:12px;line-height:1.7;margin:12px 0}.obd-term-help p{color:#c1ccd5}.obd-observation-prompt{margin-top:24px;border-top:1px solid #425464;padding-top:16px;line-height:1.7}.obd-observation-prompt p{color:#c1ccd5;margin:12px 0}.obd-observation-prompt h3{font-size:20px;margin:8px 0}
+
+/* Keep timeline and signal controls usable with touch and keyboard. */
+.obd-search input,.obd-playback select,.obd-playback input{min-height:44px}
+.obd-quality summary,.obd-state summary{min-height:44px;align-content:center}
+.obd-page :is(button,input,select,summary,svg[role=slider]):focus-visible{outline:3px solid #f3bc5b;outline-offset:3px}
+.obd-page svg[role=slider]:focus{outline:3px solid #f3bc5b;outline-offset:3px}

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { BROWSER_CALL_RESOURCES, installPrivateDocumentNetworkProbe, PRIVATE_INITIATORS_KEY } from './privacy-probe';
 import { driveCsv } from '../../lib/obd/drive-demo';
 
 const route = '/tools/obd2-log-analyzer';
@@ -112,21 +113,29 @@ test('guidance follows replacement imports, failed import, mapping review/reset 
 });
 
 test('actual editorial entry, worker disposal and back/forward return clear analysis without transmission', async ({ page }) => {
-  const traffic: string[] = [], errors: string[] = [], workers: string[] = [];
+  const traffic: string[] = [], errors: string[] = [];
   let entered = false;
   page.on('framenavigated', frame => { if (frame === page.mainFrame()) entered = new URL(frame.url()).pathname === route; });
-  page.on('request', r => { if (entered && (new URL(r.url()).origin !== origin || !['GET', 'HEAD'].includes(r.method()) || r.postData() || /C_PRIVATE|853\.2719/.test(r.url()))) traffic.push(r.url()); });
+  page.on('request', r => { if (entered && !BROWSER_CALL_RESOURCES.includes(r.resourceType()) && (new URL(r.url()).origin !== origin || !['GET', 'HEAD'].includes(r.method()) || r.postData()) || /C_PRIVATE|853\.2719/.test(`${r.url()} ${r.postData() ?? ''}`)) traffic.push(r.url()); });
   page.on('pageerror', e => errors.push(e.message));
-  page.on('worker', w => workers.push(w.url()));
+  await page.addInitScript(installPrivateDocumentNetworkProbe);
   await page.addInitScript(() => {
     const Original = window.Worker;
-    window.Worker = class extends Original { terminate() { sessionStorage.setItem('c-worker-disposed', 'yes'); super.terminate(); } };
+    window.Worker = class extends Original {
+      constructor(url: string | URL, options?: WorkerOptions) {
+        super(url, options);
+        const sources = JSON.parse(sessionStorage.getItem('c-worker-urls') ?? '[]');
+        sessionStorage.setItem('c-worker-urls', JSON.stringify([...sources, new URL(String(url), location.href).href]));
+      }
+      terminate() { sessionStorage.setItem('c-worker-disposed', 'yes'); super.terminate(); }
+    };
     window.addEventListener('pageshow', event => { if (event.persisted) sessionStorage.setItem('c-cached-return', 'yes'); });
   });
   await page.goto('/technology/how-to-record-and-export-obd2-logs');
   const before = await page.evaluate(() => performance.timeOrigin);
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click();
   expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(before);
+  await expect(page.getByLabel('Choose CSV log', { exact: true })).toBeEnabled();
   await page.getByLabel('Choose CSV log', { exact: true }).setInputFiles({ name: 'C_PRIVATE.csv', mimeType: 'text/csv', buffer: Buffer.from(driveCsv().replace('800.000', '853.2719')) });
   await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.getByLabel('Phase region A', { exact: true })).toBeVisible();
@@ -143,9 +152,11 @@ test('actual editorial entry, worker disposal and back/forward return clear anal
   await expect(page.locator('script[src*="googletagmanager"],script[src*="cloudflareinsights"],script#ga4')).toHaveCount(0);
   expect(await page.evaluate(() => 'dataLayer' in window)).toBe(false);
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toMatch(/C_PRIVATE|853\.2719|sourceValues/);
+  const workers: string[] = await page.evaluate(() => JSON.parse(sessionStorage.getItem('c-worker-urls') ?? '[]'));
   expect(workers.length).toBeGreaterThan(1);
   expect(workers.every(url => new URL(url).origin === origin)).toBe(true);
   expect(traffic).toEqual([]);
+  expect(await page.evaluate(key => JSON.parse(sessionStorage.getItem(key) ?? '[]'), PRIVATE_INITIATORS_KEY)).toEqual([]);
   expect(errors).toEqual([]);
   console.log(JSON.stringify({ workers, prohibitedRequests: traffic.length, disposedOnExit: true, cachedDocumentReturned: await page.evaluate(() => sessionStorage.getItem('c-cached-return')) }));
 });

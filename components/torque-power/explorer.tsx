@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent, type PointerEvent } from 'react';
+import { useEffect, useState, type FormEvent, type PointerEvent } from 'react';
 import { convertPower, convertTorque, parseNumericInput, powerFromTorque, torqueFromPower, TorquePowerError, type PowerUnit, type TorqueUnit, type TorquePowerPoint } from '../../lib/torque-power/math';
 import { calculateCurve, parseCurveText, SYNTHETIC_CURVE, type CalculatedCurve, type SampledPeak } from '../../lib/torque-power/curve';
 
@@ -40,6 +40,16 @@ function Plot({ points, selected, onSelect, kind, unit }: { points: TorquePowerP
 }
 
 export default function Explorer() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let active = true;
+    queueMicrotask(() => { if (active) setReady(true); });
+    // A cached document must follow the same empty-on-return contract as a
+    // fresh document; browser history must not restore private curve inputs.
+    const returnToDocument = (event: PageTransitionEvent) => { if (event.persisted) window.location.reload(); };
+    window.addEventListener('pageshow', returnToDocument);
+    return () => { active = false; window.removeEventListener('pageshow', returnToDocument); };
+  }, []);
   const [mode, setMode] = useState<'torque' | 'power'>('torque');
   const [rpm, setRpm] = useState('3000'), [torque, setTorque] = useState('100'), [power, setPower] = useState('100');
   const [torqueUnit, setTorqueUnit] = useState<TorqueUnit>('Nm'), [powerUnit, setPowerUnit] = useState<PowerUnit>('kW');
@@ -102,7 +112,8 @@ export default function Explorer() {
   const current = curve?.points[selected];
   return <div className="tp-workspace">
     <section className="tp-panel" aria-labelledby="tp-point-title"><p className="tp-step">01 / A single operating point</p><h2 id="tp-point-title">Point calculator</h2>
-      <form onSubmit={submitPoint} noValidate>
+      <form onSubmit={submitPoint} noValidate autoComplete="off">
+        <fieldset className="tp-form-ready" disabled={!ready}>
         <fieldset className="tp-modes"><legend>Calculation direction</legend><label><input type="radio" name="point-mode" checked={mode === 'torque'} onChange={() => { setMode('torque'); pointEdit(); }} />Torque + RPM → Power</label><label><input type="radio" name="point-mode" checked={mode === 'power'} onChange={() => { setMode('power'); pointEdit(); }} />Power + RPM → Torque</label></fieldset>
         <div className="tp-fields">
           <label htmlFor="tp-rpm">RPM<input id="tp-rpm" type="text" inputMode="decimal" value={rpm} onChange={e => { setRpm(e.target.value); pointEdit(); }} aria-invalid={pointError?.field === 'rpm'} aria-describedby={`tp-point-help${pointError?.field === 'rpm' ? ' tp-point-error' : ''}`} /></label>
@@ -112,15 +123,18 @@ export default function Explorer() {
         </div>
         <p id="tp-point-help" className="tp-help">Use nonnegative dot decimals or e notation, without grouping or unit suffixes. RPM: 0–100,000; torque: up to 1,000,000 Nm; power: up to 20,000,000 kW. These are tool capacity limits. Unit changes convert the entered quantity; invalid values keep their current unit.</p>
         <p id="tp-point-error" className="tp-error" role="alert">{pointError?.message}</p><button type="submit">Calculate point</button>
+        </fieldset>
       </form>
       <div className="tp-point-result" role="status" aria-live="polite">{point ? <><strong>{mode === 'torque' ? `${number(powerValue(point, powerUnit))} ${powerLabel(powerUnit)}` : `${number(torqueValue(point, torqueUnit))} ${torqueUnit}`}</strong><p>{number(point.rpm)} RPM · {number(point.torqueNm)} Nm / {number(point.torqueLbFt)} lb-ft · {number(point.powerKw)} kW / {number(point.powerHp)} mechanical hp</p></> : <p>Enter a point and calculate to see the result.</p>}</div>
     </section>
     <section className="tp-panel" aria-labelledby="tp-curve-title"><p className="tp-step">02 / Follow the relationship</p><h2 id="tp-curve-title">Curve exploration</h2>
-      <form onSubmit={submitCurve} noValidate>
+      <form onSubmit={submitCurve} noValidate autoComplete="off">
+        <fieldset className="tp-form-ready" disabled={!ready}>
         <div className="tp-fields"><label htmlFor="tp-curve-unit">Curve torque unit<select aria-label="Curve torque unit" id="tp-curve-unit" value={curveUnit} onChange={e => switchCurveUnit(e.target.value as TorqueUnit)} aria-describedby="tp-curve-help tp-curve-error"><option>Nm</option><option>lb-ft</option></select></label><label htmlFor="tp-curve-power">Curve power unit<select aria-label="Curve power unit" id="tp-curve-power" value={curvePowerUnit} onChange={e => setCurvePowerUnit(e.target.value as PowerUnit)}><option>kW</option><option value="hp">hp (mechanical)</option></select></label></div>
         <label htmlFor="tp-curve-text">RPM and torque points ({curveUnit})<textarea id="tp-curve-text" rows={9} value={text} spellCheck={false} onChange={e => { setText(e.target.value); setCurve(null); setCurveError(null); setSynthetic(false); setNotice(''); }} aria-invalid={!!curveError} aria-describedby="tp-curve-help tp-curve-error" placeholder={'RPM,Torque\n1000,200\n4000,150'} /></label>
         <p id="tp-curve-help" className="tp-help">Paste or edit 2–200 points: RPM then torque. Use consistent comma, semicolon or tab separators, dot decimals and optionally an RPM,Torque header. RPM must increase strictly; duplicates and incomplete rows are rejected. No automatic sorting or overwriting. Maximum 32,000 characters / 1,000 lines.</p>
         <p id="tp-curve-error" className="tp-error" role="alert">{curveError?.message}</p><div className="tp-actions"><button type="submit">Plot curve</button><button type="button" className="tp-secondary" onClick={sample}>Load synthetic sample</button></div>
+        </fieldset>
       </form><p role="status" className="tp-help">{notice}</p>
       {curve && current && <div className="tp-curve-results">
         <p className="tp-source">{synthetic ? SYNTHETIC_CURVE.label : 'User-supplied educational samples — no engine performance prediction'}</p>

@@ -7,6 +7,10 @@
 .shared-header .site-menu-toggle{display:none;align-items:center;justify-content:center;min-width:44px;min-height:44px;border:1px solid var(--line);background:transparent;color:inherit;cursor:pointer}
 .shared-header :focus-visible,.shared-footer :focus-visible,.site-shell a:focus-visible{outline:2px solid var(--red);outline-offset:4px}
 .shared-footer .brand b,.shared-footer .brand-mark{color:#f5f6f5;border-color:#f5f6f5}
+.shared-header:not(.shared-header--analyzer) .brand-mark,.shared-header:not(.shared-header--analyzer) .brand>span>span{color:#b71922;border-color:#b71922}
+.shared-footer .brand>span>span{color:#ff8187}
+.shared-header--analyzer .brand>span>span{color:#ff8187}
+.site-shell .article-body a[href="/tools/torque-power-explorer"]{color:#b71922}
 .shared-footer .footer-bottom{flex-wrap:wrap}
 .shared-footer .footer-bottom nav{gap:0 20px;flex:1 1 650px}
 .shared-footer nav a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;padding-inline:4px;color:#b5bdc1}

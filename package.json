@@ -20,7 +20,8 @@
     "benchmark:obd-v2": "node --import tsx scripts/benchmark-obd-v2.ts",
     "benchmark:obd-v3": "node --import tsx scripts/benchmark-obd-v3.ts",
     "test:content": "node --import tsx --test tests/content/*.test.ts",
-    "test:notebook": "node --import tsx --test tests/notebook/*.test.ts"
+    "test:notebook": "node --import tsx --test tests/notebook/*.test.ts",
+    "test:torque-power": "node --import tsx --test tests/torque-power/*.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

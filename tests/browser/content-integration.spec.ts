@@ -3,6 +3,7 @@ import { readdirSync } from 'node:fs';
 import { relative } from 'node:path';
 import { allArticles, nascarV8Article, toyota2JzArticle, turboVsSuperchargerArticle, obd2Article, obd2ComparisonArticle, obd2DtcArticle, obd2LiveDataArticle, obd2RecordingArticle, tools } from '../../lib/torquegirl-content';
 import { NOTEBOOK_KEY } from '../../lib/notebook/storage';
+import { watch as watchResources } from './resource-watch';
 
 test.use({ hasTouch: true });
 const origin = new URL(process.env.OBD_TEST_URL ?? 'http://127.0.0.1:5184').origin;
@@ -13,12 +14,7 @@ const evidence = 'outputs/next-development-task8';
 const oldRoutes = ['/', '/engines', '/engines/how-a-nascar-v8-engine-works', '/engines/toyota-2jz-gte-tuning-legend', '/engines/turbocharger-vs-supercharger', '/technology', '/technology/how-formula-1-car-creates-downforce', '/technology/what-is-an-obd2-scanner', '/technology/obd2-scanner-vs-code-reader', '/technology/how-to-read-obd2-codes', '/technology/how-to-analyze-obd2-live-data-and-logs', '/off-track', '/off-track/golf-day', '/tools', analyzer, '/privacy', '/terms'];
 
 function watch(page: Page) {
-  const errors: string[] = [], resources: string[] = [];
-  page.on('pageerror', e => errors.push(e.message));
-  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
-  page.on('response', r => { if (new URL(r.url()).origin === origin && r.status() >= 400) resources.push(`${r.status()} ${r.url()}`); });
-  page.on('requestfailed', r => { if (new URL(r.url()).origin === origin) resources.push(r.url()); });
-  return { errors, resources };
+  return watchResources(page, origin);
 }
 async function privateDocument(page: Page, previous: number) {
   expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(previous);
@@ -32,18 +28,29 @@ for (const viewport of [viewports[0], viewports[5]]) test(`homepage and Tools di
   await page.setViewportSize(viewport);
   for (const tool of tools) {
     await page.goto('/');
+    // Let the document finish its active loads before deliberately leaving it;
+    // Firefox reports cancelled image/module loads as console/resource errors.
+    await page.waitForLoadState('networkidle');
     const before = await page.evaluate(() => performance.timeOrigin);
     await page.locator(`#tools a[href="${tool.path}"]`).click();
     await expect(page).toHaveURL(origin + tool.path); await privateDocument(page, before);
+    await expect(page.getByRole('button', { name: tool.path === analyzer ? 'Explore demo' : 'Calculate point', exact: true })).toBeEnabled();
+    await page.waitForLoadState('networkidle');
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
     await page.locator(`#explore a[href="${tool.path}"]`).tap();
     await expect(page).toHaveURL(origin + tool.path);
+    await expect(page.getByRole('button', { name: tool.path === analyzer ? 'Explore demo' : 'Calculate point', exact: true })).toBeEnabled();
+    await page.waitForLoadState('networkidle');
     await page.getByRole('navigation', { name: 'Footer navigation', exact: true }).getByRole('link', { name: 'Tools', exact: true }).click();
     await expect(page).toHaveURL(origin + '/tools');
     await expect(page.locator('.tool-index-card')).toHaveCount(2);
+    await page.waitForLoadState('networkidle');
     const fromIndex = await page.evaluate(() => performance.timeOrigin);
     await page.getByRole('link', { name: `Open ${tool.title}`, exact: true }).tap();
     await expect(page).toHaveURL(origin + tool.path); await privateDocument(page, fromIndex);
+    await expect(page.getByRole('button', { name: tool.path === analyzer ? 'Explore demo' : 'Calculate point', exact: true })).toBeEnabled();
+    await page.waitForLoadState('networkidle');
   }
   await page.goto('/tools');
   await page.getByRole('link', { name: 'local observation notebook', exact: true }).click();

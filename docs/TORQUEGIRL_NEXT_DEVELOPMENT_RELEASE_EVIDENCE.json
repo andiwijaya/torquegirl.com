@@ -1,0 +1,62 @@
+{
+  "productSha": "33abf49b98afd37e0a70eee88ab26fefdb894493",
+  "workflowRun": 37134308569,
+  "cloudflareDeploymentId": "1ed9f4a9-f353-40e6-b15e-be4465e92abb",
+  "cloudflareVersionId": "5d9dee4c-6d14-4927-a21c-12639952ac46",
+  "productionReports": {
+    "production-chromium-final": {
+      "startTime": "2026-10-03T15:46:01.709Z",
+      "duration": 655183.703,
+      "expected": 131,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "production-firefox-accepted": {
+      "startTime": "2026-10-03T16:14:31.708Z",
+      "duration": 71123.593,
+      "expected": 21,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "production-webkit-accepted": {
+      "startTime": "2026-10-03T16:22:25.713Z",
+      "duration": 90574.704,
+      "expected": 21,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "production-chromium-affected": {
+      "startTime": "2026-10-03T16:25:02.415Z",
+      "duration": 68071.35399999999,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "routeCount": 19,
+  "originalUrlsPreserved": 17,
+  "internalDestinations": 22,
+  "linkedAssets": 46,
+  "brokenLinks": 0,
+  "brokenAssets": 0,
+  "nativeBFCacheObserved": false,
+  "syntheticPersistedGuards": "pass",
+  "physicalDeviceOrRealDriveValidation": "not run",
+  "audits": {
+    "full": {
+      "high": 15,
+      "moderate": 10,
+      "low": 1,
+      "critical": 0
+    },
+    "production": {
+      "moderate": 2,
+      "critical": 0
+    },
+    "disposition": "raw audits fail; reviewed current reachability accepted as scoped maintenance debt"
+  }
+}

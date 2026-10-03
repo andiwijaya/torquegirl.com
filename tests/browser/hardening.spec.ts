@@ -222,6 +222,7 @@ test('privacy sentinels, real history, worker/object URL cleanup and synthetic c
     });
   });
   await page.goto('/technology/how-to-record-and-export-obd2-logs'); const before = await page.evaluate(() => performance.timeOrigin);
+  await page.waitForLoadState('networkidle');
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click(); expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(before);
   await page.getByRole('button', { name: 'Explore demo', exact: true }).click(); await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await page.getByLabel('Observation', { exact: true }).fill(marker); await page.getByRole('button', { name: 'Save note', exact: true }).click();
@@ -232,9 +233,11 @@ test('privacy sentinels, real history, worker/object URL cleanup and synthetic c
   expect(await page.evaluate(() => (window as unknown as { sharePayload: ShareData }).sharePayload.url)).toBe('https://torquegirl.com/tools/obd2-log-analyzer');
   await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Tools', exact: true }).click();
   const lifecycle = await page.evaluate(() => JSON.parse(sessionStorage.getItem('task9-lifecycle')!)); expect(lifecycle.created).toBe(1); expect(lifecycle.terminated).toBe(1); expect(lifecycle.urls).toBe(2); expect(lifecycle.revoked).toBe(2);
+  await page.waitForLoadState('networkidle');
   await page.goBack(); await expect(page.locator('.obd-chart')).toHaveCount(0); await expect(page.getByTestId('notebook-record')).toHaveCount(2);
   await expect(page.getByLabel('Observation', { exact: true })).toHaveValue('');
   await page.goForward(); await expect(page.locator('h1')).toContainText('Understand');
+  await page.waitForLoadState('networkidle');
   await page.getByRole('link', { name: 'Open Torque-Power Explorer', exact: true }).click();
   await page.locator('#tp-torque').fill(marker); await page.getByRole('button', { name: 'Calculate point' }).click();
   await page.locator('#tp-curve-text').fill('1000,853.2719\n3000,100'); await page.getByRole('button', { name: 'Plot curve', exact: true }).click();
@@ -242,6 +245,7 @@ test('privacy sentinels, real history, worker/object URL cleanup and synthetic c
   await page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Tools', exact: true }).click();
   await page.goBack(); await expect(page.locator('#tp-curve-text')).toHaveValue(''); await expect(page.locator('.tp-plot')).toHaveCount(0);
   await page.goForward(); await expect(page.locator('h1')).toContainText('Understand');
+  await page.waitForLoadState('networkidle');
   await page.goBack(); await expect(page.locator('#tp-curve-text')).toHaveValue('');
   await page.locator('#tp-curve-text').fill('1000,853.2719\n3000,100'); await page.getByRole('button', { name: 'Plot curve', exact: true }).click();
   const previous = await page.evaluate(() => performance.timeOrigin);

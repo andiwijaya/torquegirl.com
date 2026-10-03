@@ -204,6 +204,7 @@ test('actual editorial entry plus A/B and timeline evidence capture persist only
   await page.goto('/technology/how-to-record-and-export-obd2-logs'); const before = await page.evaluate(() => performance.timeOrigin);
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click(); expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(before);
   const csv = driveCsv({ mode: 'cruise' }).split('\n').map((line, i) => line + (i ? ',853.2719' : ',Private raw channel')).join('\n');
+  await expect(page.getByLabel('Choose CSV log', { exact: true })).toBeEnabled();
   await page.getByLabel('Choose CSV log', { exact: true }).setInputFiles({ name: `${marker}.csv`, mimeType: 'text/csv', buffer: Buffer.from(csv) });
   await page.getByRole('button', { name: 'Analyze log', exact: true }).click(); await expect(page.getByTestId('region-A')).toBeVisible();
   await page.locator('.drive-advanced > summary').first().click(); await page.getByLabel('Choose Run B CSV log').setInputFiles({ name: `${marker}-B.csv`, mimeType: 'text/csv', buffer: Buffer.from(driveCsv({ mode: 'cruise', trim: 4.3 })) });

@@ -1,6 +1,7 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Worker } from '@playwright/test';
 import { obd2Article, obd2ComparisonArticle, obd2DtcArticle, obd2LiveDataArticle, obd2RecordingArticle, getLatestArticles } from '../../lib/torquegirl-content';
 import { driveCsv } from '../../lib/obd/drive-demo';
+import { watch as watchResources } from './resource-watch';
 
 const origin = new URL(process.env.OBD_TEST_URL ?? 'http://127.0.0.1:5184').origin;
 const learning = [obd2Article, obd2ComparisonArticle, obd2DtcArticle, obd2LiveDataArticle, obd2RecordingArticle];
@@ -9,20 +10,28 @@ const evidence = 'outputs/next-development-task2';
 const viewports = [{ width: 320, height: 740 }, { width: 375, height: 812 }, { width: 390, height: 844 }, { width: 430, height: 932 }, { width: 844, height: 390 }, { width: 1440, height: 1000 }];
 
 function watch(page: Page) {
-  const errors: string[] = [], resources: string[] = [];
-  page.on('pageerror', e => errors.push(e.message));
-  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
-  page.on('response', r => { if (new URL(r.url()).origin === origin && r.status() >= 400) resources.push(`${r.status()} ${r.url()}`); });
-  page.on('requestfailed', r => { if (new URL(r.url()).origin === origin) resources.push(r.url()); });
-  return { errors, resources };
+  return watchResources(page, origin);
+}
+
+async function finishArticleImages(page: Page) {
+  // Verify image decoding before deliberately leaving the article. Otherwise
+  // Firefox can report a navigation-cancelled decode as a truncated image.
+  await page.locator('.article-body img').evaluateAll(async images => {
+    await Promise.all(images.map(async element => {
+      const image = element as HTMLImageElement;
+      image.loading = 'eager';
+      await image.decode();
+      if (!image.naturalWidth) throw new Error(`Image did not decode: ${image.src}`);
+    }));
+  });
 }
 
 for (const viewport of [viewports[0], viewports[5]]) test(`complete OBD learning journey and private real-worker entry at ${viewport.width} x ${viewport.height}`, async ({ page }) => {
   test.setTimeout(120_000);
   const observed = watch(page);
-  const requests: string[] = [], workers: string[] = [];
+  const requests: string[] = [], workers: Worker[] = [];
   let entered = false;
-  page.on('worker', w => workers.push(w.url()));
+  page.on('worker', w => workers.push(w));
   // Entry means the fresh analyzer document has committed. The source article may
   // finish its own editorial page-view beacon while the navigation request is in flight.
   page.on('framenavigated', frame => {
@@ -33,10 +42,12 @@ for (const viewport of [viewports[0], viewports[5]]) test(`complete OBD learning
   });
   await page.setViewportSize(viewport);
   await page.goto(obd2Article.path);
+  await finishArticleImages(page);
   for (const article of [obd2ComparisonArticle, obd2DtcArticle, obd2LiveDataArticle, obd2RecordingArticle]) {
     await page.locator(`.article-body a[href="${article.path}"]`).first().click();
     await expect(page).toHaveURL(origin + article.path);
     await expect(page.locator('h1')).toHaveText(article.title);
+    await finishArticleImages(page);
   }
   const before = await page.evaluate(() => performance.timeOrigin);
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click();
@@ -46,21 +57,27 @@ for (const viewport of [viewports[0], viewports[5]]) test(`complete OBD learning
   expect(await page.evaluate(() => 'dataLayer' in window)).toBe(false);
   const csv = driveCsv().replace('800.000', '853.2719');
   expect(csv).toContain('853.2719');
+  await expect(page.getByLabel('Choose CSV log', { exact: true })).toBeEnabled();
   await page.getByLabel('Choose CSV log', { exact: true }).setInputFiles({ name: 'TASK2_PRIVATE_SENTINEL.csv', mimeType: 'text/csv', buffer: Buffer.from(csv) });
   await page.getByRole('button', { name: 'Analyze log', exact: true }).click();
   await expect(page.locator('.obd-chart path').first()).toHaveAttribute('d', /M/);
   await expect(page.getByTestId('current-phase')).toContainText('stopped');
   await page.waitForTimeout(1000);
   expect(workers.length).toBeGreaterThan(0);
-  expect(workers.every(url => new URL(url).origin === origin)).toBe(true);
+  // Firefox's Worker event can precede population of Worker.url(). Read the
+  // running worker's actual location once the analysis proves it is ready.
+  const workerUrls = await Promise.all(workers.map(worker => worker.evaluate(() => self.location.href)));
+  expect(workerUrls.every(url => new URL(url).origin === origin)).toBe(true);
   expect(requests).toEqual([]);
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toMatch(/TASK2_PRIVATE_SENTINEL|853\.2719|sourceValues/);
   expect(observed).toEqual({ errors: [], resources: [] });
-  console.log(JSON.stringify({ viewport, freshDocument: true, workers, offOriginOrContentRequests: requests.length }));
+  console.log(JSON.stringify({ viewport, freshDocument: true, workers: workerUrls, offOriginOrContentRequests: requests.length }));
   entered = false;
   await page.locator(`.obd-learn a[href="${obd2RecordingArticle.path}"]`).click();
   await expect(page.locator('h1')).toHaveText(obd2RecordingArticle.title);
+  await finishArticleImages(page);
   await page.locator(`.article-body a[href="${obd2LiveDataArticle.path}"]`).first().click();
+  await finishArticleImages(page);
   const liveBefore = await page.evaluate(() => performance.timeOrigin);
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click();
   expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(liveBefore);

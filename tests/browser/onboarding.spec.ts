@@ -132,6 +132,7 @@ test('actual editorial entry, worker disposal and back/forward return clear anal
     window.addEventListener('pageshow', event => { if (event.persisted) sessionStorage.setItem('c-cached-return', 'yes'); });
   });
   await page.goto('/technology/how-to-record-and-export-obd2-logs');
+  await page.waitForLoadState('networkidle');
   const before = await page.evaluate(() => performance.timeOrigin);
   await page.getByRole('link', { name: 'Analyze my log locally', exact: true }).click();
   expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(before);
@@ -141,12 +142,14 @@ test('actual editorial entry, worker disposal and back/forward return clear anal
   await expect(page.getByLabel('Phase region A', { exact: true })).toBeVisible();
   await page.locator('.obd-learn a[href="/technology/how-to-record-and-export-obd2-logs"]').click();
   expect(await page.evaluate(() => sessionStorage.getItem('c-worker-disposed'))).toBe('yes');
+  await page.waitForLoadState('networkidle');
   await page.goBack();
   await expect(page.locator('.obd-guide-next')).toContainText('Start with a file');
   await expect(page.locator('.obd-chart, .drive-analysis')).toHaveCount(0);
   await demo(page);
   await page.goForward();
   await expect(page.locator('h1')).toContainText('Record and Export');
+  await page.waitForLoadState('networkidle');
   await page.goBack();
   await expect(page.locator('.obd-chart, .drive-analysis')).toHaveCount(0);
   await expect(page.locator('script[src*="googletagmanager"],script[src*="cloudflareinsights"],script#ga4')).toHaveCount(0);

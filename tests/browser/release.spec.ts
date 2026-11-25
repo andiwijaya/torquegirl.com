@@ -1,7 +1,23 @@
 import { test, expect } from '@playwright/test';
 import { driveCsv } from '../../lib/obd/drive-demo';
+import { siteOrigin } from '../../lib/site-seo';
 const origin = new URL(process.env.OBD_TEST_URL ?? 'http://127.0.0.1:5184').origin;
 const routes = ['/', '/engines', '/engines/how-a-nascar-v8-engine-works', '/engines/toyota-2jz-gte-tuning-legend', '/engines/turbocharger-vs-supercharger', '/technology', '/technology/how-formula-1-car-creates-downforce', '/technology/what-is-an-obd2-scanner', '/technology/obd2-scanner-vs-code-reader', '/technology/how-to-read-obd2-codes', '/technology/how-to-analyze-obd2-live-data-and-logs', '/off-track', '/off-track/golf-day', '/tools', '/tools/obd2-log-analyzer', '/privacy', '/terms'];
+
+test('apex and www HTTP routes redirect to canonical HTTPS with their query', async ({ request }) => {
+  for (const host of ['torquegirl.com', 'www.torquegirl.com']) {
+    for (const path of ['/', '/technology/how-to-read-obd2-codes', '/tools/obd2-log-analyzer', '/robots.txt', '/sitemap.xml']) {
+      const target = `${path}?ref=seo-check`;
+      const production = origin === siteOrigin;
+      const response = await request.get(production ? `http://${host}${target}` : target, {
+        maxRedirects: 0,
+        headers: production ? undefined : { host, 'x-forwarded-proto': 'http' },
+      });
+      expect([301, 308], `${host}${target}`).toContain(response.status());
+      expect(response.headers().location).toBe(`${siteOrigin}${target}`);
+    }
+  }
+});
 
 test('private tool responses prevent edge analytics injection', async ({ request }) => {
   for (const path of ['/tools/obd2-log-analyzer', '/tools/torque-power-explorer']) {

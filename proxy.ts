@@ -12,7 +12,7 @@ export const config = {
   matcher: [{
     source: '/:path*',
     has: [
-      { type: 'host', value: 'torquegirl\\.com' },
+      { type: 'host', value: '(?:www\\.)?torquegirl\\.com' },
       // Cloudflare sets this header to the protocol used by the visitor.
       { type: 'header', key: 'x-forwarded-proto', value: 'http' },
     ],

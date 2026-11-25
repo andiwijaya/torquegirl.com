@@ -204,11 +204,6 @@ test('complete route sitemap metadata internal anchor and asset crawl', async ({
       expect(breadcrumbs.itemListElement.map((item: { item: string }) => item.item))
         .toEqual(['https://torquegirl.com/', `https://torquegirl.com/${path.split('/')[1]}`, entry.url]);
     }
-    if (path === analyzer || path === explorer) {
-      const tool = JSON.parse((await page.locator('#tool-data').textContent())!);
-      expect(tool['@type']).toBe('WebApplication');
-      expect(tool.url).toBe(entry.url);
-    }
     if (path === '/privacy') {
       expect(entry.date).toBe('2026-10-03');
       await expect(page.locator('.legal-updated')).toHaveText('Last updated: October 3, 2026');

@@ -35,14 +35,3 @@ export function ArticleData({ article, section }: { article: ArticleSummary; sec
     <BreadcrumbData trail={[articleSections[section], { name: article.title, path: article.path }]} />
   </>;
 }
-
-export function ToolData({ tool }: { tool: { title: string; path: string; description: string; image: string } }) {
-  return <>
-    <JsonLd id="tool-data" data={{
-      '@type': 'WebApplication', name: tool.title, url: siteUrl(tool.path),
-      description: tool.description, image: siteUrl(tool.image), applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true,
-    }} />
-    <BreadcrumbData trail={[{ name: 'Tools', path: '/tools' }, { name: tool.title, path: tool.path }]} />
-  </>;
-}

@@ -2,29 +2,29 @@ import { ArrowUpRight } from 'lucide-react';
 import SiteHeader from '../components/site-header';
 import SiteFooter from '../components/site-footer';
 import DocumentLink from '../components/document-link';
+import { JsonLd } from '../components/seo-structured-data';
+import { homeImage, pageMetadata, publisher, siteName, siteUrl } from '../lib/site-seo';
 import { getLatestArticles, nascarV8Article, turboVsSuperchargerArticle, toyota2JzArticle, formulaDownforceArticle, obd2Article, obd2ComparisonArticle, obd2DtcArticle, obd2LiveDataArticle, obd2AnalyzerTool, torquePowerExplorerTool, offTrackGolfDay, type ArticleSummary } from '../lib/torquegirl-content';
 
-export const metadata = {
-  title: 'TorqueGirl - Learn Engineering, Analyze Data, Explore Machines',
-  description: 'Learn how engines and automotive technology work. Analyze OBD2 logs locally, and explore the engineering behind powerful machines with TorqueGirl.',
-  alternates: { canonical: 'https://torquegirl.com' },
-  openGraph: { type: 'website', siteName: 'TorqueGirl', title: 'TorqueGirl - Power, decoded.', description: 'Learn engineering. Analyze your recorded data. Explore extraordinary machines.', url: 'https://torquegirl.com', images: [{ url: 'https://torquegirl.com/torque-girl-hero.png', width: 1024, height: 1536, alt: 'TorqueGirl beside a race car' }] },
-  twitter: { card: 'summary_large_image', title: 'TorqueGirl - Power, decoded.', description: 'Learn engineering. Analyze your recorded data. Explore extraordinary machines.', images: ['https://torquegirl.com/torque-girl-hero.png'] },
-};
+export const metadata = pageMetadata({
+  path: '/', title: 'Automotive Engineering & OBD2 Tools',
+  description: 'Explore performance engines and motorsport technology. Learn to read OBD2 data, analyze logs in your browser, and calculate torque and power from RPM.',
+});
 
 function Feature({ id, label, article }: { id?: string; label: string; article: ArticleSummary }) {
   return <section className={`section featured-section${article.category === 'Off Track' ? ' offtrack-home-feature' : ''}`} id={id}>
-    <div className="featured-art featured-article-art"><img src={article.heroImage} alt={article.heroAlt} loading="lazy" /></div>
+    <div className="featured-art featured-article-art"><img src={article.heroImage} alt={article.heroAlt} width={article.heroWidth} height={article.heroHeight} loading="lazy" /></div>
     <div className="featured-copy"><p className="eyebrow"><span className="eyebrow-line" />{label}</p><h2>{article.title}</h2><p>{article.description}</p><DocumentLink className="text-link" href={article.path}>Read the story <ArrowUpRight size={16} aria-hidden="true" /></DocumentLink></div>
   </section>;
 }
 
 export default function Home() {
   return <main className="site-shell home-page">
+    <JsonLd id="website-data" data={{ '@type': 'WebSite', name: siteName, url: siteUrl('/'), inLanguage: 'en', publisher }} />
     <SiteHeader active="Home" />
     <section className="hero" id="top">
-      <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-line" />Power, decoded.</p><h1>Explore machines. Make sense of data.</h1><p className="hero-intro">Learn the engineering behind powerful engines and racing machines. Analyze your recorded sensor data. Follow the details that make performance possible.</p><div className="hero-actions"><DocumentLink className="button button-dark" href="#explore">Explore engineering <ArrowUpRight size={17} aria-hidden="true" /></DocumentLink><DocumentLink className="button button-outline" href="/tools/obd2-log-analyzer">Analyze an OBD2 log</DocumentLink></div><p className="scroll-note"><span className="scroll-bar" />Learn / Analyze / Explore</p></div>
-      <div className="hero-visual"><div className="hero-grid" /><div className="hero-label label-top">TG / 001 <span>↗</span></div><div className="hero-label label-bottom">MACHINES / PERFORMANCE / ENGINEERING</div><div className="image-frame"><img src="/torque-girl-hero.png" alt="TorqueGirl standing beside a high-performance race car" fetchPriority="high" /></div></div>
+      <div className="hero-copy"><p className="eyebrow"><span className="eyebrow-line" />Power, decoded.</p><h1>Explore automotive engineering.</h1><p className="hero-intro">See how performance engines and racing machines work. Learn to read OBD2 data, analyze your own logs, and explore the relationship between torque, power and RPM.</p><div className="hero-actions"><DocumentLink className="button button-dark" href="#explore">Explore engineering <ArrowUpRight size={17} aria-hidden="true" /></DocumentLink><DocumentLink className="button button-outline" href="/tools/obd2-log-analyzer">Analyze an OBD2 log</DocumentLink></div><p className="scroll-note"><span className="scroll-bar" />Learn / Analyze / Explore</p></div>
+      <div className="hero-visual"><div className="hero-grid" /><div className="hero-label label-top">TG / 001 <span>↗</span></div><div className="hero-label label-bottom">MACHINES / PERFORMANCE / ENGINEERING</div><div className="image-frame"><img src={homeImage.url} srcSet={`/torque-girl-hero-640.webp 640w, ${homeImage.url} 1024w`} sizes="(max-width: 760px) 100vw, 50vw" alt={homeImage.alt} width={homeImage.width} height={homeImage.height} fetchPriority="high" /></div></div>
     </section>
     <section className="section explore-section" id="explore" aria-labelledby="explore-heading">
       <div className="section-heading"><div><p className="eyebrow"><span className="eyebrow-line" />The TorqueGirl index</p><h2 id="explore-heading">Curiosity starts here.</h2></div><p>From a clear explanation to a closer look at your own data. Choose the question that brings you here.</p></div>
@@ -52,7 +52,7 @@ export default function Home() {
     <Feature id="obd2-codes" label="Diagnostic codes" article={obd2DtcArticle} />
     <Feature id="obd2-live-data" label="Live data / diagnostic workflow" article={obd2LiveDataArticle} />
     <Feature label="Torque Girl / Off Track" article={offTrackGolfDay} />
-    <section className="about-section" id="about" tabIndex={-1}><div className="about-image"><img src="/torque-girl-hero.png" alt="TorqueGirl in a race paddock" loading="lazy" /></div><div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" />Meet TorqueGirl</p><h2>Your guide to the machinery behind the spectacle.</h2><p>TorqueGirl makes complex engineering easier to see, hear and understand. Learn how a system works, explore the evidence and keep your curiosity moving.</p></div></section>
+    <section className="about-section" id="about" tabIndex={-1}><div className="about-image"><img src="/torque-girl-hero-640.webp" alt={homeImage.alt} width="640" height="960" loading="lazy" /></div><div className="about-copy"><p className="eyebrow"><span className="eyebrow-line" />Meet TorqueGirl</p><h2>Your guide to the machinery behind the spectacle.</h2><p>TorqueGirl makes complex engineering easier to see, hear and understand. Learn how a system works, explore the evidence and keep your curiosity moving.</p></div></section>
     <section className="follow-section" id="follow"><div><p className="eyebrow light"><span className="eyebrow-line" />Follow the build</p><h2>Breakdowns, comparisons and machine stories.</h2></div><DocumentLink className="button button-light" href="mailto:hello@torquegirl.com">Get in touch <ArrowUpRight size={17} aria-hidden="true" /></DocumentLink></section>
     <SiteFooter />
   </main>;

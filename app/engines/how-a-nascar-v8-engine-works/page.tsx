@@ -1,34 +1,26 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { nascarV8Article, torquePowerExplorerTool } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/engines/how-a-nascar-v8-engine-works";
-
-export const metadata: Metadata = {
-  title: "How a NASCAR V8 Engine Works",
-  description: nascarV8Article.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", publishedTime: nascarV8Article.date, modifiedTime: nascarV8Article.updatedDate, url: articleUrl, title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [{ url: `https://torquegirl.com${nascarV8Article.heroImage}`, width: 1536, height: 1024, alt: nascarV8Article.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "How a NASCAR V8 Engine Works | TorqueGirl", description: nascarV8Article.description, images: [`https://torquegirl.com${nascarV8Article.heroImage}`] },
-};
+export const metadata = articleMetadata(nascarV8Article);
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
-  return <figure className="article-figure"><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className="article-figure"><img src={src} alt={alt} width="1672" height="941" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function NascarV8Article() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: nascarV8Article.title, description: nascarV8Article.description, image: [`https://torquegirl.com${nascarV8Article.heroImage}`], datePublished: nascarV8Article.date, dateModified: nascarV8Article.updatedDate ?? nascarV8Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={nascarV8Article} section="engines" />
     <SiteHeader active="Engines" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time><span>Updated <time dateTime={nascarV8Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" /></header>
-      <Figure src="/images/articles/torquegirl-nascar-v8-hero.png" alt={nascarV8Article.heroAlt} caption="Torque Girl takes a closer look at the V8 heart of a stock car." priority />
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>MOTORSPORT</span><span>{nascarV8Article.readingTime}</span></div><h1>{nascarV8Article.title}</h1><p className="article-dek">A stock car may look familiar from the outside. Under the hood, its V8 is a purpose-built study in airflow, combustion, heat and survival.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={nascarV8Article.date}>September 21, 2026</time><span>Updated <time dateTime={nascarV8Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path={nascarV8Article.path} /></header>
+      <Figure src={nascarV8Article.heroImage} alt={nascarV8Article.heroAlt} caption="Torque Girl takes a closer look at the V8 heart of a stock car." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>HOW POWER BECOMES MOTION</span></aside><div className="article-body">
         <p className="lead-paragraph">A NASCAR Cup Series engine is interesting precisely because it is not a science-fiction machine. It uses a familiar four-stroke V8 layout, then pushes that architecture through careful optimization, strict rules and the brutal duty cycle of racing.</p>
         <h2>So, what exactly is a NASCAR V8?</h2>
@@ -41,7 +33,7 @@ export default function NascarV8Article() {
         <h2>Air in, exhaust out</h2>
         <p>An engine is an air pump with a controlled chemical reaction in the middle. Air enters through the intake, fuel is metered into the system, the mixture fills a cylinder, combustion pushes the piston down, and the exhaust must leave quickly enough to make room for the next cycle.</p>
         <p>As engine speed and power demand rise, every restriction matters. Intake shape, throttle response, cylinder-head flow, valve timing and exhaust tuning all influence how completely the cylinders fill and clear. More air can support more fuel and more useful work—but only if heat, knock, friction and mechanical stress remain under control.</p>
-        <Figure src="/images/articles/torquegirl-nascar-v8-engine.png" alt="TorqueGirl examining a naturally aspirated V8 racing engine on an engine stand." caption="With the engine outside the car, its major systems become much easier to see." />
+        <Figure src="/images/articles/torquegirl-nascar-v8-engine.webp" alt="TorqueGirl examining a naturally aspirated V8 racing engine on an engine stand." caption="With the engine outside the car, its major systems become much easier to see." />
         <h2>Inside the engine</h2>
         <p>The intake system guides air toward the cylinders. The cylinder heads contain the ports, valves and combustion chambers. Pushrods and rocker arms transfer camshaft motion to the valves in an overhead-valve arrangement, while pistons move inside the cylinders and connect through rods to the crankshaft.</p>
         <p>The crankshaft turns the pistons' reciprocating motion into rotation. At the other end of the process, exhaust headers collect the spent gases and guide them out of the engine. The image above is editorial and illustrative: it helps us see the relationships between systems, but it should not be treated as an exact cutaway or a complete representation of every current NASCAR component.</p>
@@ -66,7 +58,7 @@ export default function NascarV8Article() {
         <h2>Built for power <em>and</em> survival</h2>
         <p>A race engine does not merely need to make power on a dyno. It needs to survive the race: sustained load, heat, vibration, friction, component stress and countless combustion events. Reliability engineering is not separate from performance; it is what allows performance to be used repeatedly.</p>
         <h2>What does it feel like when it runs?</h2>
-        <Figure src="/images/articles/torquegirl-nascar-v8-running.png" alt="TorqueGirl wearing hearing protection beside a running stock car engine in a race garage." caption="Power is only half the story. A racing engine must deliver it repeatedly under extreme load." />
+        <Figure src="/images/articles/torquegirl-nascar-v8-running.webp" alt="TorqueGirl wearing hearing protection beside a running stock car engine in a race garage." caption="Power is only half the story. A racing engine must deliver it repeatedly under extreme load." />
         <p>Near a running race engine, the experience is physical. There is vibration through the floor, an uneven pressure of exhaust pulses, mechanical noise, heat and a throttle response that feels immediate. Hearing protection is not decoration—race engines can produce hazardous sound levels, and safe distance matters around running machinery.</p>
         <h2>Why this engine is interesting</h2>
         <p>The lesson is not that the newest technology always wins. Performance comes from optimizing a machine for its constraints and purpose. NASCAR engines demonstrate what happens when a familiar architecture is refined inside a defined rule set until airflow, combustion, friction, heat and durability become one connected engineering problem.</p>
@@ -75,7 +67,7 @@ export default function NascarV8Article() {
         <p>The next time a stock car fires up, do not just hear noise. Think about airflow, combustion, friction, heat, torque and thousands of components working together at racing speed.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger"><strong>Turbocharger vs Supercharger: What's the Difference?</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://media.ndms.nascar.com/nascar/2021/NextGen/NextGen-SpecSheet.pdf" rel="noreferrer">NASCAR Next Gen specification sheet</a><a href="https://www.nascar.com/news-media/2025/11/14/nascar-2026-rule-book-technical-updates/" rel="noreferrer">NASCAR 2026 technical updates</a><a href="https://www.hendrickmotorsports.com/news/2023/2/17/nascar-unveils-garage-56-livery-full-details-and-specs-of-car" rel="noreferrer">Hendrick Motorsports engine specifications</a></div>
-        <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path="/engines/how-a-nascar-v8-engine-works" />
+        <ArticleShare title={nascarV8Article.title} description={nascarV8Article.description} path={nascarV8Article.path} />
       </div></div>
     </article>
     <SiteFooter />

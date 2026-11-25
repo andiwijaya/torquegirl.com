@@ -1,35 +1,27 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { obd2Article } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/technology/what-is-an-obd2-scanner";
-
-export const metadata: Metadata = {
-  title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl",
-  description: obd2Article.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", publishedTime: obd2Article.date, modifiedTime: obd2Article.updatedDate, url: articleUrl, title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl", description: obd2Article.description, images: [{ url: `https://torquegirl.com${obd2Article.heroImage}`, width: 1536, height: 1024, alt: obd2Article.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car | TorqueGirl", description: obd2Article.description, images: [`https://torquegirl.com${obd2Article.heroImage}`] },
-};
+export const metadata = articleMetadata(obd2Article);
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
-  return <figure className="article-figure wide-technical"><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className="article-figure wide-technical"><img src={src} alt={alt} width="1672" height="941" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function Obd2ScannerArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2Article.title, description: obd2Article.description, image: [`https://torquegirl.com${obd2Article.heroImage}`], datePublished: obd2Article.date, dateModified: obd2Article.updatedDate ?? obd2Article.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
 
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={obd2Article} section="technology" />
     <SiteHeader active="Technology" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2Article.readingTime}</span></div><h1>{obd2Article.title}</h1><p className="article-dek">The check-engine light is a question from your car, not a verdict. An OBD2 scanner helps you read the first clue and decide what to test next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2Article.date}>September 22, 2026</time><span>Updated <time dateTime={obd2Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2Article.title} description={obd2Article.description} path="/technology/what-is-an-obd2-scanner" /></header>
-      <Figure src="/images/articles/torquegirl-obd2-scanner-hero.png" alt="TorqueGirl using an OBD2 scanner to diagnose a car" caption="An OBD2 scan is a starting point for diagnosis: read what the vehicle detected, then investigate why." priority />
+      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2Article.readingTime}</span></div><h1>{obd2Article.title}</h1><p className="article-dek">The check-engine light is a question from your car, not a verdict. An OBD2 scanner helps you read the first clue and decide what to test next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2Article.date}>September 22, 2026</time><span>Updated <time dateTime={obd2Article.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2Article.title} description={obd2Article.description} path={obd2Article.path} /></header>
+      <Figure src={obd2Article.heroImage} alt="TorqueGirl using an OBD2 scanner to diagnose a car" caption="An OBD2 scan is a starting point for diagnosis: read what the vehicle detected, then investigate why." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>SCAN / UNDERSTAND / TEST</span></aside><div className="article-body">
         <p className="lead-paragraph">A check-engine light can turn a normal drive into a guessing game. Is it a loose fuel cap, an ignition problem, an emissions fault, or something more urgent? An OBD2 scanner gives you a way to ask the vehicle’s onboard computer what it has noticed before you start replacing parts.</p>
         <p>That distinction matters. A scanner is a diagnostic starting point, not a magical device that names the failed component. The useful skill is learning how to turn a code into a sensible next test.</p>
@@ -45,7 +37,7 @@ export default function Obd2ScannerArticle() {
         <p>More advanced tools may also access ABS, airbag/SRS, transmission, body, or network modules. They may offer service resets, adaptations, or bidirectional controls. Those features are not the same as generic OBD2 engine/emissions access, so always check the tool’s coverage for the exact vehicle and system.</p>
 
         <h2>Where does an OBD2 scanner plug in?</h2>
-        <Figure src="/images/articles/torquegirl-obd2-port.png" alt="TorqueGirl showing the OBD-II diagnostic port beneath a car dashboard" caption="The 16-pin OBD-II port is commonly beneath or around the driver's side of the dashboard, but its exact position varies by vehicle." />
+        <Figure src="/images/articles/torquegirl-obd2-port.webp" alt="TorqueGirl showing the OBD-II diagnostic port beneath a car dashboard" caption="The 16-pin OBD-II port is commonly beneath or around the driver's side of the dashboard, but its exact position varies by vehicle." />
         <p>The OBD-II diagnostic connector is a standardized 16-pin socket. It is usually accessible from the driver’s area, often below the lower dashboard or near the steering column. Some vehicles place it behind a small trim cover or slightly farther to the side, so consult the owner’s manual if it is not immediately visible.</p>
         <p>With the vehicle parked, locate the port and connect the scanner firmly. Do not force the plug or probe random connectors. The OBD-II port is the diagnostic connector you are looking for; the surrounding wiring is not an invitation to test by trial and error.</p>
 
@@ -55,7 +47,7 @@ export default function Obd2ScannerArticle() {
         <p>Some live-data checks are most useful while the vehicle is running or being driven. Never operate a scanner while driving if doing so distracts you. Have another person monitor the tool, use a safe test area, or leave dynamic testing to a qualified technician.</p>
 
         <h2>What is a Diagnostic Trouble Code?</h2>
-        <Figure src="/images/articles/torquegirl-obd2-diagnostic-code.png" alt="TorqueGirl explaining a P0301 diagnostic trouble code on an OBD2 scanner" caption="P0301 is a useful teaching example: the code points toward a detected cylinder-one misfire, but more testing is needed to find the cause." />
+        <Figure src="/images/articles/torquegirl-obd2-diagnostic-code.webp" alt="TorqueGirl explaining a P0301 diagnostic trouble code on an OBD2 scanner" caption="P0301 is a useful teaching example: the code points toward a detected cylinder-one misfire, but more testing is needed to find the cause." />
         <p>A Diagnostic Trouble Code is a compact label for a condition the vehicle’s computer detected. In the example shown here, <span className="obd2-code">P0301</span> generally indicates a misfire detected on cylinder 1.</p>
         <p>The first character gives a broad family: <strong>P</strong> for powertrain, <strong>B</strong> for body, <strong>C</strong> for chassis, and <strong>U</strong> for network or communication. The remaining characters narrow the description. You do not need to memorize the whole code system to begin; you need to read the definition carefully and understand its limits.</p>
 
@@ -92,7 +84,7 @@ export default function Obd2ScannerArticle() {
         <p>Once you understand the scan as the first step rather than the final answer, vehicle diagnostics become much less mysterious. If you are deciding how much tool you actually need, continue with <Link className="inline-article-link" href="/technology/obd2-scanner-vs-code-reader">OBD2 Scanner vs Code Reader</Link>, then learn how to interpret the result in <Link className="inline-article-link" href="/technology/how-to-read-obd2-codes">How to Read OBD2 Codes</Link>. For more TorqueGirl explanations of the systems behind performance, explore <Link className="inline-article-link" href="/technology/how-formula-1-car-creates-downforce">how a Formula 1 car creates downforce</Link>, <Link className="inline-article-link" href="/engines/turbocharger-vs-supercharger">how turbochargers and superchargers move air</Link>, and <Link className="inline-article-link" href="/engines/how-a-nascar-v8-engine-works">how a NASCAR V8 engine works</Link>.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/technology/how-formula-1-car-creates-downforce"><strong>How a Formula 1 Car Creates Downforce</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://www.epa.gov/state-and-local-transportation/vehicle-emissions-inspection-and-maintenance-im-policy-and-technical" rel="noreferrer">U.S. EPA: vehicle emissions inspection and maintenance guidance</a><a href="https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1002KRN.TXT" rel="noreferrer">U.S. EPA: performing onboard diagnostic system checks</a></div>
-        <ArticleShare title={obd2Article.title} description={obd2Article.description} path="/technology/what-is-an-obd2-scanner" />
+        <ArticleShare title={obd2Article.title} description={obd2Article.description} path={obd2Article.path} />
       </div></div>
     </article>
     <SiteFooter />

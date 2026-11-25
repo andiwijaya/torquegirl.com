@@ -2,6 +2,7 @@ export type ArticleSummary = {
   slug: string;
   path: string;
   title: string;
+  seoTitle?: string;
   description: string;
   category: string;
   topics: string[];
@@ -9,6 +10,8 @@ export type ArticleSummary = {
   updatedDate?: string;
   readingTime: string;
   heroImage: string;
+  heroWidth: number;
+  heroHeight: number;
   heroAlt: string;
 };
 
@@ -22,7 +25,9 @@ export const nascarV8Article: ArticleSummary = {
   date: "2026-09-21",
   updatedDate: "2026-10-03",
   readingTime: "9 min read",
-  heroImage: "/images/articles/torquegirl-nascar-v8-hero.png",
+  heroImage: "/images/articles/torquegirl-nascar-v8-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl presenting the V8 engine bay of a stock car in a motorsport workshop.",
 };
 
@@ -36,7 +41,9 @@ export const turboVsSuperchargerArticle: ArticleSummary = {
   date: "2026-09-21",
   updatedDate: "2026-10-03",
   readingTime: "10 min read",
-  heroImage: "/images/articles/torquegirl-turbo-vs-supercharger-hero.png",
+  heroImage: "/images/articles/torquegirl-turbo-vs-supercharger-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl comparing a turbocharger and supercharger on a performance workshop bench.",
 };
 
@@ -44,13 +51,16 @@ export const toyota2JzArticle: ArticleSummary = {
   slug: "toyota-2jz-gte-tuning-legend",
   path: "/engines/toyota-2jz-gte-tuning-legend",
   title: "Toyota 2JZ-GTE: Why This 30-Year-Old Engine Is Still a Tuning Legend",
+  seoTitle: "Toyota 2JZ-GTE: Why It’s a Tuning Legend",
   description: "Discover the engineering, durability, tuning headroom and Supra connection that made Toyota's 2JZ-GTE a lasting performance legend.",
   category: "Engine Legends",
   topics: ["Toyota", "2JZ", "Supra"],
   date: "2026-09-22",
   updatedDate: "2026-10-03",
   readingTime: "12 min read",
-  heroImage: "/images/articles/torquegirl-2jz-gte-hero.png",
+  heroImage: "/images/articles/torquegirl-2jz-gte-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl standing beside a Toyota 2JZ-GTE engine on a workshop stand.",
 };
 
@@ -63,7 +73,9 @@ export const formulaDownforceArticle: ArticleSummary = {
   topics: ["Motorsport", "Aerodynamics", "Formula Racing"],
   date: "2026-09-22",
   readingTime: "13 min read",
-  heroImage: "/images/articles/torquegirl-formula-downforce-hero.png",
+  heroImage: "/images/articles/torquegirl-formula-downforce-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop.",
 };
 
@@ -71,13 +83,16 @@ export const obd2Article: ArticleSummary = {
   slug: "what-is-an-obd2-scanner",
   path: "/technology/what-is-an-obd2-scanner",
   title: "What Is an OBD2 Scanner? A Beginner’s Guide to Diagnosing Your Car",
+  seoTitle: "What Is an OBD2 Scanner? A Beginner’s Guide",
   description: "Learn what an OBD2 scanner does, where it plugs in, how diagnostic trouble codes work, and how to use scan data without guessing at parts.",
   category: "Technology",
   topics: ["OBD2", "Diagnostics", "Automotive Technology"],
   date: "2026-09-22",
   updatedDate: "2026-10-03",
   readingTime: "14 min read",
-  heroImage: "/images/articles/torquegirl-obd2-scanner-hero.png",
+  heroImage: "/images/articles/torquegirl-obd2-scanner-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl using an OBD2 scanner to diagnose a car.",
 };
 
@@ -91,7 +106,9 @@ export const obd2ComparisonArticle: ArticleSummary = {
   date: "2026-09-22",
   updatedDate: "2026-10-03",
   readingTime: "12 min read",
-  heroImage: "/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.png",
+  heroImage: "/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool.",
 };
 
@@ -99,13 +116,16 @@ export const obd2DtcArticle: ArticleSummary = {
   slug: "how-to-read-obd2-codes",
   path: "/technology/how-to-read-obd2-codes",
   title: "How to Read OBD2 Codes: P, B, C and U Codes Explained",
+  seoTitle: "How to Read OBD2 Codes: P, B, C and U",
   description: "Learn how to read OBD2 diagnostic trouble codes, understand P, B, C and U code families, and use code information as the beginning of diagnosis—not a parts list.",
   category: "Technology",
   topics: ["OBD2", "DTC", "Diagnostics"],
   date: "2026-09-22",
   updatedDate: "2026-10-03",
   readingTime: "13 min read",
-  heroImage: "/images/articles/torquegirl-read-obd2-codes-hero.png",
+  heroImage: "/images/articles/torquegirl-read-obd2-codes-hero.webp",
+  heroWidth: 1672,
+  heroHeight: 941,
   heroAlt: "TorqueGirl reading OBD2 diagnostic trouble codes on an automotive scan tool.",
 };
 
@@ -120,6 +140,8 @@ export const obd2LiveDataArticle: ArticleSummary = {
   updatedDate: "2026-10-03",
   readingTime: "12 min read",
   heroImage: "/images/articles/meter2.webp",
+  heroWidth: 1400,
+  heroHeight: 788,
   heroAlt: "Torque Girl reviewing synchronized OBD2 live-data graphs on a laptop in a workshop.",
 };
 
@@ -133,6 +155,8 @@ export const obd2RecordingArticle: ArticleSummary = {
   date: "2026-10-03",
   readingTime: "8 min read",
   heroImage: "/images/articles/meter1.webp",
+  heroWidth: 1400,
+  heroHeight: 788,
   heroAlt: "Torque Girl preparing an OBD2 recording beside a vehicle in a workshop.",
 };
 
@@ -146,6 +170,8 @@ export const offTrackGolfDay: ArticleSummary = {
   date: "2026-09-24",
   readingTime: "3 min read",
   heroImage: "/images/articles/golf1.webp",
+  heroWidth: 1400,
+  heroHeight: 933,
   heroAlt: "Torque Girl choosing a golf club beside her golf bag on a quiet course.",
 };
 

@@ -1,34 +1,26 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { obd2ComparisonArticle } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/technology/obd2-scanner-vs-code-reader";
-
-export const metadata: Metadata = {
-  title: "OBD2 Scanner vs Code Reader: What’s the Difference? | TorqueGirl",
-  description: obd2ComparisonArticle.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", publishedTime: obd2ComparisonArticle.date, modifiedTime: obd2ComparisonArticle.updatedDate, url: articleUrl, title: "OBD2 Scanner vs Code Reader: What’s the Difference? | TorqueGirl", description: obd2ComparisonArticle.description, images: [{ url: `https://torquegirl.com${obd2ComparisonArticle.heroImage}`, width: 1536, height: 1024, alt: obd2ComparisonArticle.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "OBD2 Scanner vs Code Reader: What’s the Difference? | TorqueGirl", description: obd2ComparisonArticle.description, images: [`https://torquegirl.com${obd2ComparisonArticle.heroImage}`] },
-};
+export const metadata = articleMetadata(obd2ComparisonArticle);
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
-  return <figure className="article-figure wide-technical"><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className="article-figure wide-technical"><img src={src} alt={alt} width="1672" height="941" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function Obd2ComparisonArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2ComparisonArticle.title, description: obd2ComparisonArticle.description, image: [`https://torquegirl.com${obd2ComparisonArticle.heroImage}`], datePublished: obd2ComparisonArticle.date, dateModified: obd2ComparisonArticle.updatedDate ?? obd2ComparisonArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={obd2ComparisonArticle} section="technology" />
     <SiteHeader active="Technology" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2ComparisonArticle.readingTime}</span></div><h1>{obd2ComparisonArticle.title}</h1><p className="article-dek">A tiny code reader and a large diagnostic tablet may use the same port. The difference is what they can ask the vehicle—and how much evidence they can show you next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2ComparisonArticle.date}>September 22, 2026</time><span>Updated <time dateTime={obd2ComparisonArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path="/technology/obd2-scanner-vs-code-reader" /></header>
-      <Figure src="/images/articles/torquegirl-obd2-scanner-vs-code-reader-hero.png" alt="TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool" caption="The connector may be similar, but a basic reader and an advanced scan tool can expose very different levels of vehicle information." priority />
+      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2ComparisonArticle.readingTime}</span></div><h1>{obd2ComparisonArticle.title}</h1><p className="article-dek">A tiny code reader and a large diagnostic tablet may use the same port. The difference is what they can ask the vehicle—and how much evidence they can show you next.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2ComparisonArticle.date}>September 22, 2026</time><span>Updated <time dateTime={obd2ComparisonArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path={obd2ComparisonArticle.path} /></header>
+      <Figure src={obd2ComparisonArticle.heroImage} alt="TorqueGirl comparing a basic OBD2 code reader with an advanced automotive scan tool" caption="The connector may be similar, but a basic reader and an advanced scan tool can expose very different levels of vehicle information." priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>TOOLS / COVERAGE / EVIDENCE</span></aside><div className="article-body">
         <p className="lead-paragraph">Search for an OBD2 scanner and you quickly meet two very different-looking products: a small reader that fits in one hand and a large tablet covered in menus. Both may plug into the same diagnostic port. So why can one cost dramatically more than the other?</p>
         <p>The useful answer is not “the bigger screen is better.” It is that the tools may be able to ask different questions of the vehicle. A basic code reader tells you what the car reported. A more capable scan tool gives you more information to investigate why it happened.</p>
@@ -45,7 +37,7 @@ export default function Obd2ComparisonArticle() {
         <h2>What does an advanced scan tool add?</h2>
         <p>An advanced scan tool may communicate with more of the vehicle’s electronic systems. Depending on the tool and vehicle, that can include enhanced manufacturer-specific codes, ABS, SRS or airbag modules, transmission data, body-control modules, richer live-data views, graphs, service functions, actuator tests, and bidirectional controls.</p>
         <p>“May” is doing important work in that sentence. A large tablet does not automatically unlock every module on every car. Coverage depends on the vehicle, protocol, manufacturer data, subscription or update level, and the tool’s own design. Always check the exact vehicle coverage rather than trusting a broad phrase such as “full system.”</p>
-        <Figure src="/images/articles/torquegirl-obd2-scanner-vs-code-reader-comparison.png" alt="TorqueGirl comparing the capabilities of a basic code reader and advanced diagnostic scan tool" caption="A basic reader can report a code such as P0301, while a more capable tool may expose several vehicle systems and deeper data—if the vehicle and software support them." />
+        <Figure src="/images/articles/torquegirl-obd2-scanner-vs-code-reader-comparison.webp" alt="TorqueGirl comparing the capabilities of a basic code reader and advanced diagnostic scan tool" caption="A basic reader can report a code such as P0301, while a more capable tool may expose several vehicle systems and deeper data—if the vehicle and software support them." />
 
         <h2>Code reader vs scan tool at a glance</h2>
         <div className="comparison-table-wrap"><table className="comparison-table"><caption className="sr-only">Comparison of basic OBD2 code readers and advanced scan tools</caption><thead><tr><th scope="col">Capability</th><th scope="col">Basic code reader</th><th scope="col">Advanced scan tool</th></tr></thead><tbody><tr><td>Generic engine DTCs</td><td>Usually</td><td>Usually</td></tr><tr><td>Clear codes</td><td>Usually</td><td>Usually</td></tr><tr><td>Basic live data</td><td>Sometimes</td><td>Usually</td></tr><tr><td>ABS</td><td>Limited / tool dependent</td><td>Often, vehicle dependent</td></tr><tr><td>SRS / airbag</td><td>Limited / tool dependent</td><td>Often, vehicle dependent</td></tr><tr><td>Transmission</td><td>Limited</td><td>Often</td></tr><tr><td>Enhanced manufacturer data</td><td>Limited</td><td>Often</td></tr><tr><td>Data graphing</td><td>Basic or none</td><td>Often</td></tr><tr><td>Service functions</td><td>Rare</td><td>Tool / vehicle dependent</td></tr><tr><td>Bidirectional controls</td><td>Rare</td><td>Available on some tools</td></tr><tr><td>Learning curve</td><td>Lower</td><td>Higher</td></tr><tr><td>Typical cost</td><td>Lower</td><td>Higher</td></tr></tbody></table></div>
@@ -58,7 +50,7 @@ export default function Obd2ComparisonArticle() {
         <h2>What is live data?</h2>
         <p>A trouble code is a recorded observation. Live data lets you see what the vehicle is reporting now. Depending on the vehicle and tool, that may include RPM, coolant temperature, throttle position, fuel trims, sensor values, manifold pressure, and airflow.</p>
         <p>Live data can help you form a better hypothesis. It still does not turn the scan tool into an automatic parts cannon. Readings need context: operating temperature, engine load, symptoms, service information, and a test plan.</p>
-        <Figure src="/images/articles/torquegirl-obd2-scanner-live-data.png" alt="TorqueGirl examining engine live data with an advanced automotive scan tool" caption="Live data shows the vehicle’s current report. RPM, coolant temperature, STFT, and LTFT can add context to a diagnostic question." />
+        <Figure src="/images/articles/torquegirl-obd2-scanner-live-data.webp" alt="TorqueGirl examining engine live data with an advanced automotive scan tool" caption="Live data shows the vehicle’s current report. RPM, coolant temperature, STFT, and LTFT can add context to a diagnostic question." />
         <p><strong>STFT</strong> means Short-Term Fuel Trim: the quick correction the engine controller is making to fueling. <strong>LTFT</strong> means Long-Term Fuel Trim: a learned correction that changes more gradually. These are useful clues, not standalone proof of a particular failed part.</p>
 
         <p>If recorded data is your goal, check that your exact tool supports both logging and a usable text export, not only live display. Then read <Link className="inline-article-link" href="/technology/how-to-analyze-obd2-live-data-and-logs">How to Analyze OBD2 Live Data and Logs</Link> to understand the evidence those features can provide.</p>
@@ -97,7 +89,7 @@ export default function Obd2ComparisonArticle() {
         <p>For the fundamentals of ports, DTCs, live data, and clearing a warning light, read <Link className="inline-article-link" href="/technology/what-is-an-obd2-scanner">What Is an OBD2 Scanner?</Link>. To understand what a code such as P0301 actually means, continue with <Link className="inline-article-link" href="/technology/how-to-read-obd2-codes">How to Read OBD2 Codes</Link>. For more TorqueGirl engineering explanations, explore <Link className="inline-article-link" href="/engines/turbocharger-vs-supercharger">turbochargers and superchargers</Link> or <Link className="inline-article-link" href="/technology/how-formula-1-car-creates-downforce">Formula 1 downforce</Link>.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/technology/what-is-an-obd2-scanner"><strong>What Is an OBD2 Scanner?</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://www.epa.gov/state-and-local-transportation/vehicle-emissions-inspection-and-maintenance-im-policy-and-technical" rel="noreferrer">U.S. EPA: vehicle emissions inspection and maintenance guidance</a><a href="https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1002KRN.TXT" rel="noreferrer">U.S. EPA: performing onboard diagnostic system checks</a></div>
-        <ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path="/technology/obd2-scanner-vs-code-reader" />
+        <ArticleShare title={obd2ComparisonArticle.title} description={obd2ComparisonArticle.description} path={obd2ComparisonArticle.path} />
       </div></div>
     </article>
     <SiteFooter />

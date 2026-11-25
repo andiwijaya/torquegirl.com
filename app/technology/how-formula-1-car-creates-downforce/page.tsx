@@ -1,34 +1,26 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { formulaDownforceArticle } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/technology/how-formula-1-car-creates-downforce";
-
-export const metadata: Metadata = {
-  title: "How a Formula 1 Car Creates Downforce | TorqueGirl",
-  description: formulaDownforceArticle.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", url: articleUrl, title: "How a Formula 1 Car Creates Downforce | TorqueGirl", description: formulaDownforceArticle.description, images: [{ url: `https://torquegirl.com${formulaDownforceArticle.heroImage}`, width: 1536, height: 1024, alt: formulaDownforceArticle.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "How a Formula 1 Car Creates Downforce | TorqueGirl", description: formulaDownforceArticle.description, images: [`https://torquegirl.com${formulaDownforceArticle.heroImage}`] },
-};
+export const metadata = articleMetadata(formulaDownforceArticle);
 
 function Figure({ src, alt, caption, priority = false, wide = false }: { src: string; alt: string; caption: string; priority?: boolean; wide?: boolean }) {
-  return <figure className={`article-figure${wide ? " wide-technical" : ""}`}><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className={`article-figure${wide ? " wide-technical" : ""}`}><img src={src} alt={alt} width="1672" height="941" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function FormulaDownforceArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: formulaDownforceArticle.title, description: formulaDownforceArticle.description, image: [`https://torquegirl.com${formulaDownforceArticle.heroImage}`], datePublished: formulaDownforceArticle.date, dateModified: formulaDownforceArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={formulaDownforceArticle} section="technology" />
     <SiteHeader active="Technology" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>MOTORSPORT</span><span>{formulaDownforceArticle.readingTime}</span></div><h1>{formulaDownforceArticle.title}</h1><p className="article-dek">An airplane uses airflow to help generate lift. A Formula-style race car turns that same invisible medium into a useful force in the opposite direction: toward the track.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={formulaDownforceArticle.date}>September 22, 2026</time></div><ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path="/technology/how-formula-1-car-creates-downforce" /></header>
-      <Figure src="/images/articles/torquegirl-formula-downforce-hero.png" alt="Torque Girl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop." caption="Torque Girl takes a closer look at the aerodynamic surfaces that turn airflow into performance." priority wide />
+      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>MOTORSPORT</span><span>{formulaDownforceArticle.readingTime}</span></div><h1>{formulaDownforceArticle.title}</h1><p className="article-dek">An airplane uses airflow to help generate lift. A Formula-style race car turns that same invisible medium into a useful force in the opposite direction: toward the track.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={formulaDownforceArticle.date}>September 22, 2026</time></div><ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path={formulaDownforceArticle.path} /></header>
+      <Figure src={formulaDownforceArticle.heroImage} alt="Torque Girl examining a Formula-style race car and its aerodynamic surfaces in a motorsport workshop." caption="Torque Girl takes a closer look at the aerodynamic surfaces that turn airflow into performance." priority wide />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>AIRFLOW / LOAD / GRIP</span></aside><div className="article-body">
         <p className="lead-paragraph">The apparent contradiction is simple to state: an airplane is designed to produce lift, while a Formula 1 car is designed to produce a large aerodynamic force toward the circuit. That load can give the tires more normal force to work with, increasing cornering, braking and acceleration potential without adding the same amount of static mass.</p>
         <p>But where does all that downforce come from? Not from one magic wing. It comes from pressure fields, airflow that is accelerated and turned, underfloor geometry, wings, bodywork, vehicle attitude and wake management working as one system.</p>
@@ -46,7 +38,7 @@ export default function FormulaDownforceArticle() {
         <p>Start at the front and the chain becomes easier to see. The front wing creates load at the front axle and prepares airflow around the nose, front wheels and suspension. Sidepods and bodywork manage the flow toward the floor and rear of the car. The floor and diffuser extract a large part of the underbody opportunity, while the rear wing adds load and drag at the back.</p>
         <p>Change one area and you may change the air reaching another. A wing that produces more local load but sends a poor wake toward the floor may be a slower solution overall. This is why aerodynamicists study streamlines, pressure maps and flow structures rather than judging a component in isolation.</p>
         <h2>The biggest secret is under the car</h2>
-        <Figure src="/images/articles/torquegirl-formula-underfloor-diffuser.png" alt="Torque Girl pointing toward the underfloor and rear diffuser of a raised Formula-style race car." caption="Much of modern Formula-style aerodynamic performance is created underneath the car, where the floor and diffuser control airflow close to the track." wide />
+        <Figure src="/images/articles/torquegirl-formula-underfloor-diffuser.webp" alt="Torque Girl pointing toward the underfloor and rear diffuser of a raised Formula-style race car." caption="Much of modern Formula-style aerodynamic performance is created underneath the car, where the floor and diffuser control airflow close to the track." wide />
         <p>The underfloor works close to the track surface. Its shaped channels and tunnels manage how air accelerates beneath the car and how pressure is distributed across the floor. The pressure below can be lower than the pressure above, producing a net force toward the track. That is a more precise description than saying the floor simply “sucks” the car down.</p>
         <p>The result depends on a narrow and moving operating window. Ground clearance, floor edges, wheel wake, tunnel shape and the diffuser at the rear all affect whether the intended flow remains attached and useful. The underside is a three-dimensional aerodynamic machine, not a flat board.</p>
         <h2>Venturi effect: useful, but don't oversimplify it</h2>
@@ -59,7 +51,7 @@ export default function FormulaDownforceArticle() {
         <p>The underfloor operates near the track, so small changes in ride height can change its flow field. Pitch, roll and heave matter too. Braking pitches the car forward; acceleration changes the attitude in the opposite direction; kerbs and bumps move the floor relative to the ground.</p>
         <p>That creates a powerful connection between aerodynamics and suspension. The suspension isn't only controlling the tires. It is also controlling the aerodynamic platform. A setup that produces a spectacular peak in one static condition may be less useful if the car loses load when it heaves, rolls or meets a bump.</p>
         <h2>What does the front wing do?</h2>
-        <Figure src="/images/articles/torquegirl-formula-front-wing.png" alt="Torque Girl examining the multi-element carbon-fiber front wing of a Formula-style race car." caption="The front wing creates aerodynamic load while also influencing the airflow that reaches the rest of the car." wide />
+        <Figure src="/images/articles/torquegirl-formula-front-wing.webp" alt="Torque Girl examining the multi-element carbon-fiber front wing of a Formula-style race car." caption="The front wing creates aerodynamic load while also influencing the airflow that reaches the rest of the car." wide />
         <p>The front wing has at least two major jobs. It contributes aerodynamic load at the front axle, and it conditions the airflow approaching the bodywork, front tires and floor. Its multiple elements create pressure differences and turn the flow. The goal is not automatically maximum front downforce; the goal is a useful front balance that feeds the rest of the car.</p>
         <h2>Why the front tires are an aero problem</h2>
         <p>Open wheels disturb airflow significantly. A rotating tire produces a complex wake, and the suspension and steering angle change the geometry that the air sees. The rest of the car must manage that disturbed air so it does not ruin the floor or destabilize the rear of the car.</p>
@@ -88,7 +80,7 @@ export default function FormulaDownforceArticle() {
         <p>For another look at how racing engineering turns airflow and combustion into speed, read <Link className="inline-article-link" href="/engines/how-a-nascar-v8-engine-works">How a NASCAR V8 Engine Works</Link> or compare forced-induction energy paths in <Link className="inline-article-link" href="/engines/turbocharger-vs-supercharger">Turbocharger vs Supercharger</Link>.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/engines/turbocharger-vs-supercharger"><strong>Turbocharger vs Supercharger</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://www.formula1.com/en/latest/article/10-things-you-need-to-know-about-the-all-new-2022-f1-car.4OLg8DrXyzHzdoGrbqp6ye" rel="noreferrer">Formula 1: ground-effect floor and wake context</a><a href="https://www.formula1.com/en/latest/article/f1-glossary-f-j.2g6grJVxT6dFCDpSmgoCQX" rel="noreferrer">Formula 1 glossary: ground effect and grip</a><a href="https://www.fia.com/regulation/fia-formula-1-technical-regulations" rel="noreferrer">FIA Formula 1 technical regulations</a></div>
-        <ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path="/technology/how-formula-1-car-creates-downforce" />
+        <ArticleShare title={formulaDownforceArticle.title} description={formulaDownforceArticle.description} path={formulaDownforceArticle.path} />
       </div></div>
     </article>
     <SiteFooter />

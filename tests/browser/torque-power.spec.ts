@@ -146,7 +146,9 @@ test('explorer SEO sitemap shared shell and content-free network boundary', asyn
   await page.goto('/tools'); const previous = await page.evaluate(() => performance.timeOrigin);
   await page.goto(route); expect(await page.evaluate(() => performance.timeOrigin)).not.toBe(previous);
   page.on('request', r => requests.push(`${r.method()} ${r.url()} ${r.postData() ?? ''}`)); page.on('pageerror', e => errors.push(e.message));
-  await expect(page).toHaveTitle(/Torque–Power Explorer/); await expect(page.locator('meta[name=description]')).toHaveAttribute('content', /mechanical hp/);
+  await expect(page).toHaveTitle('Torque, Horsepower & RPM Calculator — TorqueGirl');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Torque–Power Explorer');
+  await expect(page.locator('meta[name=description]')).toHaveAttribute('content', /mechanical hp/);
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', `https://torquegirl.com${route}`);
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', `https://torquegirl.com${route}`);
   await expect(page.getByRole('navigation', { name: 'Footer navigation' }).getByRole('link', { name: 'Tools', exact: true })).toHaveAttribute('href', '/tools');

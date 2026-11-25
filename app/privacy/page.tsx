@@ -1,13 +1,12 @@
+import { pageMetadata } from '../../lib/site-seo';
 import SiteHeader from '../../components/site-header';
 import SiteFooter from '../../components/site-footer';
-import type { Metadata } from "next";
 import Link from '../../components/document-link';
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | TorqueGirl",
+export const metadata = pageMetadata({
+  path: "/privacy", title: "Privacy Policy",
   description: "How TorqueGirl handles browser-local logs, observation notes and backups, tool calculations, website analytics and hosting information.",
-  alternates: { canonical: "https://torquegirl.com/privacy" },
-};
+});
 
 export default function PrivacyPage() {
   return <main className="site-shell article-shell">

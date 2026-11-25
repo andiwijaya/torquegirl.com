@@ -1,4 +1,5 @@
-import type { Metadata } from 'next';
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
@@ -6,19 +7,11 @@ import DocumentLink from '../../../components/document-link';
 import { ArticleShare } from '../../../components/article-share';
 import { obd2RecordingArticle as article } from '../../../lib/torquegirl-content';
 
-const articleUrl = `https://torquegirl.com${article.path}`;
-export const metadata: Metadata = {
-  title: article.title,
-  description: article.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: 'article', url: articleUrl, title: `${article.title} | TorqueGirl`, description: article.description, publishedTime: article.date, modifiedTime: article.updatedDate ?? article.date, images: [{ url: `https://torquegirl.com${article.heroImage}`, width: 1672, height: 944, alt: article.heroAlt }] },
-  twitter: { card: 'summary_large_image', title: `${article.title} | TorqueGirl`, description: article.description, images: [`https://torquegirl.com${article.heroImage}`] },
-};
+export const metadata = articleMetadata(article);
 
 export default function RecordingGuide() {
-  const jsonLd = { '@context': 'https://schema.org', '@type': 'Article', headline: article.title, description: article.description, image: [`https://torquegirl.com${article.heroImage}`], datePublished: article.date, dateModified: article.updatedDate ?? article.date, mainEntityOfPage: articleUrl, publisher: { '@type': 'Organization', name: 'TorqueGirl', url: 'https://torquegirl.com' } };
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={article} section="technology" />
     <SiteHeader active="Technology" />
     <article className="technical-article">
       <header className="article-intro">
@@ -29,7 +22,7 @@ export default function RecordingGuide() {
         <div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={article.date}>October 3, 2026</time></div>
         <ArticleShare title={article.title} description={article.description} path={article.path} />
       </header>
-      <figure className="article-figure wide-technical log-figure"><img src={article.heroImage} alt={article.heroAlt} width="1672" height="944" loading="eager" fetchPriority="high" /><figcaption>Prepare the scanner and logging device while parked. A focused recording is easier to interpret when you know its conditions.</figcaption></figure>
+      <figure className="article-figure wide-technical log-figure"><img src={article.heroImage} alt={article.heroAlt} width={article.heroWidth} height={article.heroHeight} loading="eager" fetchPriority="high" /><figcaption>Prepare the scanner and logging device while parked. A focused recording is easier to interpret when you know its conditions.</figcaption></figure>
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>PREPARE / RECORD / EXPORT</span></aside><div className="article-body">
         <p className="lead-paragraph">You do not need every available sensor or an aggressive road test. You need enough relevant data to see what happened before, during and after the event you want to understand.</p>
         <p>New to this? Start with <DocumentLink className="inline-article-link" href="/technology/how-to-analyze-obd2-live-data-and-logs">how to analyze OBD2 live data and logs</DocumentLink>. If your tool only reads codes, check <DocumentLink className="inline-article-link" href="/technology/obd2-scanner-vs-code-reader">scanner versus code reader capabilities</DocumentLink>: live display, recording and text export are separate features. Confirm each in your exact tool&apos;s documentation.</p>

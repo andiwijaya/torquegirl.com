@@ -108,10 +108,11 @@ test('learning content, internal links, metadata and publication freshness agree
     await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', `https://torquegirl.com${article.heroImage}`);
     await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute('content', article.date);
     if (article.updatedDate) await expect(page.locator('meta[property="article:modified_time"]')).toHaveAttribute('content', article.updatedDate);
-    const json = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+    const json = JSON.parse((await page.locator('#article-data').textContent())!);
     expect(json.datePublished).toBe(article.date);
     expect(json.dateModified).toBe(article.updatedDate ?? article.date);
-    expect(sitemap).toContain(`<loc>https://torquegirl.com${article.path}</loc><lastmod>${article.updatedDate ?? article.date}</lastmod>`);
+    const entry = sitemap.split('</url>').find(item => item.includes(`<loc>https://torquegirl.com${article.path}</loc>`));
+    expect(entry).toContain(`<lastmod>${article.updatedDate ?? article.date}</lastmod>`);
     if (article !== obd2LiveDataArticle && article !== obd2RecordingArticle) await expect(page.locator(`.article-body a[href="${obd2LiveDataArticle.path}"]`)).toHaveCount(1);
     const links = await page.locator('a[href^="/"]').evaluateAll(a => a.map(el => el.getAttribute('href')!));
     for (const href of new Set(links)) {

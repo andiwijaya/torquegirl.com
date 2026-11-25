@@ -133,21 +133,50 @@ test('complete route sitemap metadata internal anchor and asset crawl', async ({
   test.setTimeout(240_000);
   const observed = watch(page);
   const sitemapResponse = await request.get('/sitemap.xml'); expect(sitemapResponse.status()).toBe(200);
+  expect(sitemapResponse.headers()['content-type']).toMatch(/xml/);
   const sitemap = await sitemapResponse.text();
-  const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(m => ({ url: /<loc>(.*?)<\/loc>/.exec(m[1])![1], date: /<lastmod>(.*?)<\/lastmod>/.exec(m[1])?.[1] }));
+  const robots = await request.get('/robots.txt'); expect(robots.status()).toBe(200);
+  expect(await robots.text()).toMatch(/^Sitemap: https:\/\/torquegirl\.com\/sitemap\.xml\s*$/im);
+  expect(await robots.text()).not.toMatch(/^Disallow:\s*\//im);
+  expect(sitemap).toContain('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"');
+  const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(m => ({
+    url: /<loc>(.*?)<\/loc>/.exec(m[1])![1],
+    date: /<lastmod>(.*?)<\/lastmod>/.exec(m[1])?.[1],
+    image: /<image:loc>(.*?)<\/image:loc>/.exec(m[1])?.[1],
+  }));
   const routes = entries.map(e => new URL(e.url).pathname);
   const fileRoutes = readdirSync('app', { recursive: true, withFileTypes: true }).filter(f => f.isFile() && f.name === 'page.tsx').map(f => '/' + relative('app', f.parentPath).replaceAll('\\', '/')).sort();
   expect([...routes].sort()).toEqual(fileRoutes);
   expect(entries).toHaveLength(19); expect(new Set(routes).size).toBe(19);
   for (const path of oldRoutes) expect(routes).toContain(path);
   const links = new Set<string>(), assets = new Set<string>(), ids = new Map<string, string[]>();
+  const titles = new Set<string>(), descriptions = new Set<string>();
   for (const entry of entries) {
     const path = new URL(entry.url).pathname;
     expect(entry.url).toBe(`https://torquegirl.com${path}`);
-    expect((await page.goto(path))!.status()).toBe(200);
+    const response = (await page.goto(path))!;
+    expect(response.status()).toBe(200);
+    expect(response.headers()['x-robots-tag'] ?? '').not.toMatch(/noindex/i);
+    const html = await response.text();
+    expect(html).toContain('<h1');
+    const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1];
+    expect(canonical, entry.url).toBeTruthy();
+    expect(new URL(canonical!).href).toBe(entry.url);
     await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://torquegirl.com${path === '/' ? '' : path}`);
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /\S.{20}/);
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    const openGraphUrl = await page.locator('meta[property="og:url"]').getAttribute('content');
+    expect(new URL(openGraphUrl!).href).toBe(entry.url);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /max-image-preview:\s*large/);
+    const title = await page.title();
+    expect(title.match(/TorqueGirl/g), title).toHaveLength(1);
+    expect(titles.has(title), title).toBe(false); titles.add(title);
+    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    expect(description, entry.url).toMatch(/\S.{20}/);
+    expect(descriptions.has(description!), entry.url).toBe(false); descriptions.add(description!);
+    if (entry.image) {
+      await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', entry.image);
+      assets.add(new URL(entry.image).pathname);
+    }
     ids.set(path, await page.locator('[id],a[name]').evaluateAll(nodes => nodes.flatMap(n => [n.id, n.getAttribute('name') ?? '']).filter(Boolean)));
     for (const href of await page.locator('a[href]').evaluateAll(nodes => nodes.map(n => (n as HTMLAnchorElement).href))) {
       const url = new URL(href); if ([origin, 'https://torquegirl.com'].includes(url.origin)) links.add(url.pathname + url.search + url.hash);
@@ -157,20 +186,34 @@ test('complete route sitemap metadata internal anchor and asset crawl', async ({
     }
     const article = allArticles.find(a => a.path === path);
     if (article) {
-      const json = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+      const json = JSON.parse((await page.locator('#article-data').textContent())!);
       expect(json.datePublished).toBe(article.date); expect(json.dateModified).toBe(article.updatedDate ?? article.date);
+      expect(json.author.name).toBe('TorqueGirl');
+      expect(json.mainEntityOfPage).toBe(entry.url);
+      expect(json.image).toContain(`https://torquegirl.com${article.heroImage}`);
+      expect(entry.image).toBe(`https://torquegirl.com${article.heroImage}`);
       expect(entry.date).toBe(article.updatedDate ?? article.date);
       if (engines.includes(article)) {
         await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute('content', article.date);
         await expect(page.locator('meta[property="article:modified_time"]')).toHaveAttribute('content', article.updatedDate!);
       }
     }
-    if (['/', '/tools', analyzer, explorer, '/privacy'].includes(path)) expect(entry.date).toBe('2026-10-03');
+    if (article || path === analyzer || path === explorer) {
+      const breadcrumbs = JSON.parse((await page.locator('#breadcrumb-data').textContent())!);
+      expect(breadcrumbs['@type']).toBe('BreadcrumbList');
+      expect(breadcrumbs.itemListElement.map((item: { item: string }) => item.item))
+        .toEqual(['https://torquegirl.com/', `https://torquegirl.com/${path.split('/')[1]}`, entry.url]);
+    }
+    if (path === analyzer || path === explorer) {
+      const tool = JSON.parse((await page.locator('#tool-data').textContent())!);
+      expect(tool['@type']).toBe('WebApplication');
+      expect(tool.url).toBe(entry.url);
+    }
     if (path === '/privacy') {
+      expect(entry.date).toBe('2026-10-03');
       await expect(page.locator('.legal-updated')).toHaveText('Last updated: October 3, 2026');
       for (const text of ['explicit save or a reviewed backup import', 'Browser localStorage', 'Raw logs, source rows, sample arrays, traces and analysis sessions are never saved or restored', 'Web Locks', 'unsaved edits need the separate draft backup', 'do not initialize site analytics']) await expect(page.locator('.legal-body')).toContainText(text);
     }
-    if (path === explorer || path === obd2RecordingArticle.path) await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', entry.url);
   }
   for (const href of links) {
     const url = new URL(href, origin), path = url.pathname.replace(/\/$/, '') || '/';

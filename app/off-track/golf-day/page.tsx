@@ -1,54 +1,28 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArticleShare } from "../../../components/article-share";
 import { offTrackGolfDay } from "../../../lib/torquegirl-content";
 
-const path = "/off-track/golf-day";
-
-export const metadata: Metadata = {
-  title: "Off Track: Torque Girl’s Golf Day | TorqueGirl",
-  description: offTrackGolfDay.description,
-  alternates: { canonical: `https://torquegirl.com${path}` },
-  openGraph: {
-    type: "article",
-    title: "Off Track: Torque Girl’s Golf Day",
-    description: "A different kind of drive. A short visual story about trying something new, finding your focus, and enjoying the walk.",
-    url: `https://torquegirl.com${path}`,
-    images: [{ url: offTrackGolfDay.heroImage, width: 1400, height: 933, alt: offTrackGolfDay.heroAlt }],
-  },
-  twitter: { card: "summary_large_image", title: "Off Track: Torque Girl’s Golf Day | TorqueGirl", description: offTrackGolfDay.description, images: [offTrackGolfDay.heroImage] },
-};
-
-const articleJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Off Track: Torque Girl’s Golf Day",
-  description: offTrackGolfDay.description,
-  image: [`https://torquegirl.com${offTrackGolfDay.heroImage}`],
-  datePublished: "2026-09-24",
-  dateModified: "2026-09-24",
-  author: { "@type": "Organization", name: "TorqueGirl" },
-  publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" },
-  mainEntityOfPage: `https://torquegirl.com${path}`,
-};
+export const metadata = articleMetadata(offTrackGolfDay);
 
 export default function GolfDayPage() {
   return <main className="site-shell article-shell offtrack-story">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+    <ArticleData article={offTrackGolfDay} section="off-track" />
     <SiteHeader active="Off Track" />
     <article>
       <div className="technical-article offtrack-article">
         <div className="article-intro offtrack-intro">
           <Link className="back-link" href="/off-track">← Off Track stories</Link>
-          <div className="article-kicker"><span>Off Track</span><span>24 September 2026</span><span>3 min read</span></div>
-          <h1>Off Track: Torque Girl’s Golf Day</h1>
+          <div className="article-kicker"><span>Off Track</span><time dateTime={offTrackGolfDay.date}>24 September 2026</time><span>3 min read</span></div>
+          <h1>{offTrackGolfDay.title}</h1>
           <p className="article-dek">A different kind of drive.</p>
           <div className="article-byline"><span>By TorqueGirl</span><span>A short visual story</span></div>
-          <ArticleShare title={offTrackGolfDay.title} description={offTrackGolfDay.description} path={path} />
+          <ArticleShare title={offTrackGolfDay.title} description={offTrackGolfDay.description} path={offTrackGolfDay.path} />
         </div>
-        <figure className="article-figure offtrack-hero-figure"><img src="/images/articles/golf1.webp" alt="Torque Girl arrives at the course with her golf bag, ready to try a different kind of drive." fetchPriority="high" /><figcaption>A new course, a fresh set of choices, and room to be a beginner.</figcaption></figure>
+        <figure className="article-figure offtrack-hero-figure"><img src={offTrackGolfDay.heroImage} width={offTrackGolfDay.heroWidth} height={offTrackGolfDay.heroHeight} alt="Torque Girl arrives at the course with her golf bag, ready to try a different kind of drive." fetchPriority="high" /><figcaption>A new course, a fresh set of choices, and room to be a beginner.</figcaption></figure>
         <div className="offtrack-chapters">
           <section className="offtrack-opening"><p className="eyebrow"><span className="eyebrow-line" />01 / Step away</p><h2>Try Something Different</h2><p>Today, the tools are lighter and the pace is slower. There’s a new course to read, a club to choose, and no need to know everything before taking the first step.</p><p>Curiosity works anywhere. Sometimes the best way to reset is to trade the workshop for a wide-open fairway.</p></section>
           <section className="offtrack-story-row"><figure className="offtrack-photo"><img src="/images/articles/golf2.webp" alt="Torque Girl focuses on her swing as the ball leaves the tee." loading="lazy" /><figcaption>Find your balance. Pick a line. Commit to the swing.</figcaption></figure><div className="offtrack-story-copy"><p className="eyebrow"><span className="eyebrow-line" />02 / Find the rhythm</p><h2>Focus on the Swing</h2><p>A good swing asks for the same things as any new skill: attention, timing, and a willingness to learn from each attempt.</p><p>One small adjustment at a time. Take a breath, trust the motion, and let the next shot be its own fresh start.</p></div></section>

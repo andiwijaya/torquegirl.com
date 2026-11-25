@@ -1,33 +1,24 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { obd2LiveDataArticle } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/technology/how-to-analyze-obd2-live-data-and-logs";
-
-export const metadata: Metadata = {
-  title: "How to Analyze OBD2 Live Data and Logs",
-  description: "Learn to analyze OBD2 live-data logs. Compare RPM, throttle, fuel trims, coolant and oxygen-sensor data to spot patterns and plan what to investigate next.",
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", publishedTime: obd2LiveDataArticle.date, modifiedTime: obd2LiveDataArticle.updatedDate, url: articleUrl, title: "How to Analyze OBD2 Live Data and Logs | TorqueGirl", description: "Learn to analyze OBD2 live-data logs. Compare RPM, throttle, fuel trims, coolant and oxygen-sensor data to spot patterns and plan what to investigate next.", images: [{ url: `https://torquegirl.com${obd2LiveDataArticle.heroImage}`, width: 1400, height: 791, alt: obd2LiveDataArticle.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "How to Analyze OBD2 Live Data and Logs | TorqueGirl", description: "Learn to analyze OBD2 live-data logs. Compare RPM, throttle, fuel trims, coolant and oxygen-sensor data to spot patterns and plan what to investigate next.", images: [`https://torquegirl.com${obd2LiveDataArticle.heroImage}`] },
-};
+export const metadata = articleMetadata(obd2LiveDataArticle);
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
-  return <figure className="article-figure wide-technical log-figure"><img src={src} alt={alt} width="1400" height="791" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className="article-figure wide-technical log-figure"><img src={src} alt={alt} width={obd2LiveDataArticle.heroWidth} height={obd2LiveDataArticle.heroHeight} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function Obd2LiveDataArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: obd2LiveDataArticle.title, description: obd2LiveDataArticle.description, image: [`https://torquegirl.com${obd2LiveDataArticle.heroImage}`, "https://torquegirl.com/images/articles/meter1.webp", "https://torquegirl.com/images/articles/meter3.webp"], datePublished: obd2LiveDataArticle.date, dateModified: obd2LiveDataArticle.updatedDate ?? obd2LiveDataArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
-
   return <main className="site-shell article-shell">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={obd2LiveDataArticle} section="technology" />
     <SiteHeader active="Technology" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2LiveDataArticle.readingTime}</span></div><h1>{obd2LiveDataArticle.title}</h1><p className="article-dek">A scanner can turn a drive into thousands of sensor readings. Learn to turn that wall of numbers into a useful story about what the vehicle was doing—and where a closer look may help.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2LiveDataArticle.date}>September 23, 2026</time><span>Updated <time dateTime={obd2LiveDataArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path="/technology/how-to-analyze-obd2-live-data-and-logs" /></header>
+      <header className="article-intro"><Link className="back-link" href="/technology"><ArrowLeft size={15} /> Technology</Link><div className="article-kicker"><span>TECHNOLOGY</span><span>DIAGNOSTICS</span><span>{obd2LiveDataArticle.readingTime}</span></div><h1>{obd2LiveDataArticle.title}</h1><p className="article-dek">A scanner can turn a drive into thousands of sensor readings. Learn to turn that wall of numbers into a useful story about what the vehicle was doing—and where a closer look may help.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={obd2LiveDataArticle.date}>September 23, 2026</time><span>Updated <time dateTime={obd2LiveDataArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path={obd2LiveDataArticle.path} /></header>
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>CONNECT / RECORD / CORRELATE</span></aside><div className="article-body">
         <p className="lead-paragraph">You connect an OBD2 scanner and the screen fills with numbers. Engine speed and coolant temperature are easy enough to picture. Then there is STFT, LTFT, oxygen-sensor data—and, in an exported log, thousands of samples. The point of analysis is to turn those readings into a timeline you can reason about.</p>
         <p>A diagnostic trouble code (DTC) is one observation made by the vehicle’s diagnostic system. Live data adds another kind of evidence: it shows selected parameters as they change. Neither one automatically names a failed part. A useful habit is: <strong>Find patterns first. Diagnose second.</strong></p>
@@ -64,7 +55,7 @@ export default function Obd2LiveDataArticle() {
         <div className="related-article"><span>I HAVE A LOG</span><Link href="/tools/obd2-log-analyzer"><strong>Analyze my log locally</strong><ArrowUpRight size={17} aria-hidden="true" /></Link></div>
         <p>Your imported log stays in your browser without uploading. Review the mapping and data quality before comparing operating regions. Keep your own original file; leaving or reloading the analyzer clears its in-memory log.</p>
         <h2>Step 2: Turn the log into something you can see</h2>
-        <Figure src="/images/articles/meter2.webp" alt="Torque Girl reviewing synchronized OBD2 live-data graphs for RPM, speed, throttle, coolant temperature, fuel trims, and oxygen-sensor data on a laptop." caption="Plotting multiple channels on the same timeline turns a wall of numbers into vehicle behavior you can actually investigate." />
+        <Figure src={obd2LiveDataArticle.heroImage} alt="Torque Girl reviewing synchronized OBD2 live-data graphs for RPM, speed, throttle, coolant temperature, fuel trims, and oxygen-sensor data on a laptop." caption="Plotting multiple channels on the same timeline turns a wall of numbers into vehicle behavior you can actually investigate." />
         <p>A table is useful for exact values, but thousands of rows make trends hard to spot. A time-series graph places <strong>time on the X-axis</strong> and a sensor value on the <strong>Y-axis</strong>. Peaks, plateaus, sudden changes, and repeating patterns become easier to see.</p>
         <p>Put related channels on a shared time axis. If RPM, throttle, speed, and fuel-control data are synchronized, a cursor at one moment can show what each was reporting at that same point. Separate graphs with unrelated time scales can make events look connected when they were not.</p>
         <p>Start with a few channels that fit your question. Check that the time range, units, and sample spacing make sense. If one graph looks unusual, zoom in and compare the rows around it; a chart can clarify a pattern, but it cannot fix missing, delayed, or mislabelled data.</p>
@@ -95,7 +86,7 @@ export default function Obd2LiveDataArticle() {
         <p>For a little more background before your next recording, compare <Link className="inline-article-link" href="/technology/obd2-scanner-vs-code-reader">an OBD2 scanner with a code reader</Link>. The best log is not the one with the most numbers; it is the one that helps you ask a better next question.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/technology/what-is-an-obd2-scanner"><strong>What Is an OBD2 Scanner?</strong><ArrowUpRight size={17} /></Link><Link href="/technology/how-to-read-obd2-codes"><strong>How to Read OBD2 Codes</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://www.epa.gov/system/files/documents/2021-11/td91derivesystemsemissionstestingreport04122016.pdf" rel="noreferrer">U.S. EPA: OBD data observations and analysis of live engine data</a><a href="https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/" rel="noreferrer">OBD Solutions: reading real-time OBD data and parameter IDs</a></div>
-        <ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path="/technology/how-to-analyze-obd2-live-data-and-logs" />
+        <ArticleShare title={obd2LiveDataArticle.title} description={obd2LiveDataArticle.description} path={obd2LiveDataArticle.path} />
       </div></div>
     </article>
     <SiteFooter />

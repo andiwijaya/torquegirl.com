@@ -1,34 +1,26 @@
+import { ArticleData } from '../../../components/seo-structured-data';
+import { articleMetadata } from '../../../lib/site-seo';
 import SiteHeader from '../../../components/site-header';
 import SiteFooter from '../../../components/site-footer';
-import type { Metadata } from "next";
 /* eslint-disable react/no-unescaped-entities */
 import Link from '../../../components/document-link';
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ArticleShare } from "../../../components/article-share";
 import { turboVsSuperchargerArticle, torquePowerExplorerTool } from "../../../lib/torquegirl-content";
 
-const articleUrl = "https://torquegirl.com/engines/turbocharger-vs-supercharger";
-
-export const metadata: Metadata = {
-  title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl",
-  description: turboVsSuperchargerArticle.description,
-  alternates: { canonical: articleUrl },
-  openGraph: { type: "article", publishedTime: turboVsSuperchargerArticle.date, modifiedTime: turboVsSuperchargerArticle.updatedDate, url: articleUrl, title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl", description: turboVsSuperchargerArticle.description, images: [{ url: `https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`, width: 1536, height: 1024, alt: turboVsSuperchargerArticle.heroAlt }] },
-  twitter: { card: "summary_large_image", title: "Turbocharger vs Supercharger: What’s the Difference? | TorqueGirl", description: turboVsSuperchargerArticle.description, images: [`https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`] },
-};
+export const metadata = articleMetadata(turboVsSuperchargerArticle);
 
 function Figure({ src, alt, caption, priority = false }: { src: string; alt: string; caption: string; priority?: boolean }) {
-  return <figure className="article-figure"><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
+  return <figure className="article-figure"><img src={src} alt={alt} width="1672" height="941" loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /><figcaption>{caption}</figcaption></figure>;
 }
 
 export default function TurboVsSuperchargerArticle() {
-  const jsonLd = { "@context": "https://schema.org", "@type": "Article", headline: turboVsSuperchargerArticle.title, description: turboVsSuperchargerArticle.description, image: [`https://torquegirl.com${turboVsSuperchargerArticle.heroImage}`], datePublished: turboVsSuperchargerArticle.date, dateModified: turboVsSuperchargerArticle.updatedDate ?? turboVsSuperchargerArticle.date, mainEntityOfPage: articleUrl, publisher: { "@type": "Organization", name: "TorqueGirl", url: "https://torquegirl.com" } };
   return <main className="site-shell article-shell turbo-article">
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <ArticleData article={turboVsSuperchargerArticle} section="engines" />
     <SiteHeader active="Engines" />
     <article className="technical-article">
-      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>TECHNOLOGY</span><span>{turboVsSuperchargerArticle.readingTime}</span></div><h1>{turboVsSuperchargerArticle.title}</h1><p className="article-dek">Both systems force more air into an engine. The fascinating difference is where the energy to do that work comes from.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={turboVsSuperchargerArticle.date}>September 21, 2026</time><span>Updated <time dateTime={turboVsSuperchargerArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path="/engines/turbocharger-vs-supercharger" /></header>
-      <Figure src="/images/articles/torquegirl-turbo-vs-supercharger-hero.png" alt={turboVsSuperchargerArticle.heroAlt} caption="Torque Girl faces one of performance engineering's classic questions: turbocharger or supercharger?" priority />
+      <header className="article-intro"><Link className="back-link" href="/engines"><ArrowLeft size={15} /> Engines</Link><div className="article-kicker"><span>ENGINES</span><span>TECHNOLOGY</span><span>{turboVsSuperchargerArticle.readingTime}</span></div><h1>{turboVsSuperchargerArticle.title}</h1><p className="article-dek">Both systems force more air into an engine. The fascinating difference is where the energy to do that work comes from.</p><div className="article-byline"><span>TorqueGirl editorial</span><time dateTime={turboVsSuperchargerArticle.date}>September 21, 2026</time><span>Updated <time dateTime={turboVsSuperchargerArticle.updatedDate}>October 3, 2026</time></span></div><ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path={turboVsSuperchargerArticle.path} /></header>
+      <Figure src={turboVsSuperchargerArticle.heroImage} alt={turboVsSuperchargerArticle.heroAlt} caption="Torque Girl faces one of performance engineering's classic questions: turbocharger or supercharger?" priority />
       <div className="article-layout"><aside className="article-rail"><span>01</span><span>THE ENERGY QUESTION</span></aside><div className="article-body">
         <p className="lead-paragraph">An internal-combustion engine needs air. Add more usable oxygen, add the right amount of fuel, and an engine can potentially make more power—provided its cooling, calibration and mechanical strength can handle the assignment.</p>
         <p>A turbocharger and a supercharger solve that same airflow problem in different ways. A turbo uses exhaust-gas energy to drive a compressor. A supercharger takes mechanical power from the engine to drive its compressor. That single distinction explains much of how they feel, package and behave.</p>
@@ -39,7 +31,7 @@ export default function TurboVsSuperchargerArticle() {
         <p>Air pressure sets a limit on how much air a naturally aspirated engine can draw into a cylinder during its intake event. Forced induction raises the mass of air available to the engine. More oxygen can support more fuel and more combustion energy, but boost is not a magic permission slip: fueling, ignition timing, knock control, thermal management and the strength of the engine all matter.</p>
         <p>Think of boost as a change to the engine's operating conditions, not a guaranteed power number. The compressor, engine, fuel system and calibration have to work as one system.</p>
         <h2>How a turbocharger works</h2>
-        <Figure src="/images/articles/torquegirl-turbocharged-engine.png" alt="TorqueGirl examining a turbocharged performance engine and its turbocharger system." caption="A turbocharger uses exhaust-gas energy to drive a compressor." />
+        <Figure src="/images/articles/torquegirl-turbocharged-engine.webp" alt="TorqueGirl examining a turbocharged performance engine and its turbocharger system." caption="A turbocharger uses exhaust-gas energy to drive a compressor." />
         <p>The path is easier to understand as a chain:</p>
         <div className="flow-chain" aria-label="Turbocharger airflow and energy path"><span>EXHAUST MANIFOLD</span><b>→</b><span>TURBINE</span><b>→</b><span>SHAFT</span><b>→</b><span>COMPRESSOR</span><b>→</b><span>CHARGE AIR</span><b>→</b><span>ENGINE</span></div>
         <p>Hot exhaust leaves the cylinders through the exhaust manifold and enters the turbine housing. The turbine wheel extracts energy from that flow and turns a common shaft. On the other side, the compressor wheel draws in ambient air and raises its pressure and density before sending it through charge piping toward the intake.</p>
@@ -48,7 +40,7 @@ export default function TurboVsSuperchargerArticle() {
         <p>Turbo lag is not a switch where the turbo is simply off and then on. Turbine and compressor speed, exhaust flow and intake airflow all need to change as operating conditions change. The delay a driver feels depends on turbo sizing, turbine design, engine displacement, gearing, control strategy and the rest of the system.</p>
         <p>Modern designs can improve response with lower-inertia rotating parts, twin-scroll layouts, variable geometry in suitable applications, electric assistance or carefully managed boost control. Those solutions change the trade-offs; they do not erase the underlying need to move energy through the system.</p>
         <h2>How a supercharger works</h2>
-        <Figure src="/images/articles/torquegirl-supercharged-v8.png" alt="TorqueGirl pointing to the belt-driven supercharger system on a V8 engine." caption="A supercharger takes mechanical power from the engine to drive its compressor." />
+        <Figure src="/images/articles/torquegirl-supercharged-v8.webp" alt="TorqueGirl pointing to the belt-driven supercharger system on a V8 engine." caption="A supercharger takes mechanical power from the engine to drive its compressor." />
         <p>The basic path is direct:</p>
         <div className="flow-chain" aria-label="Supercharger mechanical drive and airflow path"><span>CRANKSHAFT</span><b>→</b><span>BELT / DRIVE</span><b>→</b><span>SUPERCHARGER</span><b>→</b><span>COMPRESSED AIR</span><b>→</b><span>ENGINE</span></div>
         <p>The crankshaft drives the supercharger through a belt, gears or another mechanical arrangement. That gives the compressor a predictable relationship to engine operation, depending on the supercharger type and drive ratio. It also means the compressor receives power directly from the engine rather than waiting for exhaust flow to accelerate.</p>
@@ -78,7 +70,7 @@ export default function TurboVsSuperchargerArticle() {
         <p>Both machines solve essentially the same problem: getting more air into the engine. The fascinating part is that they obtain the energy to do it in fundamentally different ways.</p>
         <div className="related-article"><span>KEEP READING</span><Link href="/engines/how-a-nascar-v8-engine-works"><strong>How a NASCAR V8 Engine Works</strong><ArrowUpRight size={17} /></Link></div>
         <div className="article-sources"><strong>Sources &amp; technical context</strong><a href="https://www.garrettmotion.com/ko/knowledge-center-category/oem/basic/" rel="noreferrer">Garrett Motion: How a turbocharger works</a><a href="https://www.garrettmotion.com/knowledge-center-category/racing-and-performance/what-is-the-difference-between-a-wastegate-and-a-blow-off-valve/" rel="noreferrer">Garrett Motion: wastegates and turbo system control</a><a href="https://www.eaton.com/ie/en-gb/products/engine-solutions/superchargers/tvs-overview.html" rel="noreferrer">Eaton: TVS supercharger technology</a></div>
-        <ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path="/engines/turbocharger-vs-supercharger" />
+        <ArticleShare title={turboVsSuperchargerArticle.title} description={turboVsSuperchargerArticle.description} path={turboVsSuperchargerArticle.path} />
       </div></div>
     </article>
     <SiteFooter />

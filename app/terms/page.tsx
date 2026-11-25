@@ -1,12 +1,11 @@
+import { pageMetadata } from '../../lib/site-seo';
 import SiteHeader from '../../components/site-header';
 import SiteFooter from '../../components/site-footer';
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Terms of Use | TorqueGirl",
+export const metadata = pageMetadata({
+  path: "/terms", title: "Terms of Use",
   description: "Terms of use for TorqueGirl editorial content about automotive technology and engineering.",
-  alternates: { canonical: "https://torquegirl.com/terms" },
-};
+});
 
 export default function TermsPage() {
   return <main className="site-shell article-shell">

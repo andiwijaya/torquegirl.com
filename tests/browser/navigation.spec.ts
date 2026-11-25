@@ -127,9 +127,11 @@ for (const viewport of viewports) test(`homepage and editorial/analyzer menus at
 test('homepage uses registry Latest and preserves old anchors and working editorial links', async ({ page }) => {
   const observed = watch(page);
   await page.goto('/');
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://torquegirl.com/torque-girl-hero.png');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://torquegirl.com/torque-girl-hero.webp');
   await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
-  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', 'https://torquegirl.com/torque-girl-hero.png');
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', 'https://torquegirl.com/torque-girl-hero.webp');
+  const website = JSON.parse((await page.locator('#website-data').textContent())!);
+  expect(website).toMatchObject({ '@type': 'WebSite', name: 'TorqueGirl', url: 'https://torquegirl.com/' });
   const latest = getLatestArticles();
   await expect(page.locator('#latest .latest-card')).toHaveCount(latest.length);
   expect(await page.locator('#latest .latest-card').evaluateAll(links => links.map(a => a.getAttribute('href')))).toEqual(latest.map(a => a.path));
